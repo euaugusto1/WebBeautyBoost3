@@ -1,17 +1,32 @@
 import os
 import json
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from models import db, User, SocialLink, ProfileLink, ThemeSetting, FooterItem
+
+# Carregar variáveis de ambiente do .env
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev_secret_key")
 
 # Configuração do banco de dados
-# Verificar se DATABASE_URL está definido, caso contrário usar SQLite
+# Verificar se DATABASE_URL está definido, caso contrário usar variáveis individuais para construir a URL
 db_url = os.environ.get("DATABASE_URL")
 if db_url is None:
-    db_url = "sqlite:///linkstack.db"
-    print("Aviso: Variável de ambiente DATABASE_URL não encontrada. Usando SQLite local.")
+    # Tentar construir a URL a partir das variáveis individuais
+    db_host = os.environ.get("PGHOST", "localhost")
+    db_port = os.environ.get("PGPORT", "5432")
+    db_user = os.environ.get("PGUSER", "postgres")
+    db_password = os.environ.get("PGPASSWORD", "")
+    db_name = os.environ.get("PGDATABASE", "linkstack")
+    
+    db_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    
+    # Fallback para SQLite se mesmo assim não tivermos as variáveis
+    if not all([db_host, db_user, db_name]):
+        db_url = "sqlite:///linkstack.db"
+        print("Aviso: Variáveis de ambiente de banco de dados não encontradas. Usando SQLite local.")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
@@ -19,6 +34,9 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,
 }
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# Configurar o modo debug a partir das variáveis de ambiente
+app.config["DEBUG"] = os.environ.get("DEBUG", "False").lower() == "true"
 
 # Inicializar o banco de dados
 db.init_app(app)
