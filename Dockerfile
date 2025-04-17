@@ -24,6 +24,8 @@ RUN if [ -f REQUISITOS.txt ]; then cp REQUISITOS.txt requirements.txt; fi
 # Instala as dependências Python se necessário
 RUN if [ -f requirements.txt ]; then \
     apk add --no-cache python3 py3-pip && \
+    python3 -m venv /venv && \
+    . /venv/bin/activate && \
     pip install --no-cache-dir -r requirements.txt; \
 fi
 

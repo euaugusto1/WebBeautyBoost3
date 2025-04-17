@@ -3,6 +3,16 @@ FROM python:3.11-slim
 # Definir diretório de trabalho
 WORKDIR /app
 
+# Configurar para que o pip não reclame sobre ambientes gerenciados externamente
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+
+# Instalar dependências do sistema necessárias
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copiar requisitos e instalar dependências
 COPY REQUISITOS.txt .
 RUN cp REQUISITOS.txt requirements.txt && \
