@@ -5,11 +5,16 @@ let profileContainer;
 let isEditMode = false;
 let originalData = {};
 
+// Inicialização inicial
+console.log('Início da execução de edit-mode.js');
+initEditSystem();
+
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Edit Mode: DOM completamente carregado');
   
   // Inicializar o sistema de edição com prioridade alta
   setTimeout(function() {
+    console.log('Tentando inicializar o sistema de edição novamente');
     initEditSystem();
   }, 100);
 });

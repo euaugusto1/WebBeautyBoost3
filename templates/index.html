@@ -137,7 +137,7 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   
   <!-- Controles de edição -->
-  <button class="edit-toggle" id="edit-toggle" type="button">
+  <button class="edit-toggle" id="edit-toggle" type="button" onclick="handleEditButtonClick(event)">
     <i class="fas fa-pencil-alt"></i>
   </button>
   <div class="edit-controls" id="edit-controls">
@@ -151,5 +151,28 @@
   <script src="{{ url_for('static', filename='js/edit-mode.js') }}"></script>
   <script src="{{ url_for('static', filename='js/animated-patterns.js') }}"></script>
   <script src="{{ url_for('static', filename='js/social-links.js') }}"></script>
+  
+  <script>
+    // Garantir que o botão de edição funcione
+    document.addEventListener('DOMContentLoaded', function() {
+      const editButton = document.getElementById('edit-toggle');
+      if (editButton) {
+        console.log('Configurando botão de edição diretamente');
+        editButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Botão de edição clicado');
+          if (typeof window.handleEditButtonClick === 'function') {
+            window.handleEditButtonClick(e);
+          } else {
+            console.error('Função handleEditButtonClick não está definida');
+          }
+          return false;
+        });
+      } else {
+        console.error('Botão de edição não encontrado');
+      }
+    });
+  </script>
 </body>
 </html>

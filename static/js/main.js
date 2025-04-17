@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Add light beam effect on hover for the container, only for non-touch devices
   const container = document.querySelector('.container');
-  if (window.matchMedia("(hover: hover)").matches) {
+  if (container && window.matchMedia("(hover: hover)").matches) {
     container.addEventListener('mousemove', (e) => {
       const rect = container.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -180,6 +180,23 @@ document.addEventListener('DOMContentLoaded', function() {
       
       container.style.setProperty('--mouse-x', `${x}px`);
       container.style.setProperty('--mouse-y', `${y}px`);
+    });
+  }
+  
+  // Verificar novamente o botão de edição, para ter certeza
+  const editButton = document.getElementById('edit-toggle');
+  if (editButton) {
+    console.log('Configurando botão de edição do main.js');
+    editButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Botão de edição clicado do main.js');
+      if (typeof window.handleEditButtonClick === 'function') {
+        window.handleEditButtonClick(e);
+      } else {
+        console.error('Função handleEditButtonClick não está definida');
+      }
+      return false;
     });
   }
 });
