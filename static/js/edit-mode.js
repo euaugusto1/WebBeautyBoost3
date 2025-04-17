@@ -411,7 +411,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const iconSelect = document.createElement('select');
     iconSelect.className = 'edit-input footer-icon-select';
-    ['', 'fa-phone-alt', 'fa-envelope', 'fa-map-marker-alt', 'fa-clock', 'fa-calendar', 'fa-info-circle'].forEach(iconClass => {
+    [
+      '', 'fa-phone-alt', 'fa-envelope', 'fa-map-marker-alt', 'fa-clock', 'fa-calendar', 
+      'fa-info-circle', 'fa-copyright', 'fa-heart', 'fa-check-circle', 'fa-shield-alt',
+      'fa-user-shield', 'fa-cookie', 'fa-thumbs-up', 'fa-handshake', 'fa-award'
+    ].forEach(iconClass => {
       const option = document.createElement('option');
       option.value = iconClass;
       option.textContent = iconClass ? iconClass.replace('fa-', '') : 'Sem ícone';
@@ -463,7 +467,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const platformSelect = document.createElement('select');
     platformSelect.className = 'edit-input platform-select';
-    ['instagram', 'linkedin', 'github', 'twitter', 'facebook', 'youtube', 'tiktok', 'twitch'].forEach(platform => {
+    [
+      'instagram', 'linkedin', 'github', 'twitter', 'facebook', 'youtube', 'tiktok', 'twitch',
+      'pinterest', 'snapchat', 'reddit', 'whatsapp', 'telegram', 'discord', 'medium', 'spotify',
+      'behance', 'dribbble', 'vimeo', 'flickr'
+    ].forEach(platform => {
       const option = document.createElement('option');
       option.value = platform;
       option.textContent = platform;
@@ -522,7 +530,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const iconSelect = document.createElement('select');
     iconSelect.className = 'edit-input icon-select';
-    ['fa-globe', 'fa-code', 'fa-envelope', 'fa-link', 'fa-file', 'fa-video', 'fa-image', 'fa-music', 'fa-shopping-cart'].forEach(icon => {
+    [
+      'fa-globe', 'fa-code', 'fa-envelope', 'fa-link', 'fa-file', 'fa-video', 'fa-image', 
+      'fa-music', 'fa-shopping-cart', 'fa-book', 'fa-graduation-cap', 'fa-briefcase', 
+      'fa-map-marker-alt', 'fa-phone', 'fa-calendar', 'fa-certificate', 'fa-trophy',
+      'fa-heart', 'fa-star', 'fa-users', 'fa-comments', 'fa-lightbulb', 'fa-chart-bar',
+      'fa-camera', 'fa-tools', 'fa-puzzle-piece'
+    ].forEach(icon => {
       const option = document.createElement('option');
       option.value = icon;
       option.textContent = icon.replace('fa-', '');
@@ -531,7 +545,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const classSelect = document.createElement('select');
     classSelect.className = 'edit-input class-select';
-    ['website', 'store', 'contact'].forEach(cls => {
+    [
+      'website', 'store', 'contact', 'project', 'blog', 'video', 'music', 
+      'photo', 'event', 'download', 'social', 'newsletter', 'portfolio'
+    ].forEach(cls => {
       const option = document.createElement('option');
       option.value = cls;
       option.textContent = cls;
