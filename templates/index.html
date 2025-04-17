@@ -18,8 +18,105 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/edit-mode.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/animated-patterns.css') }}">
+  <style>
+    .auth-buttons {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 1000;
+      display: flex;
+      gap: 10px;
+    }
+    
+    .auth-button {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      font-size: 14px;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .auth-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .flash-messages {
+      position: fixed;
+      top: 70px;
+      right: 15px;
+      z-index: 1000;
+      max-width: 300px;
+    }
+    
+    .flash-message {
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .flash-success {
+      background-color: rgba(46, 125, 50, 0.9);
+      color: white;
+    }
+    
+    .flash-error {
+      background-color: rgba(198, 40, 40, 0.9);
+      color: white;
+    }
+    
+    .flash-warning {
+      background-color: rgba(245, 124, 0, 0.9);
+      color: white;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body class="{{ theme }}" data-pattern="{{ pattern }}">
+  <!-- Botões de autenticação -->
+  <div class="auth-buttons">
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('logout') }}" class="auth-button">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="auth-button">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </a>
+      <a href="{{ url_for('register') }}" class="auth-button">
+        <i class="fas fa-user-plus"></i> Cadastre-se
+      </a>
+    {% endif %}
+  </div>
+  
+  <!-- Mensagens Flash -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash-message flash-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  
   <!-- Theme Switcher -->
   <div class="theme-controls">
     <button class="theme-switcher" id="theme-switcher">

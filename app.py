@@ -106,8 +106,15 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    # Obter o usuário demo (por enquanto só temos esse)
-    user = User.query.filter_by(username='demo').first_or_404()
+    # Se o usuário estiver logado, mostrar seu perfil
+    # Caso contrário, mostrar o perfil de demonstração (demo)
+    if current_user.is_authenticated:
+        user = current_user
+    else:
+        user = User.query.filter_by(username='demo').first_or_404()
+    
+    # Verificar se é o usuário logado visualizando seu próprio perfil
+    is_owner = current_user.is_authenticated and current_user.id == user.id
     
     # Montar o perfil a partir dos dados do usuário
     profile = {
@@ -152,16 +159,104 @@ def index():
         theme = user.theme_settings.theme_name
         pattern = user.theme_settings.background_pattern
     
-    return render_template('index.html', profile=profile, theme=theme, pattern=pattern)
+    return render_template('index.html', profile=profile, theme=theme, pattern=pattern, is_owner=is_owner)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # Se o usuário já estiver autenticado, redireciona para a página principal
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            next_page = request.args.get('next')
+            flash('Login realizado com sucesso!', 'success')
+            if not next_page or url_for('index') in next_page:
+                next_page = url_for('index')
+            return redirect(next_page)
+        else:
+            flash('Nome de usuário ou senha incorretos. Por favor, tente novamente.', 'error')
+    
+    return render_template('login.html', form=form)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    # Se o usuário já estiver autenticado, redireciona para a página principal
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(
+            username=form.username.data,
+            email=form.email.data,
+            name=form.username.data,
+            copyright_text='Todos os direitos reservados © 2025 - Powered by LinkStack',
+            copyright_icon='fa-copyright'
+        )
+        user.set_password(form.password.data)
+        
+        # Adicionar configurações básicas de tema
+        theme_settings = ThemeSetting(theme_name='theme-2')
+        user.theme_settings = theme_settings
+        
+        # Adicionar um link de exemplo
+        profile_link = ProfileLink(
+            title='Meu Site',
+            url='#',
+            icon='fa-globe',
+            css_class='website',
+            position=1
+        )
+        user.profile_links = [profile_link]
+        
+        # Adicionar um link social de exemplo
+        social_link = SocialLink(
+            platform='instagram',
+            url='#',
+            icon='fa-instagram'
+        )
+        user.social_links = [social_link]
+        
+        # Adicionar um item de footer de exemplo
+        footer_item = FooterItem(
+            text='Contato',
+            icon='fa-envelope',
+            url='mailto:contato@exemplo.com',
+            position=1
+        )
+        user.footer_items = [footer_item]
+        
+        db.session.add(user)
+        try:
+            db.session.commit()
+            flash('Conta criada com sucesso! Agora você pode fazer login.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao registrar: {str(e)}', 'error')
+    
+    return render_template('register.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Você foi desconectado.', 'success')
+    return redirect(url_for('index'))
 
 @app.route('/update-profile', methods=['POST'])
+@login_required
 def update_profile():
     try:
         # Obter dados do formulário
         data = request.json
         
-        # Obter usuário (usamos o demo por enquanto)
-        user = User.query.filter_by(username='demo').first_or_404()
+        # Obter o usuário atual
+        user = current_user
         
         # Atualizar dados do usuário
         user.name = data.get('name')
