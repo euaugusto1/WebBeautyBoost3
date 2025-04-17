@@ -152,7 +152,7 @@
   <script src="{{ url_for('static', filename='js/social-links.js') }}"></script>
   
   <script>
-    // Sistema de edição simplificado e direto
+    // Sistema de edição completo e direto
     document.addEventListener('DOMContentLoaded', function() {
       // Variáveis globais
       let isEditMode = false;
@@ -188,6 +188,12 @@
           
           // Criar botões de ação
           createActionButtons();
+          
+          // Adicionar seletor de tema
+          addThemeSelector();
+          
+          // Adicionar seletor de padrão de fundo
+          addPatternSelector();
         } else {
           // Desativar modo de edição
           disableEditMode();
@@ -220,7 +226,7 @@
         document.querySelectorAll('.link-btn').forEach(link => {
           originalData.profileLinks.push({
             title: link.querySelector('span').textContent,
-            url: link.getAttribute('href'),
+            url: link.getAttribute('href') || link.getAttribute('data-url'),
             icon: link.querySelector('i').className,
             class: Array.from(link.classList).find(c => c !== 'link-btn' && c !== 'track-click')
           });
@@ -242,10 +248,67 @@
         
         // Tema atual
         originalData.theme = document.body.className.replace('loaded', '').trim();
+        
+        // Padrão de fundo atual
+        originalData.pattern = document.body.getAttribute('data-pattern') || 'none';
       }
       
       // Tornar campos editáveis
       function makeFieldsEditable() {
+        // Foto de perfil
+        const profileImg = document.querySelector('.profile-img');
+        if (profileImg) {
+          const imgContainer = profileImg.parentNode;
+          
+          // Criar um wrapper para a imagem e o botão de upload
+          const imgEditWrapper = document.createElement('div');
+          imgEditWrapper.className = 'img-edit-wrapper';
+          
+          // Manter a imagem original
+          const originalImg = profileImg.cloneNode(true);
+          imgEditWrapper.appendChild(originalImg);
+          
+          // Adicionar botão para fazer upload de nova imagem
+          const uploadBtn = document.createElement('button');
+          uploadBtn.className = 'upload-img-btn';
+          uploadBtn.innerHTML = '<i class="fas fa-camera"></i>';
+          uploadBtn.title = 'Alterar foto de perfil';
+          
+          // Criar um input type file oculto
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = 'image/*';
+          fileInput.className = 'img-file-input';
+          fileInput.style.display = 'none';
+          
+          // Quando o botão for clicado, disparar o input de arquivo
+          uploadBtn.addEventListener('click', function() {
+            fileInput.click();
+          });
+          
+          // Quando um arquivo for selecionado
+          fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+              const reader = new FileReader();
+              
+              reader.onload = function(e) {
+                // Atualizar a URL da imagem para o preview
+                originalImg.src = e.target.result;
+                // Guardar o conteúdo em base64 para enviar ao servidor
+                originalImg.setAttribute('data-image-base64', e.target.result);
+              };
+              
+              reader.readAsDataURL(this.files[0]);
+            }
+          });
+          
+          imgEditWrapper.appendChild(uploadBtn);
+          imgEditWrapper.appendChild(fileInput);
+          
+          // Substituir a imagem original pelo wrapper
+          imgContainer.replaceChild(imgEditWrapper, profileImg);
+        }
+        
         // Nome do usuário
         const username = document.querySelector('.username');
         const usernameText = username.textContent.replace('•', '').trim();
@@ -284,9 +347,816 @@
         description.innerHTML = '';
         description.appendChild(descriptionInput);
         
-        // Aqui adicionaríamos mais código para tornar editáveis os links sociais, 
-        // links do perfil e itens do footer, mas para simplificar e resolver o problema
-        // atual, vamos focar apenas nos campos principais.
+        // Links sociais
+        makeSocialLinksEditable();
+        
+        // Links do perfil
+        makeProfileLinksEditable();
+        
+        // Footer
+        makeFooterEditable();
+      }
+      
+      // Tornar links sociais editáveis
+      function makeSocialLinksEditable() {
+        const socialIcons = document.querySelectorAll('.social-icon');
+        socialIcons.forEach(icon => {
+          const iconWrapper = document.createElement('div');
+          iconWrapper.className = 'social-edit-wrapper';
+          
+          // Criar cabeçalho com ícone e plataforma
+          const headerDiv = document.createElement('div');
+          headerDiv.className = 'social-header';
+          
+          // Obter a plataforma a partir da classe da rede social
+          const platform = Array.from(icon.classList).find(c => c !== 'social-icon');
+          
+          // Manter o ícone original
+          const iconElement = document.createElement('div');
+          iconElement.className = 'social-icon-preview';
+          iconElement.innerHTML = icon.innerHTML;
+          
+          // Criar label para a plataforma
+          const platformLabel = document.createElement('h4');
+          platformLabel.textContent = platform ? platform.charAt(0).toUpperCase() + platform.slice(1) : 'Social Link';
+          platformLabel.style.margin = '0';
+          platformLabel.style.color = '#fff';
+          
+          headerDiv.appendChild(iconElement);
+          headerDiv.appendChild(platformLabel);
+          
+          // Criar select para plataforma
+          const platformSelect = document.createElement('select');
+          platformSelect.className = 'platform-select edit-input';
+          
+          const platforms = [
+            { id: 'instagram', name: 'Instagram' },
+            { id: 'facebook', name: 'Facebook' },
+            { id: 'twitter', name: 'Twitter' },
+            { id: 'linkedin', name: 'LinkedIn' },
+            { id: 'github', name: 'GitHub' },
+            { id: 'youtube', name: 'YouTube' },
+            { id: 'pinterest', name: 'Pinterest' },
+            { id: 'tiktok', name: 'TikTok' },
+            { id: 'snapchat', name: 'Snapchat' },
+            { id: 'whatsapp', name: 'WhatsApp' },
+            { id: 'telegram', name: 'Telegram' },
+            { id: 'reddit', name: 'Reddit' },
+            { id: 'twitch', name: 'Twitch' },
+            { id: 'discord', name: 'Discord' },
+            { id: 'spotify', name: 'Spotify' },
+            { id: 'medium', name: 'Medium' },
+            { id: 'dribbble', name: 'Dribbble' },
+            { id: 'behance', name: 'Behance' }
+          ];
+          
+          platforms.forEach(plt => {
+            const option = document.createElement('option');
+            option.value = plt.id;
+            option.textContent = plt.name;
+            
+            if (plt.id === platform) {
+              option.selected = true;
+            }
+            
+            platformSelect.appendChild(option);
+          });
+          
+          // Criar input para URL
+          const urlInput = document.createElement('input');
+          urlInput.type = 'text';
+          urlInput.value = icon.getAttribute('href');
+          urlInput.className = 'edit-input social-url-input';
+          urlInput.placeholder = 'URL da rede social';
+          
+          // Botão para remover link social
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'remove-btn';
+          removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+          removeBtn.addEventListener('click', function() {
+            iconWrapper.remove();
+          });
+          
+          iconWrapper.appendChild(headerDiv);
+          iconWrapper.appendChild(platformSelect);
+          iconWrapper.appendChild(urlInput);
+          iconWrapper.appendChild(removeBtn);
+          
+          // Substituir o ícone original pelo wrapper
+          icon.parentNode.replaceChild(iconWrapper, icon);
+        });
+        
+        // Adicionar botão para novo link social
+        const socialIconsContainer = document.querySelector('.social-icons');
+        const addSocialBtn = document.createElement('button');
+        addSocialBtn.className = 'add-social-btn';
+        addSocialBtn.innerHTML = '<i class="fas fa-plus"></i> Adicionar rede social';
+        addSocialBtn.addEventListener('click', function() {
+          addNewSocialLink(socialIconsContainer);
+        });
+        socialIconsContainer.appendChild(addSocialBtn);
+      }
+      
+      // Função para adicionar novo link social
+      function addNewSocialLink(container) {
+        const newSocialWrapper = document.createElement('div');
+        newSocialWrapper.className = 'social-edit-wrapper';
+        
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'social-header';
+        
+        const iconPreview = document.createElement('div');
+        iconPreview.className = 'social-icon-preview';
+        iconPreview.innerHTML = '<i class="fab fa-instagram"></i>';
+        
+        const platformLabel = document.createElement('h4');
+        platformLabel.textContent = 'Nova rede social';
+        platformLabel.style.margin = '0';
+        platformLabel.style.color = '#fff';
+        
+        headerDiv.appendChild(iconPreview);
+        headerDiv.appendChild(platformLabel);
+        
+        // Criar select para plataforma
+        const platformSelect = document.createElement('select');
+        platformSelect.className = 'platform-select edit-input';
+        
+        const platforms = [
+          { id: 'instagram', name: 'Instagram' },
+          { id: 'facebook', name: 'Facebook' },
+          { id: 'twitter', name: 'Twitter' },
+          { id: 'linkedin', name: 'LinkedIn' },
+          { id: 'github', name: 'GitHub' },
+          { id: 'youtube', name: 'YouTube' },
+          { id: 'pinterest', name: 'Pinterest' },
+          { id: 'tiktok', name: 'TikTok' },
+          { id: 'snapchat', name: 'Snapchat' },
+          { id: 'whatsapp', name: 'WhatsApp' },
+          { id: 'telegram', name: 'Telegram' },
+          { id: 'reddit', name: 'Reddit' },
+          { id: 'twitch', name: 'Twitch' },
+          { id: 'discord', name: 'Discord' },
+          { id: 'spotify', name: 'Spotify' },
+          { id: 'medium', name: 'Medium' },
+          { id: 'dribbble', name: 'Dribbble' },
+          { id: 'behance', name: 'Behance' }
+        ];
+        
+        platforms.forEach(plt => {
+          const option = document.createElement('option');
+          option.value = plt.id;
+          option.textContent = plt.name;
+          platformSelect.appendChild(option);
+        });
+        
+        // Atualizar ícone quando a plataforma mudar
+        platformSelect.addEventListener('change', function() {
+          const selectedPlatform = this.value;
+          iconPreview.innerHTML = `<i class="fab fa-${selectedPlatform}"></i>`;
+        });
+        
+        // Input de URL
+        const urlInput = document.createElement('input');
+        urlInput.type = 'text';
+        urlInput.className = 'edit-input social-url-input';
+        urlInput.placeholder = 'URL da rede social';
+        
+        // Botão remover
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        removeBtn.addEventListener('click', function() {
+          newSocialWrapper.remove();
+        });
+        
+        newSocialWrapper.appendChild(headerDiv);
+        newSocialWrapper.appendChild(platformSelect);
+        newSocialWrapper.appendChild(urlInput);
+        newSocialWrapper.appendChild(removeBtn);
+        
+        // Inserir antes do botão de adicionar
+        container.insertBefore(newSocialWrapper, container.lastChild);
+      }
+      
+      // Tornar links do perfil editáveis
+      function makeProfileLinksEditable() {
+        const linksSection = document.querySelector('.links');
+        const linksContainer = document.createElement('div');
+        linksContainer.className = 'links-edit-container';
+        
+        // Obter todos os links e convertê-los em formulários editáveis
+        const profileLinks = document.querySelectorAll('.link-btn');
+        profileLinks.forEach(link => {
+          const linkWrapper = document.createElement('div');
+          linkWrapper.className = 'link-edit-wrapper';
+          
+          // Dados do link
+          const title = link.querySelector('span').textContent;
+          const url = link.getAttribute('href') || link.getAttribute('data-url');
+          const icon = link.querySelector('i').className.replace('fas ', '');
+          
+          // Preview do ícone
+          const iconPreview = document.createElement('div');
+          iconPreview.className = 'icon-preview';
+          iconPreview.innerHTML = `<i class="fas ${icon}"></i>`;
+          
+          // Campos de edição
+          const titleInput = document.createElement('input');
+          titleInput.type = 'text';
+          titleInput.value = title;
+          titleInput.className = 'edit-input link-title-input';
+          titleInput.placeholder = 'Título do link';
+          
+          const urlInput = document.createElement('input');
+          urlInput.type = 'text';
+          urlInput.value = url;
+          urlInput.className = 'edit-input link-url-input';
+          urlInput.placeholder = 'URL';
+          
+          // Select para ícones
+          const iconSelect = document.createElement('select');
+          iconSelect.className = 'edit-input icon-select';
+          
+          // Lista de ícones
+          const icons = [
+            'fa-globe', 'fa-link', 'fa-bookmark', 'fa-heart', 'fa-star', 'fa-check', 
+            'fa-thumbs-up', 'fa-fire', 'fa-gift', 'fa-music', 'fa-video', 'fa-film',
+            'fa-image', 'fa-camera', 'fa-file', 'fa-file-alt', 'fa-book', 'fa-newspaper',
+            'fa-envelope', 'fa-phone', 'fa-mobile-alt', 'fa-map-marker-alt', 'fa-shopping-cart',
+            'fa-code', 'fa-graduation-cap', 'fa-briefcase', 'fa-tools', 'fa-cog', 
+            'fa-trophy', 'fa-medal', 'fa-certificate', 'fa-rocket', 'fa-users', 'fa-user'
+          ];
+          
+          icons.forEach(iconName => {
+            const option = document.createElement('option');
+            option.value = iconName;
+            option.textContent = iconName.replace('fa-', '');
+            
+            if (icon.includes(iconName)) {
+              option.selected = true;
+            }
+            
+            iconSelect.appendChild(option);
+          });
+          
+          // Atualizar preview quando o ícone mudar
+          iconSelect.addEventListener('change', function() {
+            iconPreview.innerHTML = `<i class="fas ${this.value}"></i>`;
+          });
+          
+          // Select para classes CSS
+          const classSelect = document.createElement('select');
+          classSelect.className = 'edit-input class-select';
+          
+          // Classes disponíveis
+          const classes = [
+            { value: '', label: 'Padrão' },
+            { value: 'website', label: 'Website' },
+            { value: 'store', label: 'Loja' },
+            { value: 'contact', label: 'Contato' },
+            { value: 'community', label: 'Comunidade' }
+          ];
+          
+          classes.forEach(cls => {
+            const option = document.createElement('option');
+            option.value = cls.value;
+            option.textContent = cls.label;
+            
+            // Verificar se o link tem esta classe
+            const linkClasses = Array.from(link.classList);
+            if (cls.value && linkClasses.includes(cls.value)) {
+              option.selected = true;
+            }
+            
+            classSelect.appendChild(option);
+          });
+          
+          // Botão remover
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'remove-btn';
+          removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+          removeBtn.addEventListener('click', function() {
+            linkWrapper.remove();
+          });
+          
+          // Layout do formulário
+          const headerDiv = document.createElement('div');
+          headerDiv.className = 'link-header';
+          headerDiv.appendChild(iconPreview);
+          headerDiv.appendChild(titleInput);
+          
+          const urlDiv = document.createElement('div');
+          urlDiv.className = 'link-url-row';
+          urlDiv.appendChild(urlInput);
+          
+          const selectDiv = document.createElement('div');
+          selectDiv.className = 'link-select-row';
+          selectDiv.appendChild(iconSelect);
+          selectDiv.appendChild(classSelect);
+          
+          linkWrapper.appendChild(headerDiv);
+          linkWrapper.appendChild(urlDiv);
+          linkWrapper.appendChild(selectDiv);
+          linkWrapper.appendChild(removeBtn);
+          
+          linksContainer.appendChild(linkWrapper);
+        });
+        
+        // Botão para adicionar novo link
+        const addLinkBtn = document.createElement('button');
+        addLinkBtn.className = 'add-link-btn';
+        addLinkBtn.innerHTML = '<i class="fas fa-plus"></i> Adicionar novo link';
+        addLinkBtn.addEventListener('click', function() {
+          addNewProfileLink(linksContainer);
+        });
+        
+        linksContainer.appendChild(addLinkBtn);
+        
+        // Substituir a seção de links original
+        linksSection.innerHTML = '';
+        linksSection.appendChild(linksContainer);
+      }
+      
+      // Adicionar novo link de perfil
+      function addNewProfileLink(container) {
+        const linkWrapper = document.createElement('div');
+        linkWrapper.className = 'link-edit-wrapper';
+        
+        // Preview do ícone
+        const iconPreview = document.createElement('div');
+        iconPreview.className = 'icon-preview';
+        iconPreview.innerHTML = '<i class="fas fa-link"></i>';
+        
+        // Campos de edição
+        const titleInput = document.createElement('input');
+        titleInput.type = 'text';
+        titleInput.className = 'edit-input link-title-input';
+        titleInput.placeholder = 'Título do link';
+        
+        const urlInput = document.createElement('input');
+        urlInput.type = 'text';
+        urlInput.className = 'edit-input link-url-input';
+        urlInput.placeholder = 'URL';
+        
+        // Select para ícones
+        const iconSelect = document.createElement('select');
+        iconSelect.className = 'edit-input icon-select';
+        
+        // Lista de ícones
+        const icons = [
+          'fa-globe', 'fa-link', 'fa-bookmark', 'fa-heart', 'fa-star', 'fa-check', 
+          'fa-thumbs-up', 'fa-fire', 'fa-gift', 'fa-music', 'fa-video', 'fa-film',
+          'fa-image', 'fa-camera', 'fa-file', 'fa-file-alt', 'fa-book', 'fa-newspaper',
+          'fa-envelope', 'fa-phone', 'fa-mobile-alt', 'fa-map-marker-alt', 'fa-shopping-cart',
+          'fa-code', 'fa-graduation-cap', 'fa-briefcase', 'fa-tools', 'fa-cog', 
+          'fa-trophy', 'fa-medal', 'fa-certificate', 'fa-rocket', 'fa-users', 'fa-user'
+        ];
+        
+        icons.forEach(iconName => {
+          const option = document.createElement('option');
+          option.value = iconName;
+          option.textContent = iconName.replace('fa-', '');
+          
+          if (iconName === 'fa-link') {
+            option.selected = true;
+          }
+          
+          iconSelect.appendChild(option);
+        });
+        
+        // Atualizar preview quando o ícone mudar
+        iconSelect.addEventListener('change', function() {
+          iconPreview.innerHTML = `<i class="fas ${this.value}"></i>`;
+        });
+        
+        // Select para classes CSS
+        const classSelect = document.createElement('select');
+        classSelect.className = 'edit-input class-select';
+        
+        // Classes disponíveis
+        const classes = [
+          { value: '', label: 'Padrão' },
+          { value: 'website', label: 'Website' },
+          { value: 'store', label: 'Loja' },
+          { value: 'contact', label: 'Contato' },
+          { value: 'community', label: 'Comunidade' }
+        ];
+        
+        classes.forEach(cls => {
+          const option = document.createElement('option');
+          option.value = cls.value;
+          option.textContent = cls.label;
+          classSelect.appendChild(option);
+        });
+        
+        // Botão remover
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        removeBtn.addEventListener('click', function() {
+          linkWrapper.remove();
+        });
+        
+        // Layout do formulário
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'link-header';
+        headerDiv.appendChild(iconPreview);
+        headerDiv.appendChild(titleInput);
+        
+        const urlDiv = document.createElement('div');
+        urlDiv.className = 'link-url-row';
+        urlDiv.appendChild(urlInput);
+        
+        const selectDiv = document.createElement('div');
+        selectDiv.className = 'link-select-row';
+        selectDiv.appendChild(iconSelect);
+        selectDiv.appendChild(classSelect);
+        
+        linkWrapper.appendChild(headerDiv);
+        linkWrapper.appendChild(urlDiv);
+        linkWrapper.appendChild(selectDiv);
+        linkWrapper.appendChild(removeBtn);
+        
+        // Inserir antes do botão de adicionar
+        container.insertBefore(linkWrapper, container.lastChild);
+      }
+      
+      // Tornar o footer editável
+      function makeFooterEditable() {
+        const footer = document.querySelector('.footer');
+        const footerContainer = document.createElement('div');
+        footerContainer.className = 'footer-edit-container';
+        
+        // Obter todos os itens do footer
+        const footerItems = document.querySelectorAll('.footer-item');
+        footerItems.forEach(item => {
+          const itemWrapper = document.createElement('div');
+          itemWrapper.className = 'edit-footer-wrapper';
+          
+          // Obter dados do item
+          const icon = item.querySelector('i');
+          const link = item.querySelector('a');
+          const text = link ? link.textContent : item.textContent.trim();
+          const url = link ? link.getAttribute('href') : '';
+          const isBrand = link && link.classList.contains('brand-link');
+          
+          // Campos de edição
+          const textInput = document.createElement('input');
+          textInput.type = 'text';
+          textInput.value = text;
+          textInput.className = 'edit-input footer-text-input';
+          textInput.placeholder = 'Texto do footer';
+          
+          const urlInput = document.createElement('input');
+          urlInput.type = 'text';
+          urlInput.value = url;
+          urlInput.className = 'edit-input footer-url-input';
+          urlInput.placeholder = 'URL (opcional)';
+          
+          // Select para ícones
+          const iconSelect = document.createElement('select');
+          iconSelect.className = 'footer-icon-select';
+          
+          // Lista de ícones para o footer
+          const icons = [
+            { value: '', label: 'Sem ícone' },
+            { value: 'fa-copyright', label: 'Copyright' },
+            { value: 'fa-heart', label: 'Coração' },
+            { value: 'fa-info-circle', label: 'Informação' },
+            { value: 'fa-envelope', label: 'Email' },
+            { value: 'fa-phone', label: 'Telefone' },
+            { value: 'fa-map-marker-alt', label: 'Localização' },
+            { value: 'fa-clock', label: 'Relógio' },
+            { value: 'fa-calendar', label: 'Calendário' },
+            { value: 'fa-code', label: 'Código' },
+            { value: 'fa-star', label: 'Estrela' }
+          ];
+          
+          icons.forEach(icn => {
+            const option = document.createElement('option');
+            option.value = icn.value;
+            option.textContent = icn.label;
+            
+            if (icon && icon.className.includes(icn.value)) {
+              option.selected = true;
+            }
+            
+            iconSelect.appendChild(option);
+          });
+          
+          // Opção de marca
+          const brandLabel = document.createElement('label');
+          brandLabel.className = 'footer-brand-label';
+          
+          const brandCheckbox = document.createElement('input');
+          brandCheckbox.type = 'checkbox';
+          brandCheckbox.className = 'footer-brand-checkbox';
+          brandCheckbox.checked = isBrand;
+          
+          brandLabel.appendChild(brandCheckbox);
+          brandLabel.appendChild(document.createTextNode(' Destacar como marca'));
+          
+          // Botão remover
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'remove-btn';
+          removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+          removeBtn.addEventListener('click', function() {
+            itemWrapper.remove();
+          });
+          
+          // Adicionar os elementos ao wrapper
+          itemWrapper.appendChild(textInput);
+          itemWrapper.appendChild(urlInput);
+          itemWrapper.appendChild(iconSelect);
+          itemWrapper.appendChild(brandLabel);
+          itemWrapper.appendChild(removeBtn);
+          
+          footerContainer.appendChild(itemWrapper);
+        });
+        
+        // Adicionar botão para novo item do footer
+        const addFooterBtn = document.createElement('button');
+        addFooterBtn.className = 'add-footer-btn';
+        addFooterBtn.innerHTML = '<i class="fas fa-plus"></i> Adicionar item ao footer';
+        addFooterBtn.addEventListener('click', function() {
+          addNewFooterItem(footerContainer);
+        });
+        
+        footerContainer.appendChild(addFooterBtn);
+        
+        // Copyright text
+        const copyrightP = document.querySelector('.footer-copyright');
+        if (copyrightP) {
+          const copyrightWrapper = document.createElement('div');
+          copyrightWrapper.className = 'edit-footer-wrapper copyright-wrapper';
+          
+          const copyrightTitle = document.createElement('h4');
+          copyrightTitle.textContent = 'Copyright';
+          copyrightTitle.style.margin = '10px 0';
+          copyrightTitle.style.color = '#fff';
+          
+          const copyrightInput = document.createElement('input');
+          copyrightInput.type = 'text';
+          copyrightInput.value = copyrightP.textContent.trim();
+          copyrightInput.className = 'edit-input footer-text-input';
+          copyrightInput.placeholder = 'Texto do copyright';
+          
+          const iconSelect = document.createElement('select');
+          iconSelect.className = 'footer-icon-select';
+          
+          const icons = [
+            { value: 'fa-copyright', label: 'Copyright' },
+            { value: 'fa-registered', label: 'Registrado' },
+            { value: 'fa-trademark', label: 'Trademark' },
+            { value: '', label: 'Sem ícone' }
+          ];
+          
+          icons.forEach(icn => {
+            const option = document.createElement('option');
+            option.value = icn.value;
+            option.textContent = icn.label;
+            
+            const copyrightIcon = copyrightP.querySelector('i');
+            if (copyrightIcon && copyrightIcon.className.includes(icn.value)) {
+              option.selected = true;
+            }
+            
+            iconSelect.appendChild(option);
+          });
+          
+          copyrightWrapper.appendChild(copyrightTitle);
+          copyrightWrapper.appendChild(copyrightInput);
+          copyrightWrapper.appendChild(iconSelect);
+          
+          footerContainer.appendChild(copyrightWrapper);
+        }
+        
+        // Substituir o footer original
+        footer.innerHTML = '';
+        footer.appendChild(footerContainer);
+      }
+      
+      // Adicionar novo item ao footer
+      function addNewFooterItem(container) {
+        const itemWrapper = document.createElement('div');
+        itemWrapper.className = 'edit-footer-wrapper';
+        
+        // Campos de edição
+        const textInput = document.createElement('input');
+        textInput.type = 'text';
+        textInput.className = 'edit-input footer-text-input';
+        textInput.placeholder = 'Texto do footer';
+        
+        const urlInput = document.createElement('input');
+        urlInput.type = 'text';
+        urlInput.className = 'edit-input footer-url-input';
+        urlInput.placeholder = 'URL (opcional)';
+        
+        // Select para ícones
+        const iconSelect = document.createElement('select');
+        iconSelect.className = 'footer-icon-select';
+        
+        // Lista de ícones para o footer
+        const icons = [
+          { value: '', label: 'Sem ícone' },
+          { value: 'fa-copyright', label: 'Copyright' },
+          { value: 'fa-heart', label: 'Coração' },
+          { value: 'fa-info-circle', label: 'Informação' },
+          { value: 'fa-envelope', label: 'Email' },
+          { value: 'fa-phone', label: 'Telefone' },
+          { value: 'fa-map-marker-alt', label: 'Localização' },
+          { value: 'fa-clock', label: 'Relógio' },
+          { value: 'fa-calendar', label: 'Calendário' },
+          { value: 'fa-code', label: 'Código' },
+          { value: 'fa-star', label: 'Estrela' }
+        ];
+        
+        icons.forEach(icn => {
+          const option = document.createElement('option');
+          option.value = icn.value;
+          option.textContent = icn.label;
+          iconSelect.appendChild(option);
+        });
+        
+        // Opção de marca
+        const brandLabel = document.createElement('label');
+        brandLabel.className = 'footer-brand-label';
+        
+        const brandCheckbox = document.createElement('input');
+        brandCheckbox.type = 'checkbox';
+        brandCheckbox.className = 'footer-brand-checkbox';
+        
+        brandLabel.appendChild(brandCheckbox);
+        brandLabel.appendChild(document.createTextNode(' Destacar como marca'));
+        
+        // Botão remover
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        removeBtn.addEventListener('click', function() {
+          itemWrapper.remove();
+        });
+        
+        // Adicionar os elementos ao wrapper
+        itemWrapper.appendChild(textInput);
+        itemWrapper.appendChild(urlInput);
+        itemWrapper.appendChild(iconSelect);
+        itemWrapper.appendChild(brandLabel);
+        itemWrapper.appendChild(removeBtn);
+        
+        // Inserir antes do botão de adicionar e do copyright
+        container.insertBefore(itemWrapper, container.lastChild.previousSibling);
+      }
+      
+      // Adicionar seletor de tema
+      function addThemeSelector() {
+        // Criar o seletor de temas
+        const themeEditor = document.createElement('div');
+        themeEditor.className = 'theme-editor';
+        themeEditor.innerHTML = '<h3>Escolha um tema</h3>';
+        
+        // Botão de alternância
+        const themeToggleBtn = document.createElement('button');
+        themeToggleBtn.className = 'theme-toggle-btn';
+        themeToggleBtn.innerHTML = '<i class="fas fa-palette"></i>';
+        themeToggleBtn.addEventListener('click', function() {
+          themeEditor.classList.toggle('active');
+        });
+        
+        themeEditor.appendChild(themeToggleBtn);
+        
+        // Grid de seleção de tema
+        const themeGrid = document.createElement('div');
+        themeGrid.className = 'theme-select-grid';
+        
+        // Criar opções para temas (1-50)
+        for (let i = 1; i <= 50; i++) {
+          const themeOption = document.createElement('div');
+          themeOption.className = `theme-option theme-${i}`;
+          themeOption.setAttribute('data-theme', `theme-${i}`);
+          themeOption.title = `Tema ${i}`;
+          
+          // Verificar se este é o tema atual
+          const currentTheme = document.body.className.replace('loaded', '').trim();
+          if (currentTheme === `theme-${i}`) {
+            themeOption.classList.add('active');
+          }
+          
+          // Adicionar evento de clique
+          themeOption.addEventListener('click', function() {
+            // Remover classe ativa de todas as opções
+            document.querySelectorAll('.theme-option').forEach(opt => {
+              opt.classList.remove('active');
+            });
+            
+            // Adicionar classe ativa à opção clicada
+            this.classList.add('active');
+            
+            // Aplicar o tema
+            const theme = this.getAttribute('data-theme');
+            
+            // Remover todas as classes de tema
+            for (let j = 1; j <= 50; j++) {
+              document.body.classList.remove(`theme-${j}`);
+            }
+            
+            // Adicionar a nova classe de tema
+            document.body.classList.add(theme);
+          });
+          
+          themeGrid.appendChild(themeOption);
+        }
+        
+        themeEditor.appendChild(themeGrid);
+        document.body.appendChild(themeEditor);
+        
+        // Ativar o editor de temas automaticamente após um breve atraso
+        setTimeout(() => {
+          themeEditor.classList.add('active');
+        }, 500);
+      }
+      
+      // Adicionar seletor de padrão de fundo
+      function addPatternSelector() {
+        // Criar o seletor de padrões
+        const patternEditor = document.createElement('div');
+        patternEditor.className = 'pattern-editor';
+        patternEditor.innerHTML = '<h3>Padrões Animados</h3>';
+        
+        // Botão de alternância
+        const patternToggleBtn = document.createElement('button');
+        patternToggleBtn.className = 'pattern-toggle-btn';
+        patternToggleBtn.innerHTML = '<i class="fas fa-magic"></i>';
+        patternToggleBtn.addEventListener('click', function() {
+          patternEditor.classList.toggle('active');
+        });
+        
+        patternEditor.appendChild(patternToggleBtn);
+        
+        // Grid de seleção de padrões
+        const patternGrid = document.createElement('div');
+        patternGrid.className = 'pattern-select-grid';
+        
+        // Lista de padrões
+        const patterns = [
+          { id: 'none', name: 'Nenhum' },
+          { id: 'particles', name: 'Partículas' },
+          { id: 'wave', name: 'Ondas' },
+          { id: 'pulse', name: 'Pulso' },
+          { id: 'geometric', name: 'Formas' },
+          { id: 'bubbles', name: 'Bolhas' },
+          { id: 'grid', name: 'Grade' },
+          { id: 'starfield', name: 'Estrelas' },
+          { id: 'noise', name: 'Ruído' },
+          { id: 'lines', name: 'Linhas' },
+          { id: 'ripple', name: 'Ondulação' }
+        ];
+        
+        // Obter o padrão atual
+        const currentPattern = document.body.getAttribute('data-pattern') || 'none';
+        
+        // Criar opções para cada padrão
+        patterns.forEach(pattern => {
+          const patternOption = document.createElement('div');
+          patternOption.className = `pattern-option ${pattern.id === currentPattern ? 'active' : ''}`;
+          patternOption.setAttribute('data-pattern', pattern.id);
+          patternOption.title = pattern.name;
+          
+          // Adicionar texto descritivo
+          const patternName = document.createElement('span');
+          patternName.textContent = pattern.name;
+          patternOption.appendChild(patternName);
+          
+          // Evento de clique para selecionar padrão
+          patternOption.addEventListener('click', function() {
+            // Remover classe ativa de todas as opções
+            document.querySelectorAll('.pattern-option').forEach(opt => {
+              opt.classList.remove('active');
+            });
+            
+            // Adicionar classe ativa à opção clicada
+            this.classList.add('active');
+            
+            // Aplicar o padrão
+            const patternId = this.getAttribute('data-pattern');
+            document.body.setAttribute('data-pattern', patternId);
+            
+            // Chamar a função para aplicar o padrão animado
+            if (window.applyAnimatedPattern) {
+              window.applyAnimatedPattern(patternId);
+            }
+          });
+          
+          patternGrid.appendChild(patternOption);
+        });
+        
+        patternEditor.appendChild(patternGrid);
+        document.body.appendChild(patternEditor);
+        
+        // Ativar o editor de padrões automaticamente após um breve atraso
+        setTimeout(() => {
+          patternEditor.classList.add('active');
+        }, 1000);
       }
       
       // Criar botões de ação (salvar e cancelar)
@@ -352,6 +1222,77 @@
           editedData.description = descriptionInput.value.trim();
         }
         
+        // Links sociais
+        editedData.socialLinks = [];
+        document.querySelectorAll('.social-edit-wrapper').forEach(wrapper => {
+          const platformSelect = wrapper.querySelector('.platform-select');
+          const urlInput = wrapper.querySelector('.social-url-input');
+          
+          if (platformSelect && urlInput && urlInput.value.trim()) {
+            editedData.socialLinks.push({
+              platform: platformSelect.value,
+              url: urlInput.value.trim(),
+              icon: `fab fa-${platformSelect.value}`
+            });
+          }
+        });
+        
+        // Links do perfil
+        editedData.profileLinks = [];
+        document.querySelectorAll('.link-edit-wrapper').forEach(wrapper => {
+          const titleInput = wrapper.querySelector('.link-title-input');
+          const urlInput = wrapper.querySelector('.link-url-input');
+          const iconSelect = wrapper.querySelector('.icon-select');
+          const classSelect = wrapper.querySelector('.class-select');
+          
+          if (titleInput && urlInput && titleInput.value.trim() && urlInput.value.trim()) {
+            editedData.profileLinks.push({
+              title: titleInput.value.trim(),
+              url: urlInput.value.trim(),
+              icon: iconSelect ? iconSelect.value : 'fa-link',
+              class: classSelect ? classSelect.value : ''
+            });
+          }
+        });
+        
+        // Itens do footer
+        editedData.footerItems = [];
+        document.querySelectorAll('.edit-footer-wrapper:not(.copyright-wrapper)').forEach(wrapper => {
+          const textInput = wrapper.querySelector('.footer-text-input');
+          const urlInput = wrapper.querySelector('.footer-url-input');
+          const iconSelect = wrapper.querySelector('.footer-icon-select');
+          const brandCheckbox = wrapper.querySelector('.footer-brand-checkbox');
+          
+          if (textInput && textInput.value.trim()) {
+            editedData.footerItems.push({
+              text: textInput.value.trim(),
+              url: urlInput ? urlInput.value.trim() : '',
+              icon: iconSelect && iconSelect.value ? `fas ${iconSelect.value}` : '',
+              is_brand: brandCheckbox ? brandCheckbox.checked : false
+            });
+          }
+        });
+        
+        // Copyright
+        const copyrightWrapper = document.querySelector('.copyright-wrapper');
+        if (copyrightWrapper) {
+          const copyrightInput = copyrightWrapper.querySelector('.footer-text-input');
+          const iconSelect = copyrightWrapper.querySelector('.footer-icon-select');
+          
+          if (copyrightInput) {
+            editedData.copyright = {
+              text: copyrightInput.value.trim(),
+              icon: iconSelect && iconSelect.value ? iconSelect.value : 'fa-copyright'
+            };
+          }
+        }
+        
+        // Tema
+        editedData.theme = document.body.className.replace('loaded', '').trim();
+        
+        // Padrão de fundo
+        editedData.pattern = document.body.getAttribute('data-pattern') || 'none';
+        
         return editedData;
       }
       
@@ -360,6 +1301,23 @@
         isEditMode = false;
         profileContainer.classList.remove('edit-mode');
         editControls.classList.remove('active');
+        
+        // Remover seletores de tema e padrão
+        const themeEditor = document.querySelector('.theme-editor');
+        if (themeEditor) {
+          themeEditor.remove();
+        }
+        
+        const patternEditor = document.querySelector('.pattern-editor');
+        if (patternEditor) {
+          patternEditor.remove();
+        }
+        
+        // Remover os botões de ação
+        const actionButtons = document.querySelector('.edit-action-buttons');
+        if (actionButtons) {
+          actionButtons.innerHTML = '';
+        }
         
         // Recarregar a página para restaurar o estado original
         location.reload();
