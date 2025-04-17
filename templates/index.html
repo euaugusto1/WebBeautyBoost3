@@ -17,8 +17,9 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/edit-mode.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animated-patterns.css') }}">
 </head>
-<body class="{{ theme }}">
+<body class="{{ theme }}" data-pattern="{{ pattern }}">
   <!-- Theme Switcher -->
   <div class="theme-controls">
     <button class="theme-switcher" id="theme-switcher">
@@ -111,5 +112,6 @@
   <!-- Custom JavaScript -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="{{ url_for('static', filename='js/edit-mode.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/animated-patterns.js') }}"></script>
 </body>
 </html>

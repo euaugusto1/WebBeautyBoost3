@@ -86,6 +86,7 @@ class ThemeSetting(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True, nullable=False)
     theme_name = db.Column(db.String(50), default='theme-2')
+    background_pattern = db.Column(db.String(50), default='none')  # Padrão de fundo animado
     custom_css = db.Column(db.Text)
     custom_colors = db.Column(db.Text)  # JSON string for custom colors
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

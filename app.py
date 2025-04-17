@@ -106,12 +106,14 @@ def index():
         ]
     }
     
-    # Obter o tema atual
+    # Obter o tema atual e padrão de fundo
     theme = 'theme-2'  # Tema padrão
+    pattern = 'none'   # Padrão de fundo padrão
     if user.theme_settings:
         theme = user.theme_settings.theme_name
+        pattern = user.theme_settings.background_pattern
     
-    return render_template('index.html', profile=profile, theme=theme)
+    return render_template('index.html', profile=profile, theme=theme, pattern=pattern)
 
 @app.route('/update-profile', methods=['POST'])
 def update_profile():
@@ -127,13 +129,20 @@ def update_profile():
         user.bio = data.get('bio')
         user.phone = data.get('phone')
         
-        # Atualizar tema
+        # Atualizar tema e padrão de fundo
         if 'theme' in data and data['theme']:
             theme_name = data.get('theme')
+            pattern_name = data.get('pattern', 'none')
+            
             if user.theme_settings:
                 user.theme_settings.theme_name = theme_name
+                user.theme_settings.background_pattern = pattern_name
             else:
-                theme_settings = ThemeSetting(user_id=user.id, theme_name=theme_name)
+                theme_settings = ThemeSetting(
+                    user_id=user.id, 
+                    theme_name=theme_name,
+                    background_pattern=pattern_name
+                )
                 db.session.add(theme_settings)
         
         # Verificar se há uma nova imagem de perfil

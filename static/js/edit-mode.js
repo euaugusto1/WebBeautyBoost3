@@ -649,13 +649,20 @@ document.addEventListener('DOMContentLoaded', function() {
       social_links: [],
       profile_links: [],
       footer_items: [],
-      theme: ''
+      theme: '',
+      pattern: ''
     };
     
     // Coletar tema selecionado
     const activeTheme = document.querySelector('.theme-option.active');
     if (activeTheme) {
       data.theme = activeTheme.getAttribute('data-theme');
+    }
+    
+    // Coletar padrão animado selecionado
+    const activePattern = document.querySelector('.pattern-option.active');
+    if (activePattern) {
+      data.pattern = activePattern.getAttribute('data-pattern');
     }
     
     // Verificar se a imagem foi alterada
