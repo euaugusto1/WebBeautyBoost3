@@ -1,63 +1,37 @@
-FROM node:18-alpine AS build
+FROM python:3.11-slim
 
-# Define o diretório de trabalho
+# Definir diretório de trabalho
 WORKDIR /app
 
-# Argumentos de build
-ARG VITE_API_URL
-ARG VITE_ENVIRONMENT=production
-ARG VITE_MOCK_DATA=false
+# Configurar para que o pip não reclame sobre ambientes gerenciados externamente
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
-# Variáveis de ambiente para o build
-ENV VITE_API_URL=${VITE_API_URL}
-ENV VITE_ENVIRONMENT=${VITE_ENVIRONMENT}
-ENV VITE_MOCK_DATA=${VITE_MOCK_DATA}
+# Instalar dependências do sistema necessárias
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copia arquivos de configuração e dependências
-COPY package*.json ./
-# COPY .npmrc ./  # Comentado pois o arquivo não existe
-
-# Verifica se tem um arquivo REQUISITOS.txt e cria requirements.txt
+# Verificar se existe REQUISITOS.txt e copiar para requirements.txt
 COPY REQUISITOS.txt* ./
-RUN if [ -f REQUISITOS.txt ]; then cp REQUISITOS.txt requirements.txt; fi
-
-# Instala as dependências Python se necessário
-RUN if [ -f requirements.txt ]; then \
-    apk add --no-cache python3 py3-pip && \
-    python3 -m venv /venv && \
-    . /venv/bin/activate && \
-    pip install --no-cache-dir -r requirements.txt; \
+RUN if [ -f REQUISITOS.txt ]; then \
+    cp REQUISITOS.txt requirements.txt; \
 fi
 
-# Instala as dependências Node.js se package.json existir
-RUN if [ -f package.json ]; then \
-    npm install --production --no-audit --no-fund; \
-fi
+# Instalar dependências Python
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia o código fonte
+# Copiar código-fonte da aplicação
 COPY . .
 
-# Constrói a aplicação (apenas se for um projeto Node.js)
-RUN if [ -f package.json ]; then \
-    npm run build || echo "Skipping build - not a Node.js project"; \
-fi
+# Definir variáveis de ambiente
+ENV FLASK_APP=main.py
+ENV FLASK_ENV=production
+ENV DEBUG=False
 
-# Estágio 2: Servidor Web Nginx
-FROM nginx:stable-alpine AS production
+# Expor porta para a aplicação
+EXPOSE 5000
 
-# Copia configuração personalizada do Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copia os arquivos de build do estágio anterior
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expõe a porta 80
-EXPOSE 80
-
-# Adiciona script de inicialização para substituir variáveis de ambiente no runtime
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-# Comando para iniciar o Nginx
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]
+# Comando para iniciar a aplicação
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--threads", "2", "main:app"]

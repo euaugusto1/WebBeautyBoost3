@@ -1,29 +1,10 @@
 # Solução Final para Deploy no EasyPanel
 
-## IMPORTANTE: Renomear Dockerfile.flask para Dockerfile
+## Dockerfile Atualizado para Flask
 
-O problema é que o EasyPanel está usando o Dockerfile original e ignorando nossa instrução para usar o Dockerfile.flask. A solução mais robusta é substituir o Dockerfile original pelo nosso Dockerfile.flask.
+O Dockerfile principal foi atualizado para ser compatível com aplicações Flask. Agora ele é baseado em `python:3.11-slim` e configurado corretamente para o ambiente de produção, sem necessidade de renomear arquivos.
 
 ## Instruções para Deploy Correto
-
-### 1. Renomeie Dockerfile.flask para Dockerfile no repositório
-
-```bash
-# Clone seu repositório (se já não tiver feito)
-git clone [URL_DO_SEU_REPOSITÓRIO]
-cd [NOME_DO_REPOSITÓRIO]
-
-# Faça backup do Dockerfile atual
-git mv Dockerfile Dockerfile.original
-
-# Renomeie Dockerfile.flask para Dockerfile
-git mv Dockerfile.flask Dockerfile
-
-# Commit e push das alterações
-git add .
-git commit -m "Usar Dockerfile Flask para deploy"
-git push
-```
 
 ### 2. Configure o EasyPanel para usar o Dockerfile padrão
 
@@ -50,11 +31,11 @@ git push
 
 ### Por que isso vai funcionar:
 
-1. O Dockerfile.flask foi especificamente criado para o seu aplicativo Flask
+1. O Dockerfile foi agora atualizado para ser compatível com o seu aplicativo Flask
 2. Ele usa python:3.11-slim como base (não Alpine Linux)
 3. Inclui configuração PIP_BREAK_SYSTEM_PACKAGES=1 para evitar problemas de ambiente gerenciado
-4. Instala dependências específicas para psycopg2-binary
-5. Configura gunicorn corretamente
+4. Instala dependências específicas para psycopg2-binary (build-essential e libpq-dev)
+5. Configura gunicorn corretamente para executar a aplicação
 
 ## Alternativa: Branch de Deploy
 
