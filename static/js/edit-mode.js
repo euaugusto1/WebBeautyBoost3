@@ -485,14 +485,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const platformSelect = document.createElement('select');
     platformSelect.className = 'edit-input platform-select';
-    [
+    
+    // Lista mais completa de plataformas sociais
+    const platforms = [
       'instagram', 'linkedin', 'github', 'twitter', 'facebook', 'youtube', 'tiktok', 'twitch',
       'pinterest', 'snapchat', 'reddit', 'whatsapp', 'telegram', 'discord', 'medium', 'spotify',
-      'behance', 'dribbble', 'vimeo', 'flickr'
-    ].forEach(platform => {
+      'behance', 'dribbble', 'vimeo', 'flickr', 'mastodon', 'tinder', 'quora', 'soundcloud', 
+      'slack', 'skype', 'wordpress', 'tumblr', 'deviantart', 'meetup', 'gmail',
+      'outlook', 'amazon', 'windows', 'xbox', 'playstation', 'apple'
+    ];
+    
+    // Ordenar plataformas alfabeticamente
+    platforms.sort();
+    
+    platforms.forEach(platform => {
       const option = document.createElement('option');
       option.value = platform;
-      option.textContent = platform;
+      option.textContent = platform.charAt(0).toUpperCase() + platform.slice(1);
       platformSelect.appendChild(option);
     });
     
@@ -548,13 +557,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const iconSelect = document.createElement('select');
     iconSelect.className = 'edit-input icon-select';
-    [
+    
+    // Lista expandida de ícones
+    const icons = [
       'fa-globe', 'fa-code', 'fa-envelope', 'fa-link', 'fa-file', 'fa-video', 'fa-image', 
       'fa-music', 'fa-shopping-cart', 'fa-book', 'fa-graduation-cap', 'fa-briefcase', 
       'fa-map-marker-alt', 'fa-phone', 'fa-calendar', 'fa-certificate', 'fa-trophy',
       'fa-heart', 'fa-star', 'fa-users', 'fa-comments', 'fa-lightbulb', 'fa-chart-bar',
-      'fa-camera', 'fa-tools', 'fa-puzzle-piece'
-    ].forEach(icon => {
+      'fa-camera', 'fa-tools', 'fa-puzzle-piece', 'fa-gem', 'fa-gift', 'fa-podcast',
+      'fa-coffee', 'fa-location-dot', 'fa-id-card', 'fa-ticket', 'fa-film',
+      'fa-palette', 'fa-laptop', 'fa-gamepad', 'fa-hand-holding-heart', 'fa-newspaper',
+      'fa-microphone', 'fa-blog', 'fa-guitar', 'fa-glasses', 'fa-utensils', 'fa-carrot',
+      'fa-plane', 'fa-hotel', 'fa-store', 'fa-medal', 'fa-user-graduate', 'fa-dumbbell',
+      'fa-wallet', 'fa-credit-card', 'fa-key', 'fa-house', 'fa-car'
+    ];
+    
+    // Ordenar ícones alfabeticamente
+    icons.sort();
+    
+    // Adicionar opções ao select
+    icons.forEach(icon => {
       const option = document.createElement('option');
       option.value = icon;
       option.textContent = icon.replace('fa-', '');
@@ -563,13 +585,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const classSelect = document.createElement('select');
     classSelect.className = 'edit-input class-select';
-    [
+    
+    // Lista expandida de classes/estilos
+    const classes = [
       'website', 'store', 'contact', 'project', 'blog', 'video', 'music', 
-      'photo', 'event', 'download', 'social', 'newsletter', 'portfolio'
-    ].forEach(cls => {
+      'photo', 'event', 'download', 'social', 'newsletter', 'portfolio',
+      'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+      'premium', 'new', 'featured', 'special', 'exclusive', 'popular',
+      'limited', 'free', 'pro', 'basic', 'advanced', 'business'
+    ];
+    
+    // Ordenar classes alfabeticamente
+    classes.sort();
+    
+    classes.forEach(cls => {
       const option = document.createElement('option');
       option.value = cls;
-      option.textContent = cls;
+      option.textContent = cls.charAt(0).toUpperCase() + cls.slice(1);
       classSelect.appendChild(option);
     });
     
