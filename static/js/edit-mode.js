@@ -63,6 +63,58 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Tornar campos editáveis
   function makeFieldsEditable() {
+    // Foto de perfil
+    const profileImg = document.querySelector('.profile-img');
+    const imgContainer = profileImg.parentNode;
+    
+    // Criar um wrapper para a imagem e o botão de upload
+    const imgEditWrapper = document.createElement('div');
+    imgEditWrapper.className = 'img-edit-wrapper';
+    
+    // Manter a imagem original
+    const originalImg = profileImg.cloneNode(true);
+    imgEditWrapper.appendChild(originalImg);
+    
+    // Adicionar botão para fazer upload de nova imagem
+    const uploadBtn = document.createElement('button');
+    uploadBtn.className = 'upload-img-btn';
+    uploadBtn.innerHTML = '<i class="fas fa-camera"></i>';
+    uploadBtn.title = 'Alterar foto de perfil';
+    
+    // Criar um input type file oculto
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.className = 'img-file-input';
+    fileInput.style.display = 'none';
+    
+    // Quando o botão for clicado, disparar o input de arquivo
+    uploadBtn.addEventListener('click', function() {
+      fileInput.click();
+    });
+    
+    // Quando um arquivo for selecionado
+    fileInput.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          // Atualizar a URL da imagem para o preview
+          originalImg.src = e.target.result;
+          // Guardar o conteúdo em base64 para enviar ao servidor
+          originalImg.setAttribute('data-image-base64', e.target.result);
+        };
+        
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+    
+    imgEditWrapper.appendChild(uploadBtn);
+    imgEditWrapper.appendChild(fileInput);
+    
+    // Substituir a imagem original pelo wrapper
+    imgContainer.replaceChild(imgEditWrapper, profileImg);
+    
     // Nome do usuário
     const username = document.querySelector('.username');
     const usernameText = username.textContent.replace('•', '').trim();
@@ -341,6 +393,12 @@ document.addEventListener('DOMContentLoaded', function() {
       social_links: [],
       profile_links: []
     };
+    
+    // Verificar se a imagem foi alterada
+    const profileImg = document.querySelector('.img-edit-wrapper img');
+    if (profileImg && profileImg.hasAttribute('data-image-base64')) {
+      data.profile_image = profileImg.getAttribute('data-image-base64');
+    }
     
     // Coletar links sociais
     document.querySelectorAll('.social-edit-wrapper').forEach(wrapper => {

@@ -73,6 +73,7 @@ def index():
         'name': user.name,
         'bio': user.bio,
         'phone': user.phone,
+        'image_url': user.profile_image,
         'social_links': [
             {
                 'platform': link.platform, 
@@ -110,6 +111,38 @@ def update_profile():
         user.name = data.get('name')
         user.bio = data.get('bio')
         user.phone = data.get('phone')
+        
+        # Verificar se há uma nova imagem de perfil
+        if 'profile_image' in data and data['profile_image']:
+            # Extrair apenas a parte base64 da string (remover o prefixo 'data:image/png;base64,')
+            if ',' in data['profile_image']:
+                base64_data = data['profile_image'].split(',')[1]
+            else:
+                base64_data = data['profile_image']
+            
+            # Salvar imagem como arquivo
+            import base64
+            import os
+            from datetime import datetime
+            
+            # Criar diretório de imagens se não existir
+            img_dir = os.path.join('static', 'images', 'uploads')
+            os.makedirs(img_dir, exist_ok=True)
+            
+            # Gerar nome de arquivo único
+            filename = f"profile_{user.id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
+            filepath = os.path.join(img_dir, filename)
+            
+            # Salvar imagem
+            try:
+                with open(filepath, "wb") as fh:
+                    fh.write(base64.b64decode(base64_data))
+                
+                # Atualizar caminho da imagem no usuário
+                user.profile_image = os.path.join('images', 'uploads', filename)
+            except Exception as img_error:
+                print(f"Erro ao salvar imagem: {str(img_error)}")
+                # Continuar mesmo se houver erro na imagem
         
         # Atualizar links sociais
         # Primeiro, remover todos os links existentes
