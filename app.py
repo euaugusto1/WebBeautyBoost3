@@ -269,12 +269,14 @@ def update_profile():
         print(f"Usuário autenticado: {user.username} (ID: {user.id})")
         
         # Atualizar dados do usuário
+        print(f"[DEBUG] Atualizando dados básicos do usuário: nome, bio, descrição...")
         user.name = data.get('name')
         user.bio = data.get('bio')
         user.description = data.get('description', '')
         user.phone = data.get('phone')
         user.copyright_text = data.get('copyright_text', '')
         user.copyright_icon = data.get('copyright_icon', 'fa-copyright')
+        print(f"[DEBUG] Dados básicos atualizados: nome={user.name}, bio={user.bio[:20]}...")
         
         # Atualizar tema e padrão de fundo
         if 'theme' in data and data['theme']:
@@ -374,10 +376,15 @@ def update_profile():
             db.session.add(footer_item)
         
         # Salvar as alterações no banco de dados
+        print(f"[DEBUG] Preparando para salvar no banco de dados...")
         db.session.commit()
+        print(f"[DEBUG] Commit realizado com sucesso!")
+        
         # Invalidar o cache de sessão para forçar recarregar dados do usuário
+        print(f"[DEBUG] Atualizando objeto de usuário para refletir mudanças...")
         db.session.refresh(user)
-        print(f"Perfil atualizado com sucesso para o usuário {user.username}")
+        db.session.expunge_all()  # Limpar a sessão do SQLAlchemy
+        print(f"[DEBUG] Perfil atualizado com sucesso para o usuário {user.username}")
         
         # Recarregar página após salvar - adicionar timestamp para evitar cache
         return jsonify({

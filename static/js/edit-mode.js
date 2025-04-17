@@ -1035,18 +1035,39 @@ function initEditSystem() {
   function collectEditedData() {
     console.log("Coletando dados editados...");
     
+    // Verificar existência dos elementos antes de tentar acessar seus valores
+    const usernameInput = document.querySelector('.username-input');
+    const bioInput = document.querySelector('.bio-input');
+    const descriptionInput = document.querySelector('.description-input');
+    const phoneInput = document.querySelector('.phone-input');
+    const copyrightInput = document.querySelector('.footer-copyright-input');
+    const copyrightIconSelect = document.querySelector('.copyright-wrapper .footer-icon-select');
+    
+    console.log("Elementos de formulário encontrados:", {
+      username: usernameInput ? "Sim" : "Não",
+      bio: bioInput ? "Sim" : "Não",
+      description: descriptionInput ? "Sim" : "Não"
+    });
+    
+    if (!usernameInput || !bioInput) {
+      console.error("Elementos críticos do formulário não encontrados!");
+      showMessage('Erro ao coletar dados do formulário', 'error');
+      return null;
+    }
+    
     const data = {
-      name: document.querySelector('.username-input').value,
-      bio: document.querySelector('.bio-input').value,
-      description: document.querySelector('.description-input') ? document.querySelector('.description-input').value : '',
-      phone: document.querySelector('.phone-input') ? document.querySelector('.phone-input').value : '',
+      name: usernameInput.value,
+      bio: bioInput.value,
+      description: descriptionInput ? descriptionInput.value : '',
+      phone: phoneInput ? phoneInput.value : '',
       social_links: [],
       profile_links: [],
       footer_items: [],
       theme: '',
       pattern: '',
-      copyright_text: document.querySelector('.footer-copyright-input') ? document.querySelector('.footer-copyright-input').value : '',
-      copyright_icon: document.querySelector('.copyright-wrapper .footer-icon-select') ? document.querySelector('.copyright-wrapper .footer-icon-select').value : 'fa-copyright'
+      copyright_text: copyrightInput ? copyrightInput.value : '',
+      copyright_icon: copyrightIconSelect ? copyrightIconSelect.value : 'fa-copyright',
+      timestamp: new Date().getTime()  // Adicionar timestamp para evitar problemas de cache
     };
     
     console.log("Dados básicos coletados:", {
@@ -1129,14 +1150,38 @@ function initEditSystem() {
   // Salvar alterações no servidor
   function saveChanges() {
     const data = collectEditedData();
+    
+    // Verificar se o data é válido
+    if (!data) {
+      console.error("Falha ao coletar dados editados");
+      showMessage('Falha ao coletar dados do formulário', 'error');
+      return;
+    }
+    
     console.log("Dados a serem salvos:", data);
+    
+    // Verificações adicionais antes de enviar
+    if (!data.name || data.name.trim() === '') {
+      showMessage('O nome do perfil não pode estar vazio', 'error');
+      return;
+    }
+    
+    console.log("Enviando requisição para o servidor...");
+    
+    // Mostrar indicador de carregamento
+    const loadingMessage = document.createElement('div');
+    loadingMessage.className = 'message loading';
+    loadingMessage.textContent = 'Salvando alterações...';
+    document.body.appendChild(loadingMessage);
     
     // Enviar dados para o servidor
     fetch('/update-profile', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
       },
+      credentials: 'same-origin',
       body: JSON.stringify(data),
     })
     .then(response => {
