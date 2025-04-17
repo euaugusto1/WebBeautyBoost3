@@ -43,6 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
       themePreviews.forEach(p => p.classList.remove('active'));
       preview.classList.add('active');
       
+      // Salvar a preferência do tema (implementação futura do salvamento no banco de dados)
+      // Por enquanto colocamos um console.log apenas para mostrar que está funcionando
+      console.log(`Tema selecionado: ${themeClass}`);
+      
       // Close the theme panel
       setTimeout(() => {
         themePreviewContainer.classList.remove('active');
