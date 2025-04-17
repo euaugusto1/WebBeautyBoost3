@@ -1,0 +1,84 @@
+Ação
+Commit: Improved deployment instructions
+
+Updated deployment instructions to use the correct Dockerfile and added new instructions for deploying via a specific branch.  Specifically,  `SOLUCAO_FINAL_DEPLOY.md` and `INSTRUCOES_BRANCH_DEPLOY.md` were added, and the primary `Dockerfile` was updated to reflect the changes.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 8580ea19-0134-4eb4-9113-2bf77d58a295
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/e92c9ac1-f45a-45b8-b7f7-a9398957e1e5/5b76efba-e645-453b-aaae-fcd38c8d148d.jpg 
+##########################################
+### Download Github Archive Started...
+### Thu, 17 Apr 2025 19:25:42 GMT
+##########################################
+
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.84kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:18-alpine
+#2 DONE 0.4s
+
+#3 [internal] load metadata for docker.io/library/nginx:stable-alpine
+#3 DONE 0.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [build 1/9] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#5 DONE 0.0s
+
+#6 [production 1/5] FROM docker.io/library/nginx:stable-alpine@sha256:1eadbb07820339e8bbfed18c771691970baee292ec4ab2558f1453d26153e22d
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 4.96MB 0.0s done
+#7 DONE 0.1s
+
+#8 [production 2/5] COPY nginx.conf /etc/nginx/conf.d/default.conf
+#8 CACHED
+
+#9 [build 5/9] RUN if [ -f REQUISITOS.txt ]; then cp REQUISITOS.txt requirements.txt; fi
+#9 CACHED
+
+#10 [build 2/9] WORKDIR /app
+#10 CACHED
+
+#11 [build 4/9] COPY REQUISITOS.txt* ./
+#11 CACHED
+
+#12 [build 6/9] RUN if [ -f requirements.txt ]; then     apk add --no-cache python3 py3-pip &&     python3 -m venv /venv &&     . /venv/bin/activate &&     pip install --no-cache-dir -r requirements.txt; fi
+#12 CACHED
+
+#13 [build 3/9] COPY package*.json ./
+#13 CACHED
+
+#14 [build 7/9] RUN if [ -f package.json ]; then     npm install --production --no-audit --no-fund; fi
+#14 CACHED
+
+#15 [build 8/9] COPY . .
+#15 DONE 0.1s
+
+#16 [build 9/9] RUN if [ -f package.json ]; then     npm run build || echo "Skipping build - not a Node.js project"; fi
+#16 DONE 0.1s
+
+#17 [production 3/5] COPY --from=build /app/dist /usr/share/nginx/html
+#17 ERROR: failed to calculate checksum of ref 2b19ed7e-c5a8-43c0-8184-4a3680df3c3a::j33r7hbkg66szow2w29nf7y3q: "/app/dist": not found
+------
+ > [production 3/5] COPY --from=build /app/dist /usr/share/nginx/html:
+------
+Dockerfile:52
+--------------------
+  50 |     
+  51 |     # Copia os arquivos de build do estágio anterior
+  52 | >>> COPY --from=build /app/dist /usr/share/nginx/html
+  53 |     
+  54 |     # Expõe a porta 80
+--------------------
+ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref 2b19ed7e-c5a8-43c0-8184-4a3680df3c3a::j33r7hbkg66szow2w29nf7y3q: "/app/dist": not found
+##########################################
+### Error
+### Thu, 17 Apr 2025 19:25:43 GMT
+##########################################
