@@ -1,0 +1,69 @@
+<h1>Vercel Deployment Guide</h1>
+<p>This guide explains how to deploy the frontend part of the LinkStack application on Vercel.</p>
+<h2>Prerequisites</h2>
+<p>Vercel account
+Vercel CLI installed
+Git repository with the frontend application code</p>
+<h2>Deployment Configuration</h2>
+<ol>
+<li>Log in to the Vercel CLI:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">vercel login
+</code></pre>
+
+<ol>
+<li>Create a <code>vercel.json</code> file in the project root:</li>
+</ol>
+<pre class="codehilite"><code class="language-json">{
+  &quot;version&quot;: 2,
+  &quot;builds&quot;: [
+    { &quot;src&quot;: &quot;package.json&quot;, &quot;use&quot;: &quot;@vercel/static-build&quot; }
+  ],
+  &quot;routes&quot;: [
+    { &quot;src&quot;: &quot;/(.*)&quot;, &quot;dest&quot;: &quot;/index.html&quot; }
+  ],
+  &quot;env&quot;: {
+    &quot;API_URL&quot;: &quot;https://your-backend-api.com&quot;
+  }
+}
+</code></pre>
+
+<ol>
+<li>Make sure your package.json has a build script:</li>
+</ol>
+<pre class="codehilite"><code class="language-json">&quot;scripts&quot;: {
+  &quot;build&quot;: &quot;react-scripts build&quot;
+}
+</code></pre>
+
+<ol>
+<li>Deploy to Vercel:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">vercel
+</code></pre>
+
+<ol>
+<li>To deploy to production:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">vercel --prod
+</code></pre>
+
+<h2>Environment Variables Configuration</h2>
+<ol>
+<li>In the Vercel dashboard, access your project</li>
+<li>Go to the 'Settings' &gt; 'Environment Variables' tab</li>
+<li>Add the necessary environment variables, such as the backend API URL</li>
+</ol>
+<h2>Backend Integration</h2>
+<ol>
+<li>Make sure your backend is publicly accessible</li>
+<li>Configure CORS in the backend to allow requests from the Vercel URL</li>
+<li>Update the API URL in the frontend to point to the deployed backend</li>
+</ol>
+<h2>Custom Domain Configuration</h2>
+<ol>
+<li>In the Vercel dashboard, access your project</li>
+<li>Go to the 'Settings' &gt; 'Domains' tab</li>
+<li>Add your custom domain</li>
+<li>Follow the instructions to configure the DNS records</li>
+</ol>

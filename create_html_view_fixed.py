@@ -29,285 +29,6 @@ PLATFORMS = {
     "aws": "AWS"
 }
 
-# Template HTML base
-HTML_TEMPLATE = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkStack Deployment Documentation</title>
-    <style>
-        :root {{
-            --primary-color: #4a6cf7;
-            --secondary-color: #6b7280;
-            --background-color: #f9fafb;
-            --text-color: #1f2937;
-            --border-color: #e5e7eb;
-            --sidebar-width: 250px;
-        }}
-        
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            display: flex;
-            min-height: 100vh;
-        }}
-        
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: white;
-            border-right: 1px solid var(--border-color);
-            padding: 20px;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-        }
-        
-        .sidebar h1 {
-            font-size: 1.5rem;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-        
-        .sidebar-section {
-            margin-bottom: 1.5rem;
-        }
-        
-        .sidebar-section h2 {
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-            color: var(--text-color);
-        }
-        
-        .sidebar-section ul {
-            list-style-type: none;
-            padding-left: 0.5rem;
-            margin: 0;
-        }
-        
-        .sidebar-section li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .sidebar-section a {
-            text-decoration: none;
-            color: var(--secondary-color);
-            display: block;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.2s, color 0.2s;
-        }
-        
-        .sidebar-section a:hover,
-        .sidebar-section a.active {
-            background-color: rgba(74, 108, 247, 0.1);
-            color: var(--primary-color);
-        }
-        
-        .content {
-            flex: 1;
-            padding: 30px;
-            margin-left: var(--sidebar-width);
-            max-width: 800px;
-        }
-        
-        .content h1 {
-            color: var(--primary-color);
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .content h2 {
-            color: var(--text-color);
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .content p {
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-        
-        .content ul, .content ol {
-            padding-left: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .content li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .content pre {
-            background-color: #f0f2f5;
-            padding: 1rem;
-            border-radius: 4px;
-            overflow-x: auto;
-            margin-bottom: 1.5rem;
-        }
-        
-        .content code {
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-            font-size: 0.9rem;
-        }
-        
-        .language-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .language-button {
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background-color: white;
-            color: var(--secondary-color);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.2s, color 0.2s;
-        }
-        
-        .language-button:hover,
-        .language-button.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
-            }
-            
-            .content {
-                margin-left: 0;
-                padding: 20px;
-            }
-            
-            body {
-                flex-direction: column;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <h1>LinkStack Deployment</h1>
-        
-        <!-- Platforms Navigation -->
-        <div class="sidebar-section">
-            <h2>Platforms</h2>
-            <ul>
-                {platforms_navigation}
-            </ul>
-        </div>
-        
-        <!-- Languages Navigation -->
-        <div class="sidebar-section">
-            <h2>Languages</h2>
-            <ul>
-                {languages_navigation}
-            </ul>
-        </div>
-    </div>
-    
-    <div class="content">
-        <div class="language-selector">
-            {language_buttons}
-        </div>
-        
-        <div id="doc-content">
-            {content}
-        </div>
-    </div>
-    
-    <script>
-        // Simple client-side routing
-        document.addEventListener('DOMContentLoaded', function() {
-            const contentDiv = document.getElementById('doc-content');
-            const allLinks = document.querySelectorAll('.sidebar a');
-            const languageButtons = document.querySelectorAll('.language-button');
-            
-            // Function to load content
-            async function loadContent(path) {
-                try {
-                    const response = await fetch(path);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const html = await response.text();
-                    contentDiv.innerHTML = html;
-                    
-                    // Update active link
-                    allLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('data-path') === path) {
-                            link.classList.add('active');
-                        }
-                    });
-                    
-                    // Update URL hash
-                    window.location.hash = path;
-                } catch (error) {
-                    console.error('Error loading content:', error);
-                    contentDiv.innerHTML = `<h1>Error</h1><p>Could not load the requested content: ${error.message}</p>`;
-                }
-            }
-            
-            // Handle link clicks
-            allLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const path = this.getAttribute('data-path');
-                    loadContent(path);
-                });
-            });
-            
-            // Handle language button clicks
-            languageButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const activePlatformLink = document.querySelector('.sidebar a.active');
-                    if (activePlatformLink) {
-                        const currentPath = activePlatformLink.getAttribute('data-path');
-                        const platform = currentPath.split('_')[1].toLowerCase();
-                        const language = this.getAttribute('data-language');
-                        const newPath = `docs/DEPLOY_${platform.toUpperCase()}_${language}.html`;
-                        loadContent(newPath);
-                    }
-                    
-                    // Update active button
-                    languageButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-            
-            // Handle initial load
-            if (window.location.hash) {
-                loadContent(window.location.hash.substring(1));
-            } else {
-                // Default document to load
-                const defaultDoc = 'docs/DEPLOY_EASYPANEL_pt.html';
-                loadContent(defaultDoc);
-            }
-        });
-    </script>
-</body>
-</html>
-"""
-
 def process_markdown_files(docs_dir):
     """
     Processa os arquivos markdown e gera arquivos HTML correspondentes
@@ -381,13 +102,284 @@ def generate_index_html(docs_dir, markdown_files):
     # Conteúdo inicial
     initial_content = "<h1>Selecione uma plataforma e idioma</h1><p>Escolha uma plataforma no menu lateral para ver a documentação de deployment.</p>"
     
-    # Gerar o HTML completo
-    html_content = HTML_TEMPLATE.format(
-        platforms_navigation=platforms_navigation,
-        languages_navigation=languages_navigation,
-        language_buttons=language_buttons,
-        content=initial_content
-    )
+    # Template HTML
+    html_content = f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkStack Deployment Documentation</title>
+    <style>
+        :root {{
+            --primary-color: #4a6cf7;
+            --secondary-color: #6b7280;
+            --background-color: #f9fafb;
+            --text-color: #1f2937;
+            --border-color: #e5e7eb;
+            --sidebar-width: 250px;
+        }}
+        
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }}
+        
+        .sidebar {{
+            width: var(--sidebar-width);
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        }}
+        
+        .sidebar h1 {{
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }}
+        
+        .sidebar-section {{
+            margin-bottom: 1.5rem;
+        }}
+        
+        .sidebar-section h2 {{
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-color);
+        }}
+        
+        .sidebar-section ul {{
+            list-style-type: none;
+            padding-left: 0.5rem;
+            margin: 0;
+        }}
+        
+        .sidebar-section li {{
+            margin-bottom: 0.5rem;
+        }}
+        
+        .sidebar-section a {{
+            text-decoration: none;
+            color: var(--secondary-color);
+            display: block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s, color 0.2s;
+        }}
+        
+        .sidebar-section a:hover,
+        .sidebar-section a.active {{
+            background-color: rgba(74, 108, 247, 0.1);
+            color: var(--primary-color);
+        }}
+        
+        .content {{
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--sidebar-width);
+            max-width: 800px;
+        }}
+        
+        .content h1 {{
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }}
+        
+        .content h2 {{
+            color: var(--text-color);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }}
+        
+        .content p {{
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }}
+        
+        .content ul, .content ol {{
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }}
+        
+        .content li {{
+            margin-bottom: 0.5rem;
+        }}
+        
+        .content pre {{
+            background-color: #f0f2f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }}
+        
+        .content code {{
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9rem;
+        }}
+        
+        .language-selector {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }}
+        
+        .language-button {{
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+            color: var(--secondary-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s, color 0.2s;
+        }}
+        
+        .language-button:hover,
+        .language-button.active {{
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }}
+        
+        @media (max-width: 768px) {{
+            .sidebar {{
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }}
+            
+            .content {{
+                margin-left: 0;
+                padding: 20px;
+            }}
+            
+            body {{
+                flex-direction: column;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>LinkStack Deployment</h1>
+        
+        <!-- Platforms Navigation -->
+        <div class="sidebar-section">
+            <h2>Platforms</h2>
+            <ul>
+                {platforms_navigation}
+            </ul>
+        </div>
+        
+        <!-- Languages Navigation -->
+        <div class="sidebar-section">
+            <h2>Languages</h2>
+            <ul>
+                {languages_navigation}
+            </ul>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="language-selector">
+            {language_buttons}
+        </div>
+        
+        <div id="doc-content">
+            {initial_content}
+        </div>
+    </div>
+    
+    <script>
+        // Simple client-side routing
+        document.addEventListener('DOMContentLoaded', function() {{
+            const contentDiv = document.getElementById('doc-content');
+            const allLinks = document.querySelectorAll('.sidebar a');
+            const languageButtons = document.querySelectorAll('.language-button');
+            
+            // Function to load content
+            async function loadContent(path) {{
+                try {{
+                    const response = await fetch(path);
+                    if (!response.ok) {{
+                        throw new Error(`HTTP error! status: ${{response.status}}`);
+                    }}
+                    const html = await response.text();
+                    contentDiv.innerHTML = html;
+                    
+                    // Update active link
+                    allLinks.forEach(link => {{
+                        link.classList.remove('active');
+                        if (link.getAttribute('data-path') === path) {{
+                            link.classList.add('active');
+                        }}
+                    }});
+                    
+                    // Update URL hash
+                    window.location.hash = path;
+                }} catch (error) {{
+                    console.error('Error loading content:', error);
+                    contentDiv.innerHTML = `<h1>Error</h1><p>Could not load the requested content: ${{error.message}}</p>`;
+                }}
+            }}
+            
+            // Handle link clicks
+            allLinks.forEach(link => {{
+                link.addEventListener('click', function(e) {{
+                    e.preventDefault();
+                    const path = this.getAttribute('data-path');
+                    loadContent(path);
+                }});
+            }});
+            
+            // Handle language button clicks
+            languageButtons.forEach(button => {{
+                button.addEventListener('click', function() {{
+                    const activePlatformLink = document.querySelector('.sidebar a.active');
+                    if (activePlatformLink) {{
+                        const currentPath = activePlatformLink.getAttribute('data-path');
+                        const platform = currentPath.split('_')[1].toLowerCase();
+                        const language = this.getAttribute('data-language');
+                        const newPath = `docs/DEPLOY_${{platform.toUpperCase()}}_${{language}}.html`;
+                        loadContent(newPath);
+                    }}
+                    
+                    // Update active button
+                    languageButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                }});
+            }});
+            
+            // Handle initial load
+            if (window.location.hash) {{
+                loadContent(window.location.hash.substring(1));
+            }} else {{
+                // Default document to load
+                const defaultDoc = 'docs/DEPLOY_EASYPANEL_pt.html';
+                loadContent(defaultDoc);
+            }}
+        }});
+    </script>
+</body>
+</html>
+    """
     
     # Salvar o arquivo index.html
     index_path = 'index.html'

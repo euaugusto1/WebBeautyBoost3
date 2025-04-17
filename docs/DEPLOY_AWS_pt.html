@@ -1,0 +1,85 @@
+<h1>Guia de Deploy na AWS</h1>
+<p>Este guia explica como implantar a aplicação LinkStack na Amazon Web Services (AWS).</p>
+<h2>Pré-requisitos</h2>
+<p>Conta na AWS
+AWS CLI configurado
+Docker instalado (para criar a imagem)
+Repositório no Amazon ECR criado</p>
+<h2>Preparação da Aplicação</h2>
+<ol>
+<li>Certifique-se de que o Dockerfile.flask esteja configurado corretamente</li>
+<li>Construa a imagem Docker:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">docker build -f Dockerfile.flask -t linkstack-app .
+</code></pre>
+
+<h2>Deploy no Amazon ECS</h2>
+<ol>
+<li>Faça login no Amazon ECR:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">aws ecr get-login-password --region sua-regiao | docker login --username AWS --password-stdin seu-id-conta.dkr.ecr.sua-regiao.amazonaws.com
+</code></pre>
+
+<ol>
+<li>Marque a imagem Docker para o ECR:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">docker tag linkstack-app:latest seu-id-conta.dkr.ecr.sua-regiao.amazonaws.com/linkstack-app:latest
+</code></pre>
+
+<ol>
+<li>Envie a imagem para o ECR:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">docker push seu-id-conta.dkr.ecr.sua-regiao.amazonaws.com/linkstack-app:latest
+</code></pre>
+
+<ol>
+<li>Crie um cluster ECS (se ainda não tiver um):</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">aws ecs create-cluster --cluster-name linkstack-cluster
+</code></pre>
+
+<ol>
+<li>Crie uma definição de tarefa para o serviço:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash"># Crie um arquivo de definição de tarefa (task-definition.json)
+aws ecs register-task-definition --cli-input-json file://task-definition.json
+</code></pre>
+
+<ol>
+<li>Crie um serviço ECS para executar a tarefa:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">aws ecs create-service --cluster linkstack-cluster --service-name linkstack-service --task-definition linkstack-task --desired-count 1 --launch-type FARGATE --network-configuration &quot;awsvpcConfiguration={subnets=[subnet-12345678],securityGroups=[sg-12345678],assignPublicIp=ENABLED}&quot;
+</code></pre>
+
+<h2>Configuração do Banco de Dados</h2>
+<ol>
+<li>Crie uma instância RDS PostgreSQL:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">aws rds create-db-instance --db-instance-identifier linkstack-db --db-instance-class db.t3.micro --engine postgres --master-username postgres --master-user-password sua_senha_segura --allocated-storage 20
+</code></pre>
+
+<ol>
+<li>Atualize as variáveis de ambiente no serviço ECS para apontar para o RDS.</li>
+</ol>
+<h2>Configuração de Load Balancer</h2>
+<ol>
+<li>Crie um Application Load Balancer (ALB):</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">aws elbv2 create-load-balancer --name linkstack-lb --subnets subnet-12345678 subnet-87654321 --security-groups sg-12345678
+</code></pre>
+
+<ol>
+<li>Crie um grupo de destino:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">aws elbv2 create-target-group --name linkstack-tg --protocol HTTP --port 5000 --vpc-id vpc-12345678 --target-type ip --health-check-path / --health-check-interval-seconds 30
+</code></pre>
+
+<ol>
+<li>Crie um listener:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">aws elbv2 create-listener --load-balancer-arn arn:aws:elasticloadbalancing:sua-regiao:seu-id-conta:loadbalancer/app/linkstack-lb/1234567890abcdef --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:sua-regiao:seu-id-conta:targetgroup/linkstack-tg/1234567890abcdef
+</code></pre>
+
+<ol>
+<li>Atualize o serviço ECS para usar o load balancer.</li>
+</ol>

@@ -1,0 +1,70 @@
+<h1>Heroku Deployment Guide</h1>
+<p>This guide explains how to deploy the LinkStack application on Heroku.</p>
+<h2>Prerequisites</h2>
+<p>Heroku account
+Heroku CLI installed
+Git installed
+Git repository with the application code</p>
+<h2>Deployment Configuration</h2>
+<ol>
+<li>Create a <code>runtime.txt</code> file in the project root with the following content:</li>
+</ol>
+<pre class="codehilite"><code>python-3.11.0
+</code></pre>
+
+<ol>
+<li>Rename the <code>REQUISITOS.txt</code> file to <code>requirements.txt</code>:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">git mv REQUISITOS.txt requirements.txt
+</code></pre>
+
+<ol>
+<li>Make sure the <code>Procfile</code> has the following content:</li>
+</ol>
+<pre class="codehilite"><code>web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --threads 2 main:app
+</code></pre>
+
+<ol>
+<li>Login to the Heroku CLI:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku login
+</code></pre>
+
+<ol>
+<li>Create a new Heroku application:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku create your-linkstack-app
+</code></pre>
+
+<ol>
+<li>Provision a PostgreSQL database:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku addons:create heroku-postgresql:mini
+</code></pre>
+
+<ol>
+<li>Configure environment variables:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku config:set SESSION_SECRET=your_secret_key_here
+</code></pre>
+
+<ol>
+<li>Deploy the application:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">git add .
+git commit -m &quot;Prepared for Heroku deployment&quot;
+git push heroku main
+</code></pre>
+
+<h2>Verification</h2>
+<ol>
+<li>Open the application in your browser:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku open
+</code></pre>
+
+<ol>
+<li>Check logs for debugging:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku logs --tail
+</code></pre>

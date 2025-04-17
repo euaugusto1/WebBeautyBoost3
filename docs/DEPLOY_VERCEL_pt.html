@@ -1,0 +1,69 @@
+<h1>Guia de Deploy na Vercel</h1>
+<p>Este guia explica como implantar a parte frontend da aplicação LinkStack na Vercel.</p>
+<h2>Pré-requisitos</h2>
+<p>Conta na Vercel
+Vercel CLI instalado
+Repositório Git com o código da aplicação frontend</p>
+<h2>Configuração do Deploy</h2>
+<ol>
+<li>Faça login na Vercel CLI:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">vercel login
+</code></pre>
+
+<ol>
+<li>Crie um arquivo <code>vercel.json</code> na raiz do projeto:</li>
+</ol>
+<pre class="codehilite"><code class="language-json">{
+  &quot;version&quot;: 2,
+  &quot;builds&quot;: [
+    { &quot;src&quot;: &quot;package.json&quot;, &quot;use&quot;: &quot;@vercel/static-build&quot; }
+  ],
+  &quot;routes&quot;: [
+    { &quot;src&quot;: &quot;/(.*)&quot;, &quot;dest&quot;: &quot;/index.html&quot; }
+  ],
+  &quot;env&quot;: {
+    &quot;API_URL&quot;: &quot;https://seu-backend-api.com&quot;
+  }
+}
+</code></pre>
+
+<ol>
+<li>Certifique-se de que seu package.json tem um script de build:</li>
+</ol>
+<pre class="codehilite"><code class="language-json">&quot;scripts&quot;: {
+  &quot;build&quot;: &quot;react-scripts build&quot;
+}
+</code></pre>
+
+<ol>
+<li>Faça o deploy para a Vercel:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">vercel
+</code></pre>
+
+<ol>
+<li>Para fazer o deploy para produção:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">vercel --prod
+</code></pre>
+
+<h2>Configuração de Variáveis de Ambiente</h2>
+<ol>
+<li>No painel da Vercel, acesse seu projeto</li>
+<li>Vá para a guia 'Settings' &gt; 'Environment Variables'</li>
+<li>Adicione as variáveis de ambiente necessárias, como a URL da API do backend</li>
+</ol>
+<h2>Integração com o Backend</h2>
+<ol>
+<li>Certifique-se de que seu backend está acessível publicamente</li>
+<li>Configure o CORS no backend para permitir solicitações da URL da Vercel</li>
+<li>Atualize a URL da API no frontend para apontar para o backend implantado</li>
+</ol>
+<h2>Configuração de Domínio Personalizado</h2>
+<ol>
+<li>No painel da Vercel, acesse seu projeto</li>
+<li>Vá para a guia 'Settings' &gt; 'Domains'</li>
+<li>Adicione seu domínio personalizado</li>
+<li>Siga as instruções para configurar os registros DNS</li>
+</ol>

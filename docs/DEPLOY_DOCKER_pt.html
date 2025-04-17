@@ -1,0 +1,92 @@
+<h1>Guia de Deploy com Docker</h1>
+<p>Este guia explica como implantar a aplicação LinkStack usando Docker.</p>
+<h2>Pré-requisitos</h2>
+<p>Docker instalado
+Docker Compose instalado (opcional, mas recomendado)
+Repositório Git com o código da aplicação</p>
+<h2>Configuração do Deploy</h2>
+<ol>
+<li>Certifique-se de que o Dockerfile está configurado corretamente:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash"># Verifique se está usando o Dockerfile.flask como base
+cat Dockerfile.flask
+</code></pre>
+
+<ol>
+<li>Crie um arquivo <code>docker-compose.yml</code> na raiz do projeto:</li>
+</ol>
+<pre class="codehilite"><code class="language-yaml">version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - &quot;5000:5000&quot;
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:senha@db:5432/postgres
+      - PGHOST=db
+      - PGPORT=5432
+      - PGUSER=postgres
+      - PGPASSWORD=senha
+      - PGDATABASE=postgres
+      - SESSION_SECRET=sua_chave_secreta_aqui
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=senha
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+
+volumes:
+  postgres_data:
+</code></pre>
+
+<ol>
+<li>Construa e inicie os contêineres:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">docker-compose up -d
+</code></pre>
+
+<h2>Verificação</h2>
+<ol>
+<li>Verifique se os contêineres estão em execução:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">docker-compose ps
+</code></pre>
+
+<ol>
+<li>Acesse a aplicação em seu navegador:</li>
+</ol>
+<pre class="codehilite"><code>http://localhost:5000
+</code></pre>
+
+<ol>
+<li>Verifique os logs para depuração:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">docker-compose logs -f app
+</code></pre>
+
+<h2>Deploy em Produção</h2>
+<p>Para um ambiente de produção, é recomendável usar um proxy reverso como Nginx ou Traefik para lidar com o tráfego HTTPS.
+1. Adicione um serviço Nginx ao seu <code>docker-compose.yml</code>:</p>
+<pre class="codehilite"><code class="language-yaml">  nginx:
+    image: nginx:alpine
+    ports:
+      - &quot;80:80&quot;
+      - &quot;443:443&quot;
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    depends_on:
+      - app
+</code></pre>
+
+<ol>
+<li>Configure o Nginx para encaminhar o tráfego para o aplicativo Flask.</li>
+</ol>

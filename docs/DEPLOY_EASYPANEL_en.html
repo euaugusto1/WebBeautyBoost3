@@ -1,0 +1,39 @@
+<h1>EasyPanel Deployment Guide</h1>
+<p>This guide explains how to deploy the LinkStack application on EasyPanel.</p>
+<h2>Prerequisites</h2>
+<p>EasyPanel account
+Git repository with the application code
+Configured PostgreSQL database</p>
+<h2>Deployment Configuration</h2>
+<ol>
+<li>Rename the <code>Dockerfile.flask</code> file to <code>Dockerfile</code>:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">git mv Dockerfile Dockerfile.original
+git mv Dockerfile.flask Dockerfile
+git add .
+git commit -m &quot;Prepare Dockerfile for deployment&quot;
+git push
+</code></pre>
+
+<ol>
+<li>In EasyPanel, create a new Custom service.</li>
+<li>Configure the service to use the Dockerfile.</li>
+<li>Configure the necessary environment variables:</li>
+</ol>
+<h2>Environment Variables</h2>
+<pre class="codehilite"><code>DATABASE_URL=postgresql://postgres:password@linkstack-db:5432/postgres
+PGHOST=linkstack-db
+PGPORT=5432
+PGUSER=postgres
+PGPASSWORD=your_secure_password
+PGDATABASE=postgres
+SESSION_SECRET=your_secret_key_here
+</code></pre>
+
+<h2>Verification</h2>
+<ol>
+<li>Check the build logs in EasyPanel</li>
+<li>Make sure the container is running</li>
+<li>Verify that the database is properly configured</li>
+<li>Test the application by accessing the URL provided by EasyPanel</li>
+</ol>

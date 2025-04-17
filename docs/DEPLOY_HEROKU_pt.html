@@ -1,0 +1,70 @@
+<h1>Guia de Deploy no Heroku</h1>
+<p>Este guia explica como implantar a aplicação LinkStack no Heroku.</p>
+<h2>Pré-requisitos</h2>
+<p>Conta no Heroku
+Heroku CLI instalado
+Git instalado
+Repositório Git com o código da aplicação</p>
+<h2>Configuração do Deploy</h2>
+<ol>
+<li>Crie um arquivo <code>runtime.txt</code> na raiz do projeto com o seguinte conteúdo:</li>
+</ol>
+<pre class="codehilite"><code>python-3.11.0
+</code></pre>
+
+<ol>
+<li>Renomeie o arquivo <code>REQUISITOS.txt</code> para <code>requirements.txt</code>:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">git mv REQUISITOS.txt requirements.txt
+</code></pre>
+
+<ol>
+<li>Certifique-se de que o arquivo <code>Procfile</code> tenha o seguinte conteúdo:</li>
+</ol>
+<pre class="codehilite"><code>web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --threads 2 main:app
+</code></pre>
+
+<ol>
+<li>Faça login no Heroku CLI:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku login
+</code></pre>
+
+<ol>
+<li>Crie um novo aplicativo Heroku:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku create seu-app-linkstack
+</code></pre>
+
+<ol>
+<li>Provisione um banco de dados PostgreSQL:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku addons:create heroku-postgresql:mini
+</code></pre>
+
+<ol>
+<li>Configure as variáveis de ambiente:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku config:set SESSION_SECRET=sua_chave_secreta_aqui
+</code></pre>
+
+<ol>
+<li>Faça o deploy do aplicativo:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">git add .
+git commit -m &quot;Preparado para deploy no Heroku&quot;
+git push heroku main
+</code></pre>
+
+<h2>Verificação</h2>
+<ol>
+<li>Abra o aplicativo em seu navegador:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku open
+</code></pre>
+
+<ol>
+<li>Verifique os logs para depuração:</li>
+</ol>
+<pre class="codehilite"><code class="language-bash">heroku logs --tail
+</code></pre>
