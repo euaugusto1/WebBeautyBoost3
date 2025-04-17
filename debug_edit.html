@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Teste para Edição</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste de Edição do Perfil</h1>
+    <p>Este formulário testa a funcionalidade de edição do perfil diretamente</p>
+    
+    <form id="testForm">
+        <div class="form-group">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" value="Teste de Edição">
+        </div>
+        
+        <div class="form-group">
+            <label for="bio">Bio:</label>
+            <textarea id="bio" name="bio">Esta é uma bio de teste para verificar a funcionalidade de edição.</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Descrição:</label>
+            <textarea id="description" name="description">Esta é uma descrição de teste mais detalhada sobre o perfil.</textarea>
+        </div>
+        
+        <button type="button" id="submitButton">Salvar Alterações</button>
+    </form>
+    
+    <div class="result">
+        <h3>Resposta:</h3>
+        <pre id="resultDisplay"></pre>
+    </div>
+    
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function() {
+            const data = {
+                name: document.getElementById('name').value,
+                bio: document.getElementById('bio').value,
+                description: document.getElementById('description').value,
+                social_links: [],
+                profile_links: [],
+                footer_items: [],
+                theme: 'theme-1',
+                pattern: 'none',
+                timestamp: new Date().getTime()
+            };
+            
+            // Mostrar os dados que serão enviados
+            document.getElementById('resultDisplay').textContent = 'Enviando dados...\n\n' + JSON.stringify(data, null, 2);
+            
+            // Enviar para o servidor
+            fetch('/update-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                document.getElementById('resultDisplay').textContent += '\n\nResposta Status: ' + response.status;
+                return response.text();
+            })
+            .then(text => {
+                try {
+                    const data = JSON.parse(text);
+                    document.getElementById('resultDisplay').textContent += '\n\nResposta JSON:\n' + JSON.stringify(data, null, 2);
+                } catch (e) {
+                    document.getElementById('resultDisplay').textContent += '\n\nResposta Texto:\n' + text;
+                }
+            })
+            .catch(error => {
+                document.getElementById('resultDisplay').textContent += '\n\nErro: ' + error.message;
+            });
+        });
+    </script>
+</body>
+</html>

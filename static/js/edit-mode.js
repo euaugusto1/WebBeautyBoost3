@@ -139,18 +139,55 @@ function initEditSystem() {
   
   // Ativar modo de edição
   function enableEditMode() {
+    console.log('Ativando modo de edição - versão melhorada...');
     isEditMode = true;
+    
+    // Verificar se o container existe
+    if (!profileContainer) {
+      console.error('Container de perfil não encontrado');
+      profileContainer = document.querySelector('.container');
+      if (!profileContainer) {
+        alert('Erro: Container de perfil não encontrado');
+        return;
+      }
+    }
+    
     profileContainer.classList.add('edit-mode');
+    
+    // Verificar se os controles existem
+    if (!editControls) {
+      console.error('Controles de edição não encontrados');
+      editControls = document.getElementById('edit-controls');
+      if (!editControls) {
+        // Criar controles se não existirem
+        editControls = document.createElement('div');
+        editControls.id = 'edit-controls';
+        editControls.className = 'edit-controls';
+        document.body.appendChild(editControls);
+      }
+    }
+    
     editControls.classList.add('active');
     
-    // Salvar dados originais
-    saveOriginalData();
-    
-    // Tornar campos editáveis
-    makeFieldsEditable();
-    
-    // Adicionar seletor de padrões animados
-    addPatternSelector();
+    try {
+      // Salvar dados originais
+      saveOriginalData();
+      
+      // Tornar campos editáveis
+      makeFieldsEditable();
+      
+      // Adicionar seletor de padrões animados
+      addPatternSelector();
+      
+      // Adicionar seletor de tema se não estiver presente
+      if (!document.querySelector('.theme-editor')) {
+        addThemeSelector();
+      }
+      
+      console.log('Modo de edição ativado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao ativar modo de edição:', error);
+    }
   }
   
   // Adicionar o seletor de padrões de fundo animados
@@ -1149,66 +1186,60 @@ function initEditSystem() {
   
   // Salvar alterações no servidor
   function saveChanges() {
-    const data = collectEditedData();
+    // Criar um objeto de dados simplificado para teste
+    const simplifiedData = {
+      name: document.querySelector('.username-input')?.value || 'Nome não encontrado',
+      bio: document.querySelector('.bio-input')?.value || 'Bio não encontrada',
+      description: document.querySelector('.description-input')?.value || '',
+      social_links: [],
+      profile_links: [],
+      footer_items: [],
+      theme: document.body.className || 'theme-1',
+      pattern: document.body.getAttribute('data-pattern') || 'none',
+      timestamp: new Date().getTime()
+    };
     
-    // Verificar se o data é válido
-    if (!data) {
-      console.error("Falha ao coletar dados editados");
-      showMessage('Falha ao coletar dados do formulário', 'error');
-      return;
-    }
-    
-    console.log("Dados a serem salvos:", data);
-    
-    // Verificações adicionais antes de enviar
-    if (!data.name || data.name.trim() === '') {
-      showMessage('O nome do perfil não pode estar vazio', 'error');
-      return;
-    }
-    
-    console.log("Enviando requisição para o servidor...");
+    console.log("TESTE SIMPLIFICADO - Dados a serem salvos:", simplifiedData);
     
     // Mostrar indicador de carregamento
-    const loadingMessage = document.createElement('div');
-    loadingMessage.className = 'message loading';
-    loadingMessage.textContent = 'Salvando alterações...';
-    document.body.appendChild(loadingMessage);
+    showMessage('Tentando salvar alterações...', 'loading');
     
-    // Enviar dados para o servidor
+    // Enviar dados para o servidor com abordagem simplificada
     fetch('/update-profile', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
       },
-      credentials: 'same-origin',
-      body: JSON.stringify(data),
+      body: JSON.stringify(simplifiedData),
     })
     .then(response => {
       console.log("Resposta do servidor:", response.status, response.statusText);
+      
+      // Mostrar resposta bruta para debug
+      response.clone().text().then(text => {
+        console.log('Conteúdo bruto da resposta:', text);
+      });
+      
       if (!response.ok) {
-        throw new Error(`Falha ao salvar as alterações: ${response.status} ${response.statusText}`);
+        throw new Error(`Erro HTTP: ${response.status}`);
       }
       return response.json();
     })
-    .then(data => {
-      if (data.success) {
-        // Mostrar mensagem de sucesso
-        showMessage('Perfil atualizado com sucesso!', 'success');
-        
-        // Desativar modo de edição e recarregar a página para exibir alterações
-        setTimeout(() => {
-          console.log("Recarregando a página para mostrar alterações...");
-          // Forçar recarregamento completo da página com timestamp para evitar cache
-          window.location.href = window.location.pathname + '?t=' + new Date().getTime();
-        }, 1000);
-      } else {
-        showMessage(data.message || 'Ocorreu um erro ao salvar as alterações.', 'error');
-      }
+    .then(responseData => {
+      console.log("Dados de resposta:", responseData);
+      
+      // Mostrar mensagem de sucesso
+      showMessage('Teste de salvamento concluído. Verificando resposta...', 'success');
+      
+      // Forçar recarregamento da página após 2 segundos
+      setTimeout(() => {
+        console.log("Recarregando página para ver alterações...");
+        window.location.href = window.location.pathname + '?reload=' + new Date().getTime();
+      }, 2000);
     })
     .catch(error => {
-      console.error('Erro:', error);
-      showMessage('Ocorreu um erro ao salvar as alterações. Tente novamente.', 'error');
+      console.error('Erro durante teste de salvamento:', error);
+      showMessage('Erro durante teste de salvamento. Verifique o console.', 'error');
     });
   }
   

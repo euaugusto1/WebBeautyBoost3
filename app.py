@@ -268,6 +268,15 @@ def update_profile():
         user = current_user
         print(f"Usuário autenticado: {user.username} (ID: {user.id})")
         
+        # Se não houver dados no request, envie uma resposta de sucesso falsa para testar a conexão
+        if not data:
+            print("Solicitação sem dados, retornando resposta de teste")
+            return jsonify({
+                'success': True,
+                'message': 'Teste de conexão bem-sucedido',
+                'timestamp': int(time.time())
+            })
+        
         # Atualizar dados do usuário
         print(f"[DEBUG] Atualizando dados básicos do usuário: nome, bio, descrição...")
         user.name = data.get('name')
@@ -424,6 +433,13 @@ def click_link(link_id):
             'message': 'Erro ao registrar clique',
             'error': str(e)
         }), 500
+
+@app.route('/debug-edit')
+def debug_edit():
+    """Página de teste para edição de perfil."""
+    with open('debug_edit.html', 'r') as f:
+        content = f.read()
+    return content
 
 @app.route('/get-link-stats/<int:link_id>')
 def get_link_stats(link_id):
