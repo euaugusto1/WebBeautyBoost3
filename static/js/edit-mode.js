@@ -1,3 +1,10 @@
+// Declarar variáveis no escopo global para que possam ser acessadas por todas as funções
+let editToggle;
+let editControls; 
+let profileContainer;
+let isEditMode = false;
+let originalData = {};
+
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Edit Mode: DOM completamente carregado');
   
@@ -5,38 +12,39 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
     initEditSystem();
   }, 100);
+});
+
+// Definir a função de clique de edição no escopo global
+window.handleEditButtonClick = function() {
+  console.log('Função handleEditButtonClick chamada');
+  enableEditMode();
+  createActionButtons();
+  return false; // Prevenir comportamentos padrão
+};
+
+function initEditSystem() {
+  // Elementos principais
+  editToggle = document.getElementById('edit-toggle');
+  console.log('Edit Toggle Button encontrado:', editToggle);
   
-  function initEditSystem() {
-    // Elementos principais
-    const editToggle = document.getElementById('edit-toggle');
-    console.log('Edit Toggle Button encontrado:', editToggle);
+  // Os botões de salvar e cancelar são criados dinamicamente quando o modo de edição é ativado
+  editControls = document.getElementById('edit-controls');
+  profileContainer = document.querySelector('.container');
+  
+  // Verificar se o botão de edição existe
+  if (editToggle) {
+    // Configuração adicional do botão para garantir visibilidade
+    editToggle.style.visibility = 'visible';
+    editToggle.style.opacity = '1';
+    editToggle.style.zIndex = '10000';
+    editToggle.style.pointerEvents = 'auto';
     
-    // Os botões de salvar e cancelar são criados dinamicamente quando o modo de edição é ativado
-    const editControls = document.getElementById('edit-controls');
-    const profileContainer = document.querySelector('.container');
+    // Adicionar evento click diretamente
+    editToggle.onclick = window.handleEditButtonClick;
     
-    // Verificar se o botão de edição existe
-    if (editToggle) {
-      // Configuração adicional do botão para garantir visibilidade
-      editToggle.style.visibility = 'visible';
-      editToggle.style.opacity = '1';
-      editToggle.style.zIndex = '10000';
-      editToggle.style.pointerEvents = 'auto';
-      
-      // Função direta no botão que será executada ao clicar
-      window.handleEditButtonClick = function() {
-        console.log('Função handleEditButtonClick chamada');
-        enableEditMode();
-        createActionButtons();
-        return false; // Prevenir comportamentos padrão
-      };
-      
-      // Adicionar evento click diretamente
-      editToggle.onclick = window.handleEditButtonClick;
-      
-      console.log('Botão de edição inicializado com sucesso.');
-    } else {
-      console.error('Botão de edição não encontrado!');
+    console.log('Botão de edição inicializado com sucesso.');
+  } else {
+    console.error('Botão de edição não encontrado!');
       
       // Criar o botão manualmente se não existir
       const newEditButton = document.createElement('button');
