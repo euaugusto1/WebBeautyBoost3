@@ -69,9 +69,8 @@ function initEditSystem() {
     }
   }
   
-  // Estado de edição
-  let isEditMode = false;
-  let originalData = {};
+  // Estas variáveis já estão declaradas no escopo global
+  // Não precisamos redeclará-las aqui
   
   // Guardar dados originais para restaurar em caso de cancelamento
   function saveOriginalData() {
@@ -1204,6 +1203,7 @@ function initEditSystem() {
   }
   
   // Verificar se botão de edição existe e adicionar eventos
+  /* Este bloco está causando erro porque já configuramos o evento de clique no início do arquivo.
   if (editToggle) {
     console.log('Adicionando event listener ao botão de edição existente');
     // Remover event listeners antigos (se houver)
@@ -1219,6 +1219,7 @@ function initEditSystem() {
       createActionButtons(); // Criar botões quando o modo de edição for habilitado
     });
   } else {
+  */
     console.error('Botão de edição não encontrado mesmo após tentativa de criação!');
-  }
+  //}
 });

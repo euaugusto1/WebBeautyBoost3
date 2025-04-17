@@ -25,7 +25,7 @@
   align-items: center !important;
   cursor: pointer !important;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
-  z-index: 100000 !important; /* Valor muito alto para garantir que fique por cima de tudo */
+  z-index: 9999999 !important; /* Valor extremamente alto para garantir que fique por cima de tudo */
   transition: all 0.3s ease !important;
   font-size: 16px !important;
   font-weight: bold !important;
@@ -35,6 +35,19 @@
   pointer-events: auto !important;
   text-transform: uppercase !important;
   letter-spacing: 1px !important;
+  animation: pulse-effect 2s infinite; /* Adiciona animação para chamar atenção */
+}
+
+@keyframes pulse-effect {
+  0% {
+    box-shadow: 0 0 0 0 rgba(106, 17, 203, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(106, 17, 203, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(106, 17, 203, 0);
+  }
 }
 
 .edit-toggle:hover {
