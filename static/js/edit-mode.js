@@ -359,10 +359,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     footerContainer.appendChild(addFooterBtn);
     
-    // Add theme selector in edit mode
+    // Add theme selector in edit mode (as a floating panel)
     const themeSwitcher = document.createElement('div');
     themeSwitcher.className = 'theme-editor';
     themeSwitcher.innerHTML = '<h3>Escolha um tema</h3>';
+    
+    // Add toggle button for theme editor
+    const themeToggleBtn = document.createElement('button');
+    themeToggleBtn.className = 'theme-toggle-btn';
+    themeToggleBtn.innerHTML = '<i class="fas fa-palette"></i>';
+    themeToggleBtn.addEventListener('click', function() {
+      themeSwitcher.classList.toggle('active');
+    });
+    
+    themeSwitcher.appendChild(themeToggleBtn);
     
     const themeSelect = document.createElement('div');
     themeSelect.className = 'theme-select-grid';
@@ -372,6 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const themeOption = document.createElement('div');
       themeOption.className = `theme-option theme-${i} ${document.body.classList.contains(`theme-${i}`) ? 'active' : ''}`;
       themeOption.setAttribute('data-theme', `theme-${i}`);
+      themeOption.title = `Tema ${i}`;
       
       themeOption.addEventListener('click', function() {
         // Remove active class from all options
@@ -390,7 +401,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     themeSwitcher.appendChild(themeSelect);
-    editControls.appendChild(themeSwitcher);
+    document.body.appendChild(themeSwitcher);
+    
+    // Activate the theme editor panel by default
+    setTimeout(() => {
+      themeSwitcher.classList.add('active');
+    }, 500);
   }
   
   // Adicionar novo item de rodapé

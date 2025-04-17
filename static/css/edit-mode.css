@@ -43,11 +43,13 @@
   background-color: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
   z-index: 998;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   color: white;
   box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.3);
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 .edit-controls.active {
@@ -59,6 +61,11 @@
   justify-content: center;
   gap: 20px;
   margin-bottom: 15px;
+  position: sticky;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 10px 0;
+  z-index: 10;
 }
 
 .save-button, .cancel-button {
@@ -146,6 +153,12 @@
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.social-edit-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .social-edit-wrapper .social-icon {
@@ -179,7 +192,7 @@
 }
 
 .platform-select {
-  width: 100px;
+  width: 120px;
   padding: 8px;
   background-color: rgba(0, 0, 0, 0.3);
   color: white;
@@ -188,17 +201,21 @@
 }
 
 .add-social-btn {
-  width: 40px;
+  width: 100%;
+  max-width: 200px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 10px;
   background-color: rgba(0, 255, 0, 0.2);
   border: none;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin: 0 auto;
+  font-weight: 600;
 }
 
 .add-social-btn:hover {
@@ -208,14 +225,20 @@
 
 /* Profile link editing */
 .link-edit-wrapper {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto 2fr 3fr 1fr 1fr auto;
   gap: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 15px;
   align-items: center;
+  transition: all 0.3s ease;
+}
+
+.link-edit-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .icon-preview {
@@ -327,14 +350,20 @@
 
 /* Footer items editing */
 .edit-footer-wrapper {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 2fr 2fr auto auto auto;
   gap: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 10px;
   align-items: center;
+  transition: all 0.3s ease;
+}
+
+.edit-footer-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .footer-text-input {
@@ -391,16 +420,48 @@
 
 /* Tema editor */
 .theme-editor {
-  margin-top: 20px;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: auto;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 10px;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  max-width: 250px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateX(calc(100% + 20px));
+  transition: transform 0.3s ease;
+}
+
+.theme-editor.active {
+  transform: translateX(0);
+}
+
+.theme-toggle-btn {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  width: 35px;
+  height: 35px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: white;
+  border-radius: 8px 0 0 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .theme-editor h3 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: #fff;
   text-align: center;
 }
@@ -408,16 +469,16 @@
 .theme-select-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  gap: 5px;
 }
 
 .theme-option {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -454,13 +515,25 @@
     grid-template-columns: repeat(5, 1fr);
   }
   
-  .link-edit-wrapper, .social-edit-wrapper, .edit-footer-wrapper {
+  .link-edit-wrapper {
+    grid-template-columns: 1fr;
+  }
+  
+  .social-edit-wrapper {
     flex-direction: column;
     align-items: stretch;
   }
   
+  .edit-footer-wrapper {
+    grid-template-columns: 1fr;
+  }
+  
   .icon-preview {
     margin: 0 auto;
+  }
+  
+  .edit-controls {
+    max-height: 75vh;
   }
 }
 
