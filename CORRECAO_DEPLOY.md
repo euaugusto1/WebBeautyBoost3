@@ -49,14 +49,23 @@ Você tem duas opções para resolver o problema do arquivo de requisitos:
 **Opção A: Renomear o arquivo no repositório**
 Renomeie o arquivo `REQUISITOS.txt` para `requirements.txt` no seu repositório. Isso é a solução mais limpa.
 
-**Opção B: Modificar o comando de build**
+**Opção B: Usar um script de build**
+Adicionei um script de build ao repositório chamado `build.sh` que cuida da conversão do arquivo de requisitos.
+
 Altere o comando de build no EasyPanel para:
+
+```
+chmod +x build.sh && ./build.sh
+```
+
+Este script copia seu arquivo `REQUISITOS.txt` para `requirements.txt` durante o processo de build e instala as dependências, sem alterar seu repositório original.
+
+**Opção C: Modificar o comando de build diretamente**
+Se preferir não usar o script, altere o comando de build no EasyPanel para:
 
 ```
 cp REQUISITOS.txt requirements.txt && pip install -r requirements.txt
 ```
-
-Esta segunda opção copia seu arquivo `REQUISITOS.txt` para `requirements.txt` durante o processo de build, sem alterar seu repositório original.
 
 ### 5. Reconstrua o Serviço
 
