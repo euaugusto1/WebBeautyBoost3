@@ -6,8 +6,11 @@ document.addEventListener('DOMContentLoaded', function() {
     easing: 'ease-out'
   });
   
-  // Update current year in footer
-  document.getElementById('current-year').textContent = new Date().getFullYear();
+  // Update current year in footer if element exists
+  const currentYearElement = document.getElementById('current-year');
+  if (currentYearElement) {
+    currentYearElement.textContent = new Date().getFullYear();
+  }
   
   // Theme Switcher
   const themeSwitcher = document.getElementById('theme-switcher');
