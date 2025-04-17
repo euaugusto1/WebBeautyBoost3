@@ -35,6 +35,7 @@ Este guia explica como implantar o LinkStack no EasyPanel, uma plataforma de hos
 2. Configuração através do Git:
    - URL do repositório: seu repositório Git
    - Branch: `main` (ou o que você estiver usando)
+   - Builder: `heroku/buildpacks:20` (em vez de heroku/builder:24)
    - Build Command: `pip install -r REQUISITOS.txt`
    - Start Command: `gunicorn --bind 0.0.0.0:$PORT main:app`
 
@@ -119,6 +120,13 @@ psql -h linkstack-db -U postgres -d postgres < linkstack_backup.sql
 ```
 
 ## Solução de Problemas
+
+### Erro com heroku/builder:24
+
+Se você encontrar erros ao usar o `heroku/builder:24`, siga estas etapas:
+1. Mude o builder para `heroku/buildpacks:20` nas configurações do serviço
+2. O builder mais recente (24) pode ter incompatibilidades com algumas dependências Python
+3. Se o erro persistir, verifique os logs de construção para mensagens específicas de erro
 
 ### Problemas de Conexão com o Banco de Dados
 
