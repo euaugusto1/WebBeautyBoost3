@@ -830,6 +830,32 @@ def load_all_templates():
                         "3. Verify that the database is properly configured",
                         "4. Test the application by accessing the URL provided by EasyPanel"
                     ]
+                },
+                {
+                    "title": "Troubleshooting",
+                    "content": [
+                        "### Error: \"container is not running\"",
+                        "",
+                        "If you encounter this error, follow these steps:",
+                        "",
+                        "1. **Check the container logs**:",
+                        "   - In EasyPanel, access the service logs to identify the problem.",
+                        "",
+                        "2. **Common issues and solutions**:",
+                        "",
+                        "   **Database connection issues**:",
+                        "   - Verify the host name is correct (must be the service name in EasyPanel)",
+                        "   - Confirm database credentials are correct",
+                        "   - For Neon/Supabase, check if `sslmode=require` is included in the URL",
+                        "",
+                        "   **Dependency issues**:",
+                        "   - Verify the requirements.txt file contains all necessary dependencies",
+                        "   - Make sure `gunicorn` is included in the dependencies",
+                        "",
+                        "3. **Diagnostic scripts**:",
+                        "   - The updated Dockerfile includes diagnostic scripts that help identify issues",
+                        "   - Check the logs for detailed messages about database connection tests"
+                    ]
                 }
             ]
         }
