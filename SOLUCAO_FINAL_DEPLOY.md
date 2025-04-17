@@ -21,15 +21,29 @@ O Dockerfile foi completamente atualizado para aplicações Flask com recursos a
    - Arquivo Dockerfile: *(deixe em branco para usar o Dockerfile padrão)*
 
 2. **Configure as variáveis de ambiente**:
+
+   **IMPORTANTE**: Escolha UMA das duas configurações abaixo:
+
+   **Opção 1: Usando banco de dados PostgreSQL local no EasyPanel**:
    ```
-   DATABASE_URL=postgresql://postgres:senha@linkstack-db:5432/postgres
-   PGHOST=linkstack-db
+   # Nome do host deve ser o nome do serviço PostgreSQL no EasyPanel
+   DATABASE_URL=postgresql://postgres:senha@nome-servico-postgres:5432/postgres
+   PGHOST=nome-servico-postgres
    PGPORT=5432
    PGUSER=postgres
    PGPASSWORD=sua_senha_segura
    PGDATABASE=postgres
    SESSION_SECRET=sua_chave_secreta_aqui
    ```
+   
+   **Opção 2: Usando banco de dados Neon, Supabase ou outro externo**:
+   ```
+   # Use a URL fornecida pelo provedor de banco de dados
+   DATABASE_URL=postgresql://user:senha@host-externo.provedor.com:5432/dbname?sslmode=require
+   SESSION_SECRET=sua_chave_secreta_aqui
+   ```
+   
+   > **ATENÇÃO**: O erro "container is not running" geralmente está relacionado com problemas na conexão do banco de dados. Verifique se as credenciais estão corretas e se o host está acessível.
 
 3. **Configure as redes e portas**:
    - Porta: **5000**
