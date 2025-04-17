@@ -57,29 +57,35 @@
 }
 
 .edit-action-buttons {
-  display: flex;
+  display: flex !important;
   justify-content: flex-end;
   gap: 10px;
   margin-bottom: 10px;
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 9999;
+  z-index: 99999;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 .save-button, .cancel-button {
-  padding: 12px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 12px !important;
+  width: 45px !important;
+  height: 45px !important;
+  border-radius: 50% !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
 }
 
 .save-button {
@@ -171,6 +177,8 @@
   margin-bottom: 15px;
   transition: all 0.3s ease;
   position: relative;
+  width: 100%;
+  max-width: 450px;
 }
 
 .social-edit-wrapper .social-header {
@@ -178,18 +186,23 @@
   align-items: center;
   gap: 15px;
   margin-bottom: 5px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  padding: 10px;
+  border-radius: 8px;
 }
 
 .social-edit-wrapper .social-icon {
   width: 50px;
   height: 50px;
   flex-shrink: 0;
-  align-self: flex-start;
+  align-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
   background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
 }
 
 .social-edit-wrapper:hover {

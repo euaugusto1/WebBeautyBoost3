@@ -164,6 +164,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (patternEditor) {
       patternEditor.remove();
     }
+    
+    // Remover os botões de ação
+    const actionButtons = document.querySelector('.edit-action-buttons');
+    if (actionButtons) {
+      actionButtons.remove();
+    }
   }
   
   // Tornar campos editáveis
@@ -1090,18 +1096,58 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 3000);
   }
   
+  // Criar e adicionar botões de ação independentes
+  function createActionButtons() {
+    // Remover botões existentes se houver
+    const existingButtons = document.querySelector('.edit-action-buttons');
+    if (existingButtons) {
+      existingButtons.remove();
+    }
+    
+    // Criar nova div para os botões
+    const actionButtons = document.createElement('div');
+    actionButtons.className = 'edit-action-buttons';
+    actionButtons.style.display = 'flex';
+    actionButtons.style.opacity = '1';
+    actionButtons.style.visibility = 'visible';
+    actionButtons.style.position = 'fixed';
+    actionButtons.style.bottom = '20px';
+    actionButtons.style.right = '20px';
+    actionButtons.style.zIndex = '99999';
+    
+    // Botão Salvar
+    const newSaveButton = document.createElement('button');
+    newSaveButton.className = 'save-button';
+    newSaveButton.id = 'save-button';
+    newSaveButton.innerHTML = '<i class="fas fa-check"></i>';
+    newSaveButton.addEventListener('click', function() {
+      saveChanges();
+    });
+    
+    // Botão Cancelar
+    const newCancelButton = document.createElement('button');
+    newCancelButton.className = 'cancel-button';
+    newCancelButton.id = 'cancel-button';
+    newCancelButton.innerHTML = '<i class="fas fa-times"></i>';
+    newCancelButton.addEventListener('click', function() {
+      disableEditMode();
+    });
+    
+    // Adicionar botões à div
+    actionButtons.appendChild(newSaveButton);
+    actionButtons.appendChild(newCancelButton);
+    
+    // Adicionar ao corpo do documento
+    document.body.appendChild(actionButtons);
+  }
+  
   // Verificar se botão de edição existe e adicionar eventos
   if (editToggle) {
     editToggle.addEventListener('click', function() {
       enableEditMode();
+      createActionButtons(); // Criar botões quando o modo de edição for habilitado
     });
     
-    saveButton.addEventListener('click', function() {
-      saveChanges();
-    });
-    
-    cancelButton.addEventListener('click', function() {
-      disableEditMode();
-    });
+    // Os event listeners para saveButton e cancelButton agora são adicionados dinamicamente
   }
 });
