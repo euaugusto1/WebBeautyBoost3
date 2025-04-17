@@ -1,0 +1,180 @@
+Ação
+Commit: Added deployment instructions
+
+Added instructions and a new file (`SOLUCAO_FINAL_DEPLOY.md`) detailing how to deploy the application using Docker and EasyPanel, along with alternative instructions for deploying using a specific branch and a `runtime.txt` file specifying Python 3.11.0.  A second markdown file (`INSTRUCOES_BRANCH_DEPLOY.md`) was also added for branch-specific deployment.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 8580ea19-0134-4eb4-9113-2bf77d58a295
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/e92c9ac1-f45a-45b8-b7f7-a9398957e1e5/9108781f-5b83-40fc-9b75-da33572637f4.jpg 
+##########################################
+### Download Github Archive Started...
+### Thu, 17 Apr 2025 19:24:02 GMT
+##########################################
+
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.84kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/nginx:stable-alpine
+#2 ...
+
+#3 [internal] load metadata for docker.io/library/node:18-alpine
+#3 DONE 0.4s
+
+#2 [internal] load metadata for docker.io/library/nginx:stable-alpine
+#2 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [build 1/9] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#5 DONE 0.0s
+
+#6 [production 1/5] FROM docker.io/library/nginx:stable-alpine@sha256:1eadbb07820339e8bbfed18c771691970baee292ec4ab2558f1453d26153e22d
+#6 CACHED
+
+#7 [build 2/9] WORKDIR /app
+#7 CACHED
+
+#8 [internal] load build context
+#8 transferring context: 4.95MB 0.1s done
+#8 DONE 0.1s
+
+#9 [build 3/9] COPY package*.json ./
+#9 DONE 0.0s
+
+#10 [production 2/5] COPY nginx.conf /etc/nginx/conf.d/default.conf
+#10 DONE 0.1s
+
+#11 [build 4/9] COPY REQUISITOS.txt* ./
+#11 DONE 0.0s
+
+#12 [build 5/9] RUN if [ -f REQUISITOS.txt ]; then cp REQUISITOS.txt requirements.txt; fi
+#12 DONE 0.1s
+
+#13 [build 6/9] RUN if [ -f requirements.txt ]; then     apk add --no-cache python3 py3-pip &&     python3 -m venv /venv &&     . /venv/bin/activate &&     pip install --no-cache-dir -r requirements.txt; fi
+#13 0.083 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/APKINDEX.tar.gz
+#13 0.361 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/community/x86_64/APKINDEX.tar.gz
+#13 0.811 (1/23) Installing libbz2 (1.0.8-r6)
+#13 0.823 (2/23) Installing libexpat (2.7.0-r0)
+#13 0.837 (3/23) Installing libffi (3.4.7-r0)
+#13 0.849 (4/23) Installing gdbm (1.24-r0)
+#13 0.860 (5/23) Installing xz-libs (5.6.3-r1)
+#13 0.874 (6/23) Installing mpdecimal (4.0.0-r0)
+#13 0.885 (7/23) Installing ncurses-terminfo-base (6.5_p20241006-r3)
+#13 0.898 (8/23) Installing libncursesw (6.5_p20241006-r3)
+#13 0.914 (9/23) Installing libpanelw (6.5_p20241006-r3)
+#13 0.925 (10/23) Installing readline (8.2.13-r0)
+#13 0.938 (11/23) Installing sqlite-libs (3.48.0-r1)
+#13 0.973 (12/23) Installing python3 (3.12.10-r0)
+#13 1.497 (13/23) Installing python3-pycache-pyc0 (3.12.10-r0)
+#13 1.726 (14/23) Installing pyc (3.12.10-r0)
+#13 1.727 (15/23) Installing py3-setuptools-pyc (70.3.0-r0)
+#13 1.785 (16/23) Installing py3-pip-pyc (24.3.1-r0)
+#13 1.871 (17/23) Installing py3-parsing (3.1.4-r0)
+#13 1.886 (18/23) Installing py3-parsing-pyc (3.1.4-r0)
+#13 1.951 (19/23) Installing py3-packaging-pyc (24.2-r0)
+#13 1.966 (20/23) Installing python3-pyc (3.12.10-r0)
+#13 1.966 (21/23) Installing py3-packaging (24.2-r0)
+#13 1.982 (22/23) Installing py3-setuptools (70.3.0-r0)
+#13 2.054 (23/23) Installing py3-pip (24.3.1-r0)
+#13 2.159 Executing busybox-1.37.0-r12.trigger
+#13 2.168 OK: 63 MiB in 40 packages
+#13 5.887 Collecting flask==2.3.3 (from -r requirements.txt (line 1))
+#13 5.945   Downloading flask-2.3.3-py3-none-any.whl.metadata (3.6 kB)
+#13 5.956 Collecting flask-login==0.6.2 (from -r requirements.txt (line 2))
+#13 5.959   Downloading Flask_Login-0.6.2-py3-none-any.whl.metadata (5.8 kB)
+#13 5.970 Collecting flask-sqlalchemy==3.1.1 (from -r requirements.txt (line 3))
+#13 5.975   Downloading flask_sqlalchemy-3.1.1-py3-none-any.whl.metadata (3.4 kB)
+#13 5.986 Collecting python-dotenv==1.0.0 (from -r requirements.txt (line 4))
+#13 5.989   Downloading python_dotenv-1.0.0-py3-none-any.whl.metadata (21 kB)
+#13 6.005 Collecting gunicorn==21.2.0 (from -r requirements.txt (line 5))
+#13 6.008   Downloading gunicorn-21.2.0-py3-none-any.whl.metadata (4.1 kB)
+#13 6.047 Collecting psycopg2-binary==2.9.9 (from -r requirements.txt (line 6))
+#13 6.050   Downloading psycopg2_binary-2.9.9-cp312-cp312-musllinux_1_1_x86_64.whl.metadata (4.4 kB)
+#13 6.062 Collecting werkzeug==2.3.7 (from -r requirements.txt (line 7))
+#13 6.065   Downloading werkzeug-2.3.7-py3-none-any.whl.metadata (4.1 kB)
+#13 6.073 Collecting email-validator==2.1.0 (from -r requirements.txt (line 8))
+#13 6.076   Downloading email_validator-2.1.0-py3-none-any.whl.metadata (25 kB)
+#13 6.100 Collecting Jinja2>=3.1.2 (from flask==2.3.3->-r requirements.txt (line 1))
+#13 6.100   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#13 6.111 Collecting itsdangerous>=2.1.2 (from flask==2.3.3->-r requirements.txt (line 1))
+#13 6.114   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#13 6.123 Collecting click>=8.1.3 (from flask==2.3.3->-r requirements.txt (line 1))
+#13 6.126   Downloading click-8.1.8-py3-none-any.whl.metadata (2.3 kB)
+#13 6.142 Collecting blinker>=1.6.2 (from flask==2.3.3->-r requirements.txt (line 1))
+#13 6.145   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#13 6.321 Collecting sqlalchemy>=2.0.16 (from flask-sqlalchemy==3.1.1->-r requirements.txt (line 3))
+#13 6.325   Downloading sqlalchemy-2.0.40-cp312-cp312-musllinux_1_2_x86_64.whl.metadata (9.6 kB)
+#13 6.342 Collecting packaging (from gunicorn==21.2.0->-r requirements.txt (line 5))
+#13 6.345   Downloading packaging-24.2-py3-none-any.whl.metadata (3.2 kB)
+#13 6.378 Collecting MarkupSafe>=2.1.1 (from werkzeug==2.3.7->-r requirements.txt (line 7))
+#13 6.384   Downloading MarkupSafe-3.0.2-cp312-cp312-musllinux_1_2_x86_64.whl.metadata (4.0 kB)
+#13 6.393 Collecting dnspython>=2.0.0 (from email-validator==2.1.0->-r requirements.txt (line 8))
+#13 6.397   Downloading dnspython-2.7.0-py3-none-any.whl.metadata (5.8 kB)
+#13 6.407 Collecting idna>=2.0.0 (from email-validator==2.1.0->-r requirements.txt (line 8))
+#13 6.411   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+#13 6.482 Collecting greenlet>=1 (from sqlalchemy>=2.0.16->flask-sqlalchemy==3.1.1->-r requirements.txt (line 3))
+#13 6.485   Downloading greenlet-3.2.0-cp312-cp312-musllinux_1_1_x86_64.whl.metadata (4.1 kB)
+#13 6.495 Collecting typing-extensions>=4.6.0 (from sqlalchemy>=2.0.16->flask-sqlalchemy==3.1.1->-r requirements.txt (line 3))
+#13 6.499   Downloading typing_extensions-4.13.2-py3-none-any.whl.metadata (3.0 kB)
+#13 6.502 WARNING: The candidate selected for download or install is a yanked version: 'email-validator' candidate (version 2.1.0 at https://files.pythonhosted.org/packages/90/41/4767ff64e422734487a06384a66e62615b1f5cf9cf3b23295e22d3ecf711/email_validator-2.1.0-py3-none-any.whl (from https://pypi.org/simple/email-validator/) (requires-python:>=3.7))
+#13 6.502 Reason for being yanked: Forgot to drop Python 3.7 from python_requires, see https://github.com/JoshData/python-email-validator/pull/118
+#13 6.505 Downloading flask-2.3.3-py3-none-any.whl (96 kB)
+#13 6.513 Downloading Flask_Login-0.6.2-py3-none-any.whl (17 kB)
+#13 6.516 Downloading flask_sqlalchemy-3.1.1-py3-none-any.whl (25 kB)
+#13 6.519 Downloading python_dotenv-1.0.0-py3-none-any.whl (19 kB)
+#13 6.525 Downloading gunicorn-21.2.0-py3-none-any.whl (80 kB)
+#13 6.530 Downloading psycopg2_binary-2.9.9-cp312-cp312-musllinux_1_1_x86_64.whl (2.5 MB)
+#13 6.596    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.5/2.5 MB 37.4 MB/s eta 0:00:00
+#13 6.600 Downloading werkzeug-2.3.7-py3-none-any.whl (242 kB)
+#13 6.610 Downloading email_validator-2.1.0-py3-none-any.whl (32 kB)
+#13 6.614 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#13 6.616 Downloading click-8.1.8-py3-none-any.whl (98 kB)
+#13 6.622 Downloading dnspython-2.7.0-py3-none-any.whl (313 kB)
+#13 6.632 Downloading idna-3.10-py3-none-any.whl (70 kB)
+#13 6.637 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#13 6.640 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#13 6.646 Downloading MarkupSafe-3.0.2-cp312-cp312-musllinux_1_2_x86_64.whl (23 kB)
+#13 6.649 Downloading sqlalchemy-2.0.40-cp312-cp312-musllinux_1_2_x86_64.whl (3.2 MB)
+#13 6.735    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 38.0 MB/s eta 0:00:00
+#13 6.740 Downloading packaging-24.2-py3-none-any.whl (65 kB)
+#13 6.744 Downloading greenlet-3.2.0-cp312-cp312-musllinux_1_1_x86_64.whl (1.1 MB)
+#13 6.775    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 38.8 MB/s eta 0:00:00
+#13 6.781 Downloading typing_extensions-4.13.2-py3-none-any.whl (45 kB)
+#13 6.838 Installing collected packages: typing-extensions, python-dotenv, psycopg2-binary, packaging, MarkupSafe, itsdangerous, idna, greenlet, dnspython, click, blinker, werkzeug, sqlalchemy, Jinja2, gunicorn, email-validator, flask, flask-sqlalchemy, flask-login
+#13 10.13 Successfully installed Jinja2-3.1.6 MarkupSafe-3.0.2 blinker-1.9.0 click-8.1.8 dnspython-2.7.0 email-validator-2.1.0 flask-2.3.3 flask-login-0.6.2 flask-sqlalchemy-3.1.1 greenlet-3.2.0 gunicorn-21.2.0 idna-3.10 itsdangerous-2.2.0 packaging-24.2 psycopg2-binary-2.9.9 python-dotenv-1.0.0 sqlalchemy-2.0.40 typing-extensions-4.13.2 werkzeug-2.3.7
+#13 DONE 10.5s
+
+#14 [build 7/9] RUN if [ -f package.json ]; then     npm install --production --no-audit --no-fund; fi
+#14 DONE 0.1s
+
+#15 [build 8/9] COPY . .
+#15 DONE 0.1s
+
+#16 [build 9/9] RUN if [ -f package.json ]; then     npm run build || echo "Skipping build - not a Node.js project"; fi
+#16 DONE 0.2s
+
+#17 [production 3/5] COPY --from=build /app/dist /usr/share/nginx/html
+#17 ERROR: failed to calculate checksum of ref 2b19ed7e-c5a8-43c0-8184-4a3680df3c3a::soajdo7bsu7zvlw3anon9391a: "/app/dist": not found
+------
+ > [production 3/5] COPY --from=build /app/dist /usr/share/nginx/html:
+------
+Dockerfile:52
+--------------------
+  50 |     
+  51 |     # Copia os arquivos de build do estágio anterior
+  52 | >>> COPY --from=build /app/dist /usr/share/nginx/html
+  53 |     
+  54 |     # Expõe a porta 80
+--------------------
+ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref 2b19ed7e-c5a8-43c0-8184-4a3680df3c3a::soajdo7bsu7zvlw3anon9391a: "/app/dist": not found
+##########################################
+### Error
+### Thu, 17 Apr 2025 19:24:15 GMT
+##########################################
+
+Command failed with exit code 1: docker buildx build --network host -f /etc/easypanel/projects/repo-personal/new/code/Dockerfile -t easypanel/repo-personal/new --label 'keep=true' --no-cache --build-arg 'DATABASE_URL=postgresql://postgres:senha@linkstack-db:5432/postgres' --build-arg 'PGHOST=linkstack-db' --build-arg 'PGPORT=5432' --build-arg 'PGUSER=postgres' --build-arg 'PGPASSWORD=i8iLRKW4yLRkXbyjumnoAInHGZSbiuIlwvAqiuwj' --build-arg 'PGDATABASE=postgres' --build-arg 'SESSION_SECRET=d6d0b89d23827d16fe0c225aef457c1e0a0e7c2001d' --build-arg 'FLASK_ENV=production' --build-arg 'DEBUG=False' --build-arg 'GIT_SHA=56152ee4b4a2bae94cb063adcc05972c5ec91e40' /etc/easypanel/projects/repo-personal/new/code/

@@ -1,18 +1,37 @@
 # Solução Final para Deploy no EasyPanel
 
-## IMPORTANTE: Usar Dockerfile.flask em vez do Dockerfile Original
+## IMPORTANTE: Renomear Dockerfile.flask para Dockerfile
 
-O problema atual é que o EasyPanel está usando o **Dockerfile** original que foi projetado para um aplicativo Node.js/React, não para um aplicativo Flask. Este Dockerfile espera encontrar um diretório `/app/dist` que não existe em nosso projeto Python.
+O problema é que o EasyPanel está usando o Dockerfile original e ignorando nossa instrução para usar o Dockerfile.flask. A solução mais robusta é substituir o Dockerfile original pelo nosso Dockerfile.flask.
 
 ## Instruções para Deploy Correto
 
-### 1. Configure o EasyPanel para usar o Dockerfile.flask
+### 1. Renomeie Dockerfile.flask para Dockerfile no repositório
+
+```bash
+# Clone seu repositório (se já não tiver feito)
+git clone [URL_DO_SEU_REPOSITÓRIO]
+cd [NOME_DO_REPOSITÓRIO]
+
+# Faça backup do Dockerfile atual
+git mv Dockerfile Dockerfile.original
+
+# Renomeie Dockerfile.flask para Dockerfile
+git mv Dockerfile.flask Dockerfile
+
+# Commit e push das alterações
+git add .
+git commit -m "Usar Dockerfile Flask para deploy"
+git push
+```
+
+### 2. Configure o EasyPanel para usar o Dockerfile padrão
 
 1. **No EasyPanel, crie um novo serviço customizado**:
    - Tipo: **Custom**
    - Método de construção: **Build from Dockerfile**
    - Repositório Git: *seu-repositorio*
-   - **IMPORTANTE**: Especifique o arquivo Dockerfile: **Dockerfile.flask**
+   - Arquivo Dockerfile: *(deixe em branco para usar o Dockerfile padrão)*
 
 2. **Configure as variáveis de ambiente**:
    ```
