@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -109,12 +110,15 @@ def index():
     # Se o usuário estiver logado, mostrar seu perfil
     # Caso contrário, mostrar o perfil de demonstração (demo)
     if current_user.is_authenticated:
+        print(f"Usuário autenticado: {current_user.username} (ID: {current_user.id})")
         user = current_user
     else:
+        print("Nenhum usuário autenticado, mostrando perfil demo")
         user = User.query.filter_by(username='demo').first_or_404()
     
     # Verificar se é o usuário logado visualizando seu próprio perfil
     is_owner = current_user.is_authenticated and current_user.id == user.id
+    print(f"É o proprietário do perfil? {is_owner}")
     
     # Montar o perfil a partir dos dados do usuário
     profile = {
@@ -165,19 +169,23 @@ def index():
 def login():
     # Se o usuário já estiver autenticado, redireciona para a página principal
     if current_user.is_authenticated:
+        print(f"Usuário já autenticado: {current_user.username}. Redirecionando para a página inicial.")
         return redirect(url_for('index'))
     
     form = LoginForm()
     if form.validate_on_submit():
+        print(f"Tentativa de login para o usuário: {form.username.data}")
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
+            print(f"Login bem-sucedido para o usuário: {user.username} (ID: {user.id})")
             next_page = request.args.get('next')
             flash('Login realizado com sucesso!', 'success')
             if not next_page or url_for('index') in next_page:
                 next_page = url_for('index')
             return redirect(next_page)
         else:
+            print(f"Falha no login para o usuário: {form.username.data}")
             flash('Nome de usuário ou senha incorretos. Por favor, tente novamente.', 'error')
     
     return render_template('login.html', form=form)
@@ -367,10 +375,16 @@ def update_profile():
         
         # Salvar as alterações no banco de dados
         db.session.commit()
+        # Invalidar o cache de sessão para forçar recarregar dados do usuário
+        db.session.refresh(user)
         print(f"Perfil atualizado com sucesso para o usuário {user.username}")
         
-        # Recarregar página após salvar
-        return jsonify({'success': True, 'message': 'Perfil atualizado com sucesso!'})
+        # Recarregar página após salvar - adicionar timestamp para evitar cache
+        return jsonify({
+            'success': True, 
+            'message': 'Perfil atualizado com sucesso!',
+            'timestamp': int(time.time())  # Adicionar timestamp para evitar cache
+        })
     except Exception as e:
         db.session.rollback()
         print(f'Erro ao atualizar perfil: {str(e)}')

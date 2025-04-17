@@ -1154,7 +1154,8 @@ function initEditSystem() {
         // Desativar modo de edição e recarregar a página para exibir alterações
         setTimeout(() => {
           console.log("Recarregando a página para mostrar alterações...");
-          window.location.reload();
+          // Forçar recarregamento completo da página com timestamp para evitar cache
+          window.location.href = window.location.pathname + '?t=' + new Date().getTime();
         }, 1000);
       } else {
         showMessage(data.message || 'Ocorreu um erro ao salvar as alterações.', 'error');
