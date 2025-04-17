@@ -1,0 +1,24 @@
+FROM python:3.11-slim
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Copiar requisitos e instalar dependências
+COPY REQUISITOS.txt .
+RUN cp REQUISITOS.txt requirements.txt && \
+    pip install --no-cache-dir -r requirements.txt && \
+    rm requirements.txt
+
+# Copiar código-fonte da aplicação
+COPY . .
+
+# Definir variáveis de ambiente
+ENV FLASK_APP=main.py
+ENV FLASK_ENV=production
+ENV DEBUG=False
+
+# Expor porta para a aplicação
+EXPOSE 5000
+
+# Comando para iniciar a aplicação
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--threads", "2", "main:app"]

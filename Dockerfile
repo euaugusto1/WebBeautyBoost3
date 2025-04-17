@@ -15,16 +15,30 @@ ENV VITE_MOCK_DATA=${VITE_MOCK_DATA}
 
 # Copia arquivos de configuração e dependências
 COPY package*.json ./
-COPY .npmrc ./
+# COPY .npmrc ./  # Comentado pois o arquivo não existe
 
-# Instala as dependências com flags de produção
-RUN npm ci --only=production --no-audit --no-fund
+# Verifica se tem um arquivo REQUISITOS.txt e cria requirements.txt
+COPY REQUISITOS.txt* ./
+RUN if [ -f REQUISITOS.txt ]; then cp REQUISITOS.txt requirements.txt; fi
+
+# Instala as dependências Python se necessário
+RUN if [ -f requirements.txt ]; then \
+    apk add --no-cache python3 py3-pip && \
+    pip install --no-cache-dir -r requirements.txt; \
+fi
+
+# Instala as dependências Node.js se package.json existir
+RUN if [ -f package.json ]; then \
+    npm install --production --no-audit --no-fund; \
+fi
 
 # Copia o código fonte
 COPY . .
 
-# Constrói a aplicação
-RUN npm run build
+# Constrói a aplicação (apenas se for um projeto Node.js)
+RUN if [ -f package.json ]; then \
+    npm run build || echo "Skipping build - not a Node.js project"; \
+fi
 
 # Estágio 2: Servidor Web Nginx
 FROM nginx:stable-alpine AS production

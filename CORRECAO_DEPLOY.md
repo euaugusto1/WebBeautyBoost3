@@ -1,81 +1,43 @@
-# Correção de Erro de Implantação no EasyPanel
+# Correção de Problemas de Deploy no EasyPanel
 
-O novo erro que você está encontrando ocorre porque:
+## Problema Identificado
 
-1. O EasyPanel não consegue encontrar o arquivo de requisitos do Python
-2. O buildpack Heroku está procurando por `requirements.txt` (em minúsculas), mas seu projeto usa `REQUISITOS.txt` (em maiúsculas)
+No EasyPanel, o buildpack do Heroku está procurando por um arquivo chamado `requirements.txt` (em minúsculas), mas nosso projeto utiliza o nome `REQUISITOS.txt` (em maiúsculas). Isso causa a falha na detecção do Python pelo buildpack.
 
-## Solução Passo a Passo
+## Soluções
 
-### 1. Mude o Builder no EasyPanel
+### 1. Usando Docker (Recomendado)
 
-No painel administrativo do seu projeto no EasyPanel:
+A melhor e mais confiável solução é utilizar o Dockerfile.flask para o deploy. Esta abordagem contorna as limitações dos buildpacks e oferece mais controle sobre o processo de build.
 
-1. Vá para "Settings" ou "Configurações" do serviço
-2. Localize o campo "Builder"
-3. Substitua `heroku/builder:24` por `heroku/buildpacks:20`
-4. Salve as alterações
+- No EasyPanel, selecione **Custom** como tipo de serviço
+- Escolha a opção **Build from Dockerfile**
+- Aponte para o repositório Git
+- Especifique o arquivo Dockerfile: `Dockerfile.flask`
 
-### 2. Corrija as Variáveis de Ambiente
+Este Dockerfile foi criado especificamente para a aplicação Flask, incluindo:
+- Conversão automática de REQUISITOS.txt para requirements.txt
+- Configuração apropriada de gunicorn com workers e threads
+- Variáveis de ambiente configuradas corretamente
 
-Você precisa ajustar as variáveis de ambiente para o ambiente EasyPanel. Vá para a seção de variáveis de ambiente no EasyPanel e defina:
+### 2. Usando requirements.txt.deploy
 
-```
-DATABASE_URL=postgresql://postgres:senha@linkstack-db:5432/postgres
-PGHOST=linkstack-db
-PGPORT=5432
-PGUSER=postgres
-PGPASSWORD=senha
-PGDATABASE=postgres
-SESSION_SECRET=sua_chave_secreta_aqui
-FLASK_ENV=production
-DEBUG=False
-```
+Se preferir continuar com o buildpack, você pode:
+1. Renomear manualmente `requirements.txt.deploy` para `requirements.txt` no seu repositório
+2. Fazer commit e push dessa alteração
+3. Configurar o EasyPanel para usar o buildpack Heroku (heroku/buildpacks:20)
 
-**IMPORTANTE**: Substitua `senha` por uma senha segura e `sua_chave_secreta_aqui` por uma string aleatória de caracteres.
+### 3. Branch Separado para Deploy
 
-### 3. Verifique o Procfile
-
-Certifique-se de que o arquivo `Procfile` existe no seu repositório e contém:
-
-```
-web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --threads 2 main:app
-```
-
-### 4. Correção do Arquivo de Requisitos
-
-Você tem duas opções para resolver o problema do arquivo de requisitos:
-
-**Opção A: Renomear o arquivo no repositório**
-Renomeie o arquivo `REQUISITOS.txt` para `requirements.txt` no seu repositório. Isso é a solução mais limpa.
-
-**Opção B: Usar um script de build**
-Adicionei um script de build ao repositório chamado `build.sh` que cuida da conversão do arquivo de requisitos.
-
-Altere o comando de build no EasyPanel para:
-
-```
-chmod +x build.sh && ./build.sh
-```
-
-Este script copia seu arquivo `REQUISITOS.txt` para `requirements.txt` durante o processo de build e instala as dependências, sem alterar seu repositório original.
-
-**Opção C: Modificar o comando de build diretamente**
-Se preferir não usar o script, altere o comando de build no EasyPanel para:
-
-```
-cp REQUISITOS.txt requirements.txt && pip install -r requirements.txt
-```
-
-### 5. Reconstrua o Serviço
-
-Após fazer essas alterações, use o botão "Rebuild" ou "Reconstruir" no EasyPanel para reiniciar o processo de implantação.
+Outra alternativa é manter um branch específico para deploy onde:
+1. `REQUISITOS.txt` é renomeado para `requirements.txt`
+2. Aponte o EasyPanel para este branch específico de deploy
 
 ## Verificação
 
-Após a reconstrução, verifique os logs de build para confirmar que:
-1. Está usando o builder correto (heroku/buildpacks:20)
-2. As variáveis de ambiente estão corretas
-3. Não há erros de construção ou inicialização
+Após implementar qualquer uma destas soluções, verifique os logs de build no EasyPanel para garantir que:
+1. As dependências estão sendo instaladas corretamente
+2. O aplicativo está sendo iniciado sem erros
+3. As variáveis de ambiente estão acessíveis ao aplicativo
 
-Se ainda houver erros após essas alterações, por favor compartilhe os logs completos para uma análise mais detalhada.
+Para informações mais detalhadas, consulte o documento `INSTRUÇOES_DEPLOY_MANUAL.md`

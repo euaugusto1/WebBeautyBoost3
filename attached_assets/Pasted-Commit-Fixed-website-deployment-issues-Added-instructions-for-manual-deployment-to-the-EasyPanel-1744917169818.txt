@@ -1,0 +1,71 @@
+Commit: Fixed website deployment issues
+
+Added instructions for manual deployment to the EasyPanel, addressing buildpack issues by providing alternative deployment methods using a Dockerfile, a modified Git branch, or a modified Procfile.  This includes creating a `build.sh` script to handle file renaming and dependency installation, resolving a previous build failure.  The `INSTRUÇOES_DEPLOY_MANUAL.md` and `attached_assets/Pasted-Commit-Improved-the-website-s-building-process-Added-a-build-script-to-streamline-the-deployment-1744916956649.txt` files were updated to reflect these changes.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 8580ea19-0134-4eb4-9113-2bf77d58a295
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/e92c9ac1-f45a-45b8-b7f7-a9398957e1e5/647eb182-ff0d-429f-b67e-b00bd354b216.jpg 
+##########################################
+### Download Github Archive Started...
+### Thu, 17 Apr 2025 19:11:27 GMT
+##########################################
+
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.21kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:18-alpine
+#2 ...
+
+#3 [internal] load metadata for docker.io/library/nginx:stable-alpine
+#3 DONE 1.0s
+
+#2 [internal] load metadata for docker.io/library/node:18-alpine
+#2 DONE 1.2s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [build 1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 4.92MB 0.1s done
+#6 DONE 0.1s
+
+#7 [build 2/7] WORKDIR /app
+#7 CACHED
+
+#8 [build 3/7] COPY package*.json ./
+#8 CACHED
+
+#9 [build 4/7] COPY .npmrc ./
+#9 ERROR: failed to calculate checksum of ref 2b19ed7e-c5a8-43c0-8184-4a3680df3c3a::fchty3j2e5cwr60c61d087y4l: "/.npmrc": not found
+
+#10 [production 1/5] FROM docker.io/library/nginx:stable-alpine@sha256:1eadbb07820339e8bbfed18c771691970baee292ec4ab2558f1453d26153e22d
+#10 resolve docker.io/library/nginx:stable-alpine@sha256:1eadbb07820339e8bbfed18c771691970baee292ec4ab2558f1453d26153e22d done
+#10 sha256:1eadbb07820339e8bbfed18c771691970baee292ec4ab2558f1453d26153e22d 10.32kB / 10.32kB done
+#10 sha256:b17b00f7ef0038aeb11362157f49006a130628ee711cefcced871405d046f114 2.49kB / 2.49kB done
+#10 sha256:42ce3d3585d47518cb0c1ef4bd3d8a65c1edfcbbfd423eda86990a83f378b111 10.77kB / 10.77kB done
+#10 CANCELED
+------
+ > [build 4/7] COPY .npmrc ./:
+------
+Dockerfile:18
+--------------------
+  16 |     # Copia arquivos de configuração e dependências
+  17 |     COPY package*.json ./
+  18 | >>> COPY .npmrc ./
+  19 |     
+  20 |     # Instala as dependências com flags de produção
+--------------------
+ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref 2b19ed7e-c5a8-43c0-8184-4a3680df3c3a::fchty3j2e5cwr60c61d087y4l: "/.npmrc": not found
+##########################################
+### Error
+### Thu, 17 Apr 2025 19:11:29 GMT
+##########################################
+
+Command failed with exit code 1: docker buildx build --network host -f /etc/easypanel/projects/repo-personal/new/code/Dockerfile -t easypanel/repo-personal/new --label 'keep=true' --build-arg 'DATABASE_URL=postgresql://postgres:senha@linkstack-db:5432/postgres' --build-arg 'PGHOST=linkstack-db' --build-arg 'PGPORT=5432' --build-arg 'PGUSER=postgres' --build-arg 'PGPASSWORD=i8iLRKW4yLRkXbyjumnoAInHGZSbiuIlwvAqiuwj' --build-arg 'PGDATABASE=postgres' --build-arg 'SESSION_SECRET=d6d0b89d23827d16fe0c225aef457c1e0a0e7c2001d' --build-arg 'FLASK_ENV=production' --build-arg 'DEBUG=False' --build-arg 'GIT_SHA=ed96cde6cc435184486180943e642a53844153db' /etc/easypanel/projects/repo-personal/new/code/
