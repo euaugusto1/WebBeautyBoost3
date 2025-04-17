@@ -77,6 +77,7 @@ class ProfileLink(db.Model):
     css_class = db.Column(db.String(50))
     position = db.Column(db.Integer, default=0)
     is_active = db.Column(db.Boolean, default=True)
+    click_count = db.Column(db.Integer, default=0)  # Novo campo para contador de cliques
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     

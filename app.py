@@ -96,10 +96,12 @@ def index():
         ],
         'links': [
             {
+                'id': link.id,
                 'title': link.title, 
                 'url': link.url, 
                 'icon': link.icon, 
-                'class': link.css_class
+                'class': link.css_class,
+                'click_count': link.click_count
             } for link in user.profile_links
         ],
         'footer_items': [
@@ -243,6 +245,49 @@ def update_profile():
         db.session.rollback()
         print(f'Erro ao atualizar perfil: {str(e)}')
         return jsonify({'success': False, 'message': f'Erro ao atualizar o perfil: {str(e)}'}), 500
+
+@app.route('/click-link/<int:link_id>', methods=['POST'])
+def click_link(link_id):
+    """Registra um clique em um link e redireciona para a URL do link."""
+    try:
+        # Buscar o link no banco de dados
+        link = ProfileLink.query.get_or_404(link_id)
+        
+        # Incrementar o contador de cliques
+        link.click_count += 1
+        db.session.commit()
+        
+        # Retornar sucesso e a URL para redirecionamento
+        return jsonify({
+            'success': True, 
+            'url': link.url,
+            'click_count': link.click_count
+        })
+    except Exception as e:
+        db.session.rollback()
+        print(f"Erro ao registrar clique: {str(e)}")
+        return jsonify({
+            'success': False, 
+            'message': 'Erro ao registrar clique',
+            'error': str(e)
+        }), 500
+
+@app.route('/get-link-stats/<int:link_id>')
+def get_link_stats(link_id):
+    """Retorna estatísticas de um link específico."""
+    try:
+        link = ProfileLink.query.get_or_404(link_id)
+        return jsonify({
+            'success': True,
+            'title': link.title,
+            'click_count': link.click_count
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'Erro ao obter estatísticas',
+            'error': str(e)
+        }), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -108,6 +108,47 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 300);
   });
   
+  // Rastreador de cliques para links
+  const trackableLinks = document.querySelectorAll('.track-click');
+  trackableLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const linkId = this.getAttribute('data-link-id');
+      const linkUrl = this.getAttribute('data-url');
+      const clickStatsElement = this.querySelector('.click-stats');
+      
+      // Enviar solicitação para registrar o clique
+      fetch(`/click-link/${linkId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Atualizar contador na interface
+          if (clickStatsElement) {
+            clickStatsElement.textContent = `${data.click_count} cliques`;
+          }
+          
+          // Abrir URL em nova aba após um pequeno atraso
+          setTimeout(() => {
+            window.open(linkUrl, '_blank');
+          }, 300);
+        } else {
+          console.error('Erro ao registrar clique:', data.message);
+          window.open(linkUrl, '_blank');
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao registrar clique:', error);
+        window.open(linkUrl, '_blank');
+      });
+    });
+  });
+  
   // Add light beam effect on hover for the container, only for non-touch devices
   const container = document.querySelector('.container');
   if (window.matchMedia("(hover: hover)").matches) {
