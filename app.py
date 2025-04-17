@@ -128,7 +128,7 @@ def update_profile():
         user.phone = data.get('phone')
         
         # Atualizar tema
-        if 'theme' in data:
+        if 'theme' in data and data['theme']:
             theme_name = data.get('theme')
             if user.theme_settings:
                 user.theme_settings.theme_name = theme_name
@@ -199,6 +199,23 @@ def update_profile():
                 position=index + 1
             )
             db.session.add(profile_link)
+            
+        # Atualizar itens do footer
+        # Primeiro, remover todos os itens existentes
+        for item in user.footer_items:
+            db.session.delete(item)
+            
+        # Adicionar os novos itens do footer
+        for index, item_data in enumerate(data.get('footer_items', [])):
+            footer_item = FooterItem(
+                user_id=user.id,
+                text=item_data.get('text'),
+                icon=item_data.get('icon'),
+                url=item_data.get('url'),
+                is_brand=item_data.get('is_brand', False),
+                position=index + 1
+            )
+            db.session.add(footer_item)
         
         # Salvar as alterações no banco de dados
         db.session.commit()

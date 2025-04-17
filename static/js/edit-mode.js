@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
   function saveOriginalData() {
     originalData.name = document.querySelector('.username').textContent.replace('•', '').trim();
     originalData.bio = document.querySelector('.bio').textContent;
-    originalData.phone = document.querySelector('.footer p:first-child').textContent.replace(/.*: /, '');
     
     // Links sociais
     originalData.socialLinks = [];
@@ -36,6 +35,23 @@ document.addEventListener('DOMContentLoaded', function() {
         class: Array.from(link.classList).find(c => c !== 'link-btn')
       });
     });
+    
+    // Itens do footer
+    originalData.footerItems = [];
+    document.querySelectorAll('.footer-item').forEach(item => {
+      const icon = item.querySelector('i');
+      const link = item.querySelector('a');
+      
+      originalData.footerItems.push({
+        text: link ? link.textContent : item.textContent.trim(),
+        icon: icon ? icon.className.replace('fas ', '') : '',
+        url: link ? link.getAttribute('href') : '',
+        is_brand: link && link.classList.contains('brand-link')
+      });
+    });
+    
+    // Tema atual
+    originalData.theme = document.body.className.replace('loaded', '').trim();
   }
   
   // Ativar modo de edição
@@ -265,6 +281,179 @@ document.addEventListener('DOMContentLoaded', function() {
       addNewProfileLink(linksContainer);
     });
     linksContainer.appendChild(addLinkBtn);
+    
+    // Footer Items
+    const footerItems = document.querySelectorAll('.footer-item');
+    footerItems.forEach(item => {
+      if (item.closest('.edit-footer-wrapper')) return; // Skip if already wrapped
+      
+      const itemWrapper = document.createElement('div');
+      itemWrapper.className = 'edit-footer-wrapper';
+      
+      // Get current values
+      const icon = item.querySelector('i');
+      const link = item.querySelector('a');
+      
+      // Create inputs for editing
+      const textInput = document.createElement('input');
+      textInput.type = 'text';
+      textInput.className = 'edit-input footer-text-input';
+      textInput.value = link ? link.textContent : item.textContent.trim();
+      
+      const urlInput = document.createElement('input');
+      urlInput.type = 'text';
+      urlInput.className = 'edit-input footer-url-input';
+      urlInput.placeholder = 'URL (opcional)';
+      urlInput.value = link ? link.getAttribute('href') : '';
+      
+      const iconSelect = document.createElement('select');
+      iconSelect.className = 'edit-input footer-icon-select';
+      ['', 'fa-phone-alt', 'fa-envelope', 'fa-map-marker-alt', 'fa-clock', 'fa-calendar', 'fa-info-circle'].forEach(iconClass => {
+        const option = document.createElement('option');
+        option.value = iconClass;
+        option.textContent = iconClass ? iconClass.replace('fa-', '') : 'Sem ícone';
+        if (icon && icon.className.includes(iconClass)) {
+          option.selected = true;
+        }
+        iconSelect.appendChild(option);
+      });
+      
+      const isBrandCheckbox = document.createElement('input');
+      isBrandCheckbox.type = 'checkbox';
+      isBrandCheckbox.className = 'footer-brand-checkbox';
+      isBrandCheckbox.checked = link && link.classList.contains('brand-link');
+      
+      const isBrandLabel = document.createElement('label');
+      isBrandLabel.className = 'footer-brand-label';
+      isBrandLabel.appendChild(isBrandCheckbox);
+      isBrandLabel.appendChild(document.createTextNode(' Destaque'));
+      
+      // Remove button
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+      removeBtn.addEventListener('click', function() {
+        itemWrapper.remove();
+      });
+      
+      // Add inputs to wrapper
+      itemWrapper.appendChild(iconSelect);
+      itemWrapper.appendChild(textInput);
+      itemWrapper.appendChild(urlInput);
+      itemWrapper.appendChild(isBrandLabel);
+      itemWrapper.appendChild(removeBtn);
+      
+      // Replace original item with wrapper
+      item.parentNode.replaceChild(itemWrapper, item);
+    });
+    
+    // Add button for new footer item
+    const footerContainer = document.querySelector('.footer');
+    const addFooterBtn = document.createElement('button');
+    addFooterBtn.className = 'add-footer-btn';
+    addFooterBtn.innerHTML = '<i class="fas fa-plus"></i> Adicionar Item de Rodapé';
+    addFooterBtn.addEventListener('click', function() {
+      addNewFooterItem(footerContainer);
+    });
+    footerContainer.appendChild(addFooterBtn);
+    
+    // Add theme selector in edit mode
+    const themeSwitcher = document.createElement('div');
+    themeSwitcher.className = 'theme-editor';
+    themeSwitcher.innerHTML = '<h3>Escolha um tema</h3>';
+    
+    const themeSelect = document.createElement('div');
+    themeSelect.className = 'theme-select-grid';
+    
+    // Add theme options
+    for (let i = 1; i <= 10; i++) {
+      const themeOption = document.createElement('div');
+      themeOption.className = `theme-option theme-${i} ${document.body.classList.contains(`theme-${i}`) ? 'active' : ''}`;
+      themeOption.setAttribute('data-theme', `theme-${i}`);
+      
+      themeOption.addEventListener('click', function() {
+        // Remove active class from all options
+        document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+        // Add active class to clicked option
+        this.classList.add('active');
+        
+        // Update body class
+        const themeClasses = Array.from(document.body.classList)
+          .filter(cls => cls.startsWith('theme-'));
+        themeClasses.forEach(cls => document.body.classList.remove(cls));
+        document.body.classList.add(this.getAttribute('data-theme'));
+      });
+      
+      themeSelect.appendChild(themeOption);
+    }
+    
+    themeSwitcher.appendChild(themeSelect);
+    editControls.appendChild(themeSwitcher);
+  }
+  
+  // Adicionar novo item de rodapé
+  function addNewFooterItem(container) {
+    const itemWrapper = document.createElement('div');
+    itemWrapper.className = 'edit-footer-wrapper';
+    
+    // Create inputs for editing
+    const textInput = document.createElement('input');
+    textInput.type = 'text';
+    textInput.className = 'edit-input footer-text-input';
+    textInput.value = 'Novo Item';
+    textInput.placeholder = 'Texto';
+    
+    const urlInput = document.createElement('input');
+    urlInput.type = 'text';
+    urlInput.className = 'edit-input footer-url-input';
+    urlInput.placeholder = 'URL (opcional)';
+    urlInput.value = '';
+    
+    const iconSelect = document.createElement('select');
+    iconSelect.className = 'edit-input footer-icon-select';
+    ['', 'fa-phone-alt', 'fa-envelope', 'fa-map-marker-alt', 'fa-clock', 'fa-calendar', 'fa-info-circle'].forEach(iconClass => {
+      const option = document.createElement('option');
+      option.value = iconClass;
+      option.textContent = iconClass ? iconClass.replace('fa-', '') : 'Sem ícone';
+      iconSelect.appendChild(option);
+    });
+    
+    const isBrandCheckbox = document.createElement('input');
+    isBrandCheckbox.type = 'checkbox';
+    isBrandCheckbox.className = 'footer-brand-checkbox';
+    
+    const isBrandLabel = document.createElement('label');
+    isBrandLabel.className = 'footer-brand-label';
+    isBrandLabel.appendChild(isBrandCheckbox);
+    isBrandLabel.appendChild(document.createTextNode(' Destaque'));
+    
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    removeBtn.addEventListener('click', function() {
+      itemWrapper.remove();
+    });
+    
+    // Add inputs to wrapper
+    itemWrapper.appendChild(iconSelect);
+    itemWrapper.appendChild(textInput);
+    itemWrapper.appendChild(urlInput);
+    itemWrapper.appendChild(isBrandLabel);
+    itemWrapper.appendChild(removeBtn);
+    
+    // Insert at appropriate position
+    const existingItems = container.querySelectorAll('.edit-footer-wrapper');
+    if (existingItems.length > 0) {
+      container.insertBefore(itemWrapper, existingItems[existingItems.length - 1].nextSibling);
+    } else {
+      const addBtn = container.querySelector('.add-footer-btn');
+      if (addBtn) {
+        container.insertBefore(itemWrapper, addBtn);
+      } else {
+        container.appendChild(itemWrapper);
+      }
+    }
   }
   
   // Adicionar novo link social
@@ -391,8 +580,16 @@ document.addEventListener('DOMContentLoaded', function() {
       bio: document.querySelector('.bio-input').value,
       phone: document.querySelector('.phone-input').value,
       social_links: [],
-      profile_links: []
+      profile_links: [],
+      footer_items: [],
+      theme: ''
     };
+    
+    // Coletar tema selecionado
+    const activeTheme = document.querySelector('.theme-option.active');
+    if (activeTheme) {
+      data.theme = activeTheme.getAttribute('data-theme');
+    }
     
     // Verificar se a imagem foi alterada
     const profileImg = document.querySelector('.img-edit-wrapper img');
@@ -431,6 +628,23 @@ document.addEventListener('DOMContentLoaded', function() {
         icon: wrapper.querySelector('.icon-select').value,
         class: wrapper.querySelector('.class-select').value
       });
+    });
+    
+    // Coletar itens do footer
+    document.querySelectorAll('.edit-footer-wrapper').forEach(wrapper => {
+      const textInput = wrapper.querySelector('.footer-text-input');
+      const urlInput = wrapper.querySelector('.footer-url-input');
+      const iconSelect = wrapper.querySelector('.footer-icon-select');
+      const isBrandCheckbox = wrapper.querySelector('.footer-brand-checkbox');
+      
+      if (textInput && textInput.value.trim()) {
+        data.footer_items.push({
+          text: textInput.value.trim(),
+          url: urlInput ? urlInput.value : '',
+          icon: iconSelect ? iconSelect.value : '',
+          is_brand: isBrandCheckbox ? isBrandCheckbox.checked : false
+        });
+      }
     });
     
     return data;
