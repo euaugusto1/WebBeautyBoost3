@@ -88,8 +88,23 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   width: 100%;
+  padding-top: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -10%;
+  width: 120%;
+  height: 180px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+  z-index: -1;
+  border-radius: 8px;
 }
 
 /* Logo/Avatar */

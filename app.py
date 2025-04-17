@@ -1,7 +1,7 @@
 import os
 import json
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-from models import db, User, SocialLink, ProfileLink, ThemeSetting
+from models import db, User, SocialLink, ProfileLink, ThemeSetting, FooterItem
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev_secret_key")
@@ -60,6 +60,13 @@ with app.app_context():
         theme_settings = ThemeSetting(theme_name='theme-2')
         demo_user.theme_settings = theme_settings
         
+        # Adicionar itens do footer
+        footer_items = [
+            FooterItem(text='(98) 98100-0099', icon='fa-phone-alt', position=1),
+            FooterItem(text='contato@augu.dev', icon='fa-envelope', url='mailto:contato@augu.dev', position=2)
+        ]
+        demo_user.footer_items = footer_items
+        
         db.session.add(demo_user)
         db.session.commit()
 
@@ -88,6 +95,14 @@ def index():
                 'icon': link.icon, 
                 'class': link.css_class
             } for link in user.profile_links
+        ],
+        'footer_items': [
+            {
+                'text': item.text,
+                'icon': item.icon,
+                'url': item.url,
+                'is_brand': item.is_brand
+            } for item in user.footer_items
         ]
     }
     
@@ -111,6 +126,15 @@ def update_profile():
         user.name = data.get('name')
         user.bio = data.get('bio')
         user.phone = data.get('phone')
+        
+        # Atualizar tema
+        if 'theme' in data:
+            theme_name = data.get('theme')
+            if user.theme_settings:
+                user.theme_settings.theme_name = theme_name
+            else:
+                theme_settings = ThemeSetting(user_id=user.id, theme_name=theme_name)
+                db.session.add(theme_settings)
         
         # Verificar se há uma nova imagem de perfil
         if 'profile_image' in data and data['profile_image']:

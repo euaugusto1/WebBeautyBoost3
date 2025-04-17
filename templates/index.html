@@ -79,7 +79,16 @@
     
     <!-- Footer -->
     <div class="footer" data-aos="fade-up" data-aos-delay="900">
-      <p><i class="fas fa-phone-alt"></i> {{ profile.phone }}</p>
+      {% for footer_item in profile.footer_items %}
+        <p class="footer-item">
+          {% if footer_item.icon %}<i class="fas {{ footer_item.icon }}"></i>{% endif %}
+          {% if footer_item.url %}
+            <a href="{{ footer_item.url }}" target="_blank" class="{% if footer_item.is_brand %}brand-link{% endif %}">{{ footer_item.text }}</a>
+          {% else %}
+            {{ footer_item.text }}
+          {% endif %}
+        </p>
+      {% endfor %}
       <p>Todos os direitos reservados © <span id="current-year">2025</span></p>
       <p>Powered by <a href="#" class="brand-link">LinkStack</a></p>
     </div>

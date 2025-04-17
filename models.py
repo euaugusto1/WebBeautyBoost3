@@ -4,6 +4,22 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
+class FooterItem(db.Model):
+    __tablename__ = 'footer_items'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    text = db.Column(db.String(100), nullable=False)
+    icon = db.Column(db.String(50))
+    url = db.Column(db.String(255))
+    is_brand = db.Column(db.Boolean, default=False)
+    position = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<FooterItem {self.text}>'
+
 class User(db.Model):
     __tablename__ = 'users'
     
@@ -22,6 +38,7 @@ class User(db.Model):
     social_links = db.relationship('SocialLink', backref='user', cascade='all, delete-orphan')
     profile_links = db.relationship('ProfileLink', backref='user', cascade='all, delete-orphan')
     theme_settings = db.relationship('ThemeSetting', backref='user', uselist=False, cascade='all, delete-orphan')
+    footer_items = db.relationship('FooterItem', backref='user', cascade='all, delete-orphan')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
