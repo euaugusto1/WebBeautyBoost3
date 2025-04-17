@@ -147,13 +147,19 @@
 /* Social links editing */
 .social-edit-wrapper {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
   background-color: rgba(255, 255, 255, 0.1);
-  padding: 10px;
+  padding: 15px;
   border-radius: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   transition: all 0.3s ease;
+}
+
+.social-edit-wrapper .social-icon {
+  align-self: center;
+  margin-bottom: 5px;
+  font-size: 1.5em;
 }
 
 .social-edit-wrapper:hover {
@@ -225,15 +231,20 @@
 
 /* Profile link editing */
 .link-edit-wrapper {
-  display: grid;
-  grid-template-columns: auto 2fr 3fr 1fr 1fr auto;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 15px;
-  align-items: center;
   transition: all 0.3s ease;
+}
+
+.link-edit-wrapper .icon-preview {
+  align-self: center;
+  margin-bottom: 5px;
+  font-size: 1.5em;
 }
 
 .link-edit-wrapper:hover {
@@ -350,14 +361,13 @@
 
 /* Footer items editing */
 .edit-footer-wrapper {
-  display: grid;
-  grid-template-columns: 2fr 2fr auto auto auto;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   background-color: rgba(255, 255, 255, 0.1);
-  padding: 10px;
+  padding: 15px;
   border-radius: 10px;
-  margin-bottom: 10px;
-  align-items: center;
+  margin-bottom: 15px;
   transition: all 0.3s ease;
 }
 

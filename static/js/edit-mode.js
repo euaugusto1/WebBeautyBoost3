@@ -313,7 +313,8 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const iconSelect = document.createElement('select');
       iconSelect.className = 'edit-input icon-select';
-      ['fa-globe', 'fa-code', 'fa-envelope', 'fa-link', 'fa-file', 'fa-video', 'fa-image', 'fa-music', 'fa-shopping-cart'].forEach(icon => {
+      ['fa-globe', 'fa-code', 'fa-envelope', 'fa-link', 'fa-file', 'fa-video', 'fa-image', 'fa-music', 'fa-shopping-cart', 
+       'fa-user', 'fa-heart', 'fa-star', 'fa-bookmark', 'fa-gift', 'fa-calendar', 'fa-home', 'fa-briefcase'].forEach(icon => {
         const option = document.createElement('option');
         option.value = icon;
         option.textContent = icon.replace('fa-', '');
