@@ -64,8 +64,10 @@
   position: sticky;
   top: 0;
   background-color: rgba(0, 0, 0, 0.9);
-  padding: 10px 0;
-  z-index: 10;
+  padding: 15px 0;
+  z-index: 999;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .save-button, .cancel-button {
@@ -138,6 +140,16 @@
   resize: none;
 }
 
+.description-input {
+  width: 90%;
+  margin: 10px auto;
+  display: block;
+  height: 100px;
+  resize: none;
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
 .phone-input {
   display: inline-block;
   width: auto;
@@ -154,6 +166,7 @@
   border-radius: 10px;
   margin-bottom: 15px;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .social-edit-wrapper .social-icon {
@@ -190,6 +203,10 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
 }
 
 .remove-btn:hover {

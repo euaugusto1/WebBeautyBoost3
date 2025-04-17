@@ -237,6 +237,23 @@ document.addEventListener('DOMContentLoaded', function() {
     bio.innerHTML = '';
     bio.appendChild(bioInput);
     
+    // Descrição do perfil
+    let description = document.querySelector('.profile-description');
+    // Se não existir, criar elemento
+    if (!description) {
+      description = document.createElement('div');
+      description.className = 'profile-description';
+      bio.parentNode.insertBefore(description, bio.nextSibling);
+    }
+    
+    const descriptionText = description.textContent || '';
+    const descriptionInput = document.createElement('textarea');
+    descriptionInput.value = descriptionText;
+    descriptionInput.className = 'edit-input description-input';
+    descriptionInput.placeholder = 'Adicione uma descrição sobre você...';
+    description.innerHTML = '';
+    description.appendChild(descriptionInput);
+    
     // Telefone - apenas se existir um elemento com classe .contact-phone
     const phoneElement = document.querySelector('.contact-phone');
     if (phoneElement) {
