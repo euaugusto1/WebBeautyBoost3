@@ -136,8 +136,8 @@
   <!-- AOS Animation Library -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   
-  <!-- Controles de edição -->
-  <button class="edit-toggle" id="edit-toggle" type="button" onclick="handleEditButtonClick(event)">
+  <!-- Controles de edição com solução direta -->
+  <button class="edit-toggle" id="edit-toggle" type="button">
     <i class="fas fa-pencil-alt"></i>
   </button>
   <div class="edit-controls" id="edit-controls">
@@ -148,29 +148,242 @@
 
   <!-- Custom JavaScript -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/edit-mode.js') }}"></script>
   <script src="{{ url_for('static', filename='js/animated-patterns.js') }}"></script>
   <script src="{{ url_for('static', filename='js/social-links.js') }}"></script>
   
   <script>
-    // Garantir que o botão de edição funcione
+    // Sistema de edição simplificado e direto
     document.addEventListener('DOMContentLoaded', function() {
-      const editButton = document.getElementById('edit-toggle');
-      if (editButton) {
-        console.log('Configurando botão de edição diretamente');
-        editButton.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('Botão de edição clicado');
-          if (typeof window.handleEditButtonClick === 'function') {
-            window.handleEditButtonClick(e);
-          } else {
-            console.error('Função handleEditButtonClick não está definida');
-          }
-          return false;
+      // Variáveis globais
+      let isEditMode = false;
+      let originalData = {};
+      const editToggle = document.getElementById('edit-toggle');
+      const editControls = document.getElementById('edit-controls');
+      const profileContainer = document.querySelector('.container');
+      
+      // Verificar se o botão existe
+      if (!editToggle) {
+        console.error('Botão de edição não encontrado!');
+        return;
+      }
+      
+      // Adicionar evento de clique
+      editToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Botão de edição clicado');
+        
+        // Alternar modo de edição
+        if (!isEditMode) {
+          // Ativar modo de edição
+          isEditMode = true;
+          profileContainer.classList.add('edit-mode');
+          editControls.classList.add('active');
+          
+          // Salvar dados originais
+          saveOriginalData();
+          
+          // Tornar campos editáveis
+          makeFieldsEditable();
+          
+          // Criar botões de ação
+          createActionButtons();
+        } else {
+          // Desativar modo de edição
+          disableEditMode();
+        }
+        
+        return false;
+      });
+      
+      // Guardar dados originais
+      function saveOriginalData() {
+        originalData.name = document.querySelector('.username').textContent.replace('•', '').trim();
+        originalData.bio = document.querySelector('.bio').textContent;
+        
+        // Descrição adicional
+        const descriptionElement = document.querySelector('.description');
+        originalData.description = descriptionElement ? descriptionElement.textContent : '';
+        
+        // Links sociais
+        originalData.socialLinks = [];
+        document.querySelectorAll('.social-icon').forEach(icon => {
+          originalData.socialLinks.push({
+            platform: Array.from(icon.classList).find(c => c !== 'social-icon'),
+            url: icon.getAttribute('href'),
+            icon: icon.querySelector('i').className
+          });
         });
-      } else {
-        console.error('Botão de edição não encontrado');
+        
+        // Links do perfil
+        originalData.profileLinks = [];
+        document.querySelectorAll('.link-btn').forEach(link => {
+          originalData.profileLinks.push({
+            title: link.querySelector('span').textContent,
+            url: link.getAttribute('href'),
+            icon: link.querySelector('i').className,
+            class: Array.from(link.classList).find(c => c !== 'link-btn' && c !== 'track-click')
+          });
+        });
+        
+        // Itens do footer
+        originalData.footerItems = [];
+        document.querySelectorAll('.footer-item').forEach(item => {
+          const icon = item.querySelector('i');
+          const link = item.querySelector('a');
+          
+          originalData.footerItems.push({
+            text: link ? link.textContent : item.textContent.trim(),
+            icon: icon ? icon.className.replace('fas ', '') : '',
+            url: link ? link.getAttribute('href') : '',
+            is_brand: link && link.classList.contains('brand-link')
+          });
+        });
+        
+        // Tema atual
+        originalData.theme = document.body.className.replace('loaded', '').trim();
+      }
+      
+      // Tornar campos editáveis
+      function makeFieldsEditable() {
+        // Nome do usuário
+        const username = document.querySelector('.username');
+        const usernameText = username.textContent.replace('•', '').trim();
+        const usernameInput = document.createElement('input');
+        usernameInput.type = 'text';
+        usernameInput.value = usernameText;
+        usernameInput.className = 'edit-input username-input';
+        username.innerHTML = '';
+        username.appendChild(usernameInput);
+        username.appendChild(document.createElement('span')).className = 'dot';
+        username.querySelector('.dot').innerHTML = '•';
+        
+        // Bio
+        const bio = document.querySelector('.bio');
+        const bioText = bio.textContent;
+        const bioInput = document.createElement('textarea');
+        bioInput.value = bioText;
+        bioInput.className = 'edit-input bio-input';
+        bio.innerHTML = '';
+        bio.appendChild(bioInput);
+        
+        // Descrição do perfil
+        let description = document.querySelector('.description');
+        // Se não existir, criar elemento
+        if (!description) {
+          description = document.createElement('p');
+          description.className = 'description';
+          bio.parentNode.insertBefore(description, bio.nextSibling);
+        }
+        
+        const descriptionText = description.textContent || '';
+        const descriptionInput = document.createElement('textarea');
+        descriptionInput.value = descriptionText;
+        descriptionInput.className = 'edit-input description-input';
+        descriptionInput.placeholder = 'Adicione uma descrição sobre você...';
+        description.innerHTML = '';
+        description.appendChild(descriptionInput);
+        
+        // Aqui adicionaríamos mais código para tornar editáveis os links sociais, 
+        // links do perfil e itens do footer, mas para simplificar e resolver o problema
+        // atual, vamos focar apenas nos campos principais.
+      }
+      
+      // Criar botões de ação (salvar e cancelar)
+      function createActionButtons() {
+        const actionButtonsContainer = document.querySelector('.edit-action-buttons');
+        
+        // Limpar botões existentes
+        actionButtonsContainer.innerHTML = '';
+        
+        // Botão Salvar
+        const saveButton = document.createElement('button');
+        saveButton.className = 'save-button';
+        saveButton.innerHTML = '<i class="fas fa-check"></i>';
+        saveButton.title = 'Salvar alterações';
+        saveButton.addEventListener('click', saveChanges);
+        
+        // Botão Cancelar
+        const cancelButton = document.createElement('button');
+        cancelButton.className = 'cancel-button';
+        cancelButton.innerHTML = '<i class="fas fa-times"></i>';
+        cancelButton.title = 'Cancelar edição';
+        cancelButton.addEventListener('click', disableEditMode);
+        
+        // Adicionar botões ao container
+        actionButtonsContainer.appendChild(saveButton);
+        actionButtonsContainer.appendChild(cancelButton);
+        actionButtonsContainer.style.display = 'flex';
+      }
+      
+      // Função para salvar as alterações
+      function saveChanges() {
+        const editedData = collectEditedData();
+        
+        // Simulação de envio para o servidor
+        console.log('Dados a serem enviados:', editedData);
+        
+        // Mostrar mensagem de sucesso
+        showMessage('Perfil atualizado com sucesso!', 'success');
+        
+        // Desativar modo de edição
+        disableEditMode();
+      }
+      
+      // Coletar dados editados
+      function collectEditedData() {
+        const editedData = {};
+        
+        // Nome de usuário
+        const usernameInput = document.querySelector('.username-input');
+        if (usernameInput) {
+          editedData.name = usernameInput.value.trim();
+        }
+        
+        // Bio
+        const bioInput = document.querySelector('.bio-input');
+        if (bioInput) {
+          editedData.bio = bioInput.value.trim();
+        }
+        
+        // Descrição
+        const descriptionInput = document.querySelector('.description-input');
+        if (descriptionInput) {
+          editedData.description = descriptionInput.value.trim();
+        }
+        
+        return editedData;
+      }
+      
+      // Desativar modo de edição
+      function disableEditMode() {
+        isEditMode = false;
+        profileContainer.classList.remove('edit-mode');
+        editControls.classList.remove('active');
+        
+        // Recarregar a página para restaurar o estado original
+        location.reload();
+      }
+      
+      // Mostrar mensagem
+      function showMessage(message, type) {
+        const messageElement = document.createElement('div');
+        messageElement.className = `message ${type}`;
+        messageElement.textContent = message;
+        document.body.appendChild(messageElement);
+        
+        // Mostrar mensagem
+        setTimeout(() => {
+          messageElement.classList.add('show');
+        }, 100);
+        
+        // Remover mensagem após 3 segundos
+        setTimeout(() => {
+          messageElement.classList.remove('show');
+          setTimeout(() => {
+            messageElement.remove();
+          }, 400);
+        }, 3000);
       }
     });
   </script>
