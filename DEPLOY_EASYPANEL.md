@@ -37,7 +37,9 @@ Este guia explica como implantar o LinkStack no EasyPanel, uma plataforma de hos
    - Branch: `main` (ou o que você estiver usando)
    - Builder: `heroku/buildpacks:20` (em vez de heroku/builder:24)
    - Build Command: `pip install -r REQUISITOS.txt`
-   - Start Command: `gunicorn --bind 0.0.0.0:$PORT main:app`
+   - Start Command: `gunicorn --bind 0.0.0.0:$PORT --workers 4 --threads 2 main:app`
+
+   **IMPORTANTE**: Certifique-se de que seu repositório Git esteja configurado como público ou que você tenha adicionado uma chave SSH ao EasyPanel.
 
 3. Configure as variáveis de ambiente:
    ```
@@ -120,6 +122,27 @@ psql -h linkstack-db -U postgres -d postgres < linkstack_backup.sql
 ```
 
 ## Solução de Problemas
+
+### Erros de Implantação com GitHub
+
+Se você estiver enfrentando erros ao implantar via GitHub no EasyPanel:
+
+1. **Problemas de Acesso ao Repositório**:
+   - Verifique se o repositório está público ou se você adicionou uma chave SSH ao EasyPanel
+   - Nas configurações do serviço no EasyPanel, vá em "Settings" > "Git" e verifique as credenciais
+
+2. **Problemas com o Branch**:
+   - Certifique-se de que o nome do branch está correto (main, master, etc.)
+   - Verifique se o branch contém todos os arquivos necessários
+
+3. **Erros de Build**:
+   - Verifique os logs de build no EasyPanel para mensagens de erro específicas
+   - Certifique-se de que o arquivo REQUISITOS.txt existe na raiz do repositório
+   - Adicione um arquivo Procfile na raiz com: `web: gunicorn --bind 0.0.0.0:$PORT main:app`
+
+4. **Solução Alternativa**:
+   - Se o deploy via Git continuar falhando, considere usar o método Docker
+   - Clone seu repositório localmente, construa a imagem e envie para o registro do EasyPanel
 
 ### Erro com heroku/builder:24
 
