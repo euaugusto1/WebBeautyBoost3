@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkStack - João Silva</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --gradient-1: linear-gradient(135deg, #DA22FF, #9733EE);
+      --gradient-2: linear-gradient(135deg, #8A2387, #E94057, #F27121);
+      --gradient-3: linear-gradient(135deg, #000428, #004e92);
+      --gradient-4: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
+      --button-color: #ff416c;
+      --text-color: #fff;
+      --icon-bg: #9733EE;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--gradient-2);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      background-color: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo {
+      width: 90px;
+      height: 90px;
+      margin-bottom: 20px;
+      position: relative;
+      border-radius: 22px;
+      background: var(--gradient-1);
+      padding: 4px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .logo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      background-color: #8A2BE2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .profile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover .profile-img {
+      transform: scale(1.1);
+    }
+
+    .username {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .username span {
+      color: #40E0D0;
+    }
+
+    .bio {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-3px);
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .links {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .link-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      color: var(--text-color);
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .link-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      transition: all 0.3s ease;
+    }
+    
+    .link-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .link-btn:hover::before {
+      filter: brightness(1.2);
+    }
+    
+    .link-btn.website::before {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    }
+    
+    .link-btn.store::before {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+    }
+    
+    .link-btn.contact::before {
+      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    }
+
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.9);
+      width: 100%;
+      padding: 10px;
+      background: none;
+    }
+
+    .footer p {
+      margin: 3px 0;
+    }
+
+    .footer a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .theme-switcher {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 45px;
+      height: 45px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      border: none;
+      color: white;
+      font-size: 20px;
+    }
+
+    /* Temas alternativos */
+    body.theme-1 {
+      background: var(--gradient-1);
+    }
+
+    body.theme-2 {
+      background: var(--gradient-2);
+    }
+    
+    /* Adicionando classes para animação de hover nos social icons */
+    .social-icon:nth-child(1):hover {
+      background: #E1306C;
+    }
+    
+    .social-icon:nth-child(2):hover {
+      background: #0077B5;
+    }
+    
+    .social-icon:nth-child(3):hover {
+      background: #333333;
+    }
+    
+    .social-icon:nth-child(4):hover {
+      background: #1DA1F2;
+    }
+
+    body.theme-3 {
+      background: var(--gradient-3);
+    }
+
+    body.theme-4 {
+      background: var(--gradient-4);
+    }
+
+    /* Animação suave para trocar de tema */
+    body {
+      transition: background 0.5s ease;
+    }
+  </style>
+</head>
+<body class="theme-2">
+  <button class="theme-switcher" id="theme-switcher">
+    <i class="fas fa-palette"></i>
+  </button>
+
+  <div class="container">
+    <div class="logo">
+      <div class="logo-inner">
+        <img src="/api/placeholder/400/400" alt="Augusto Araujo" class="profile-img">
+      </div>
+    </div>
+    <h1 class="username">Augusto Araujo<span>•</span></h1>
+    <p class="bio">Desenvolvedor & entusiasta de IA</p>
+    
+    <div class="social-icons">
+      <a href="https://www.instagram.com/augu_ia/" target="_blank" class="social-icon">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="#" class="social-icon">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="#" class="social-icon">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="#" class="social-icon">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </div>
+    
+    <div class="links">
+      <a href="#" class="link-btn website">
+        <i class="fas fa-globe"></i>
+        Meu Portfolio
+      </a>
+      <a href="#" class="link-btn store">
+        <i class="fas fa-code"></i>
+        Projetos de IA
+      </a>
+      <a href="#" class="link-btn contact">
+        <i class="fas fa-envelope"></i>
+        Fale Comigo
+      </a>
+    </div>
+    
+    <div class="footer">
+      <p>Contato: (98) 98100-0099</p>
+      <p>Todos os direitos reservados © 2025</p>
+      <p>Powered by <a href="#">LinkStack</a></p>
+    </div>
+  </div>
+
+  <script>
+    const themeSwitcher = document.getElementById('theme-switcher');
+    const body = document.body;
+    const themes = ['theme-1', 'theme-2', 'theme-3', 'theme-4'];
+    let currentTheme = 1; // Começa com theme-2 (índice 1)
+    
+    themeSwitcher.addEventListener('click', () => {
+      // Remove o tema atual
+      body.classList.remove(themes[currentTheme]);
+      
+      // Avança para o próximo tema (com retorno ao início)
+      currentTheme = (currentTheme + 1) % themes.length;
+      
+      // Aplica o novo tema
+      body.classList.add(themes[currentTheme]);
+    });
+  </script>
+</body>
+</html>
