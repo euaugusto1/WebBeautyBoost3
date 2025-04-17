@@ -1,9 +1,9 @@
 # Correção de Erro de Implantação no EasyPanel
 
-O erro que você está encontrando ocorre porque:
+O novo erro que você está encontrando ocorre porque:
 
-1. O EasyPanel está tentando usar o builder `heroku/builder:24`, que tem problemas de compatibilidade
-2. As variáveis de ambiente estão configuradas para desenvolvimento local e não para o EasyPanel
+1. O EasyPanel não consegue encontrar o arquivo de requisitos do Python
+2. O buildpack Heroku está procurando por `requirements.txt` (em minúsculas), mas seu projeto usa `REQUISITOS.txt` (em maiúsculas)
 
 ## Solução Passo a Passo
 
@@ -42,13 +42,21 @@ Certifique-se de que o arquivo `Procfile` existe no seu repositório e contém:
 web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --threads 2 main:app
 ```
 
-### 4. Comando de Build
+### 4. Correção do Arquivo de Requisitos
 
-O comando de build no EasyPanel deve ser:
+Você tem duas opções para resolver o problema do arquivo de requisitos:
+
+**Opção A: Renomear o arquivo no repositório**
+Renomeie o arquivo `REQUISITOS.txt` para `requirements.txt` no seu repositório. Isso é a solução mais limpa.
+
+**Opção B: Modificar o comando de build**
+Altere o comando de build no EasyPanel para:
 
 ```
-pip install -r REQUISITOS.txt
+cp REQUISITOS.txt requirements.txt && pip install -r requirements.txt
 ```
+
+Esta segunda opção copia seu arquivo `REQUISITOS.txt` para `requirements.txt` durante o processo de build, sem alterar seu repositório original.
 
 ### 5. Reconstrua o Serviço
 

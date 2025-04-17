@@ -1,0 +1,47 @@
+Commit: Fixes a website deployment error
+
+Updated deployment settings in EasyPanel to fix a build error caused by an incompatible builder and incorrect environment variables.  The `CORRECAO_DEPLOY.md` file details the changes made to the builder, environment variables, and build command.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 8580ea19-0134-4eb4-9113-2bf77d58a295
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/e92c9ac1-f45a-45b8-b7f7-a9398957e1e5/470fbd53-1711-46ce-8e6b-e3baad573201.jpg 
+##########################################
+### Download Github Archive Started...
+### Thu, 17 Apr 2025 18:56:29 GMT
+##########################################
+
+20: Pulling from heroku/builder
+Digest: sha256:a9a48dd3e858a5ab24fd469aef7e17c950f923f5beb69681a60bae3e3c443884
+Status: Image is up to date for heroku/builder:20
+20-cnb: Pulling from heroku/heroku
+Digest: sha256:00ee094d57858a8e372c79c2e92ae0b2b0134e852ded0c9ed906db7b886c2016
+Status: Image is up to date for heroku/heroku:20-cnb
+===> ANALYZING
+Image with name "easypanel/repo-personal/new" not found
+===> DETECTING
+heroku/python      0.26.1
+heroku/procfile    4.2.1
+heroku/eol-warning 1.0.0
+===> RESTORING
+===> BUILDING
+
+[Error: Couldn't find any supported Python package manager files]
+Your app must have either a pip requirements file ('requirements.txt')
+or Poetry lockfile ('poetry.lock') in the root directory of its source
+code, so your app's dependencies can be installed.
+
+If your app already has one of those files, check that it:
+
+1. Is in the top level directory (not a subdirectory).
+2. Has the correct spelling (the filenames are case-sensitive).
+3. Isn't excluded by '.gitignore' or 'project.toml'.
+
+Otherwise, add a package manager file to your app. If your app has
+no dependencies, then create an empty 'requirements.txt' file.
+
+ERROR: failed to build: exit status 1
+ERROR: failed to build: executing lifecycle: failed with status code: 51
+##########################################
+### Error
+### Thu, 17 Apr 2025 18:56:33 GMT
+##########################################
