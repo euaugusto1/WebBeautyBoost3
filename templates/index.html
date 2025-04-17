@@ -56,6 +56,9 @@
       </div>
       <h1 class="username" data-aos="fade-up" data-aos-delay="300">{{ profile.name }}<span class="dot">•</span></h1>
       <p class="bio" data-aos="fade-up" data-aos-delay="400">{{ profile.bio }}</p>
+      {% if profile.description %}
+      <p class="description" data-aos="fade-up" data-aos-delay="450">{{ profile.description }}</p>
+      {% endif %}
     </div>
     
     <!-- Social Icons -->
@@ -90,8 +93,10 @@
           {% endif %}
         </p>
       {% endfor %}
-      <p>Todos os direitos reservados © <span id="current-year">2025</span></p>
-      <p>Powered by <a href="#" class="brand-link">LinkStack</a></p>
+      <p class="footer-copyright">
+        {% if profile.copyright_icon %}<i class="fas {{ profile.copyright_icon }}"></i>{% endif %}
+        {{ profile.copyright_text }}
+      </p>
     </div>
   </div>
 

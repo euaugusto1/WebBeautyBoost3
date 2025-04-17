@@ -270,10 +270,23 @@ body.theme-20 .logo::before { background: conic-gradient(from 0deg, transparent 
   font-size: 16px;
   color: var(--text-secondary);
   text-align: center;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  max-width: 90%;
+  font-weight: 400;
+}
+
+.description {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  text-align: center;
   margin-bottom: 25px;
   line-height: 1.5;
   max-width: 90%;
   font-weight: 400;
+  font-style: italic;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Social icons */
@@ -776,6 +789,10 @@ body.theme-20 {
     font-size: 14px;
   }
   
+  .description {
+    font-size: 12px;
+  }
+  
   .social-icon {
     width: 45px;
     height: 45px;
@@ -819,6 +836,10 @@ body.theme-20 {
   
   .bio {
     font-size: 13px;
+  }
+  
+  .description {
+    font-size: 11px;
   }
   
   .social-icons {

@@ -238,11 +238,11 @@ document.addEventListener('DOMContentLoaded', function() {
     bio.appendChild(bioInput);
     
     // Descrição do perfil
-    let description = document.querySelector('.profile-description');
+    let description = document.querySelector('.description');
     // Se não existir, criar elemento
     if (!description) {
-      description = document.createElement('div');
-      description.className = 'profile-description';
+      description = document.createElement('p');
+      description.className = 'description';
       bio.parentNode.insertBefore(description, bio.nextSibling);
     }
     

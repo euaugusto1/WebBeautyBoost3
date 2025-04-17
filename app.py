@@ -35,7 +35,10 @@ with app.app_context():
             email='demo@linkstack.com',
             name='Augusto Araujo',
             bio='Desenvolvedor & entusiasta de IA',
-            phone='(98) 98100-0099'
+            description='Apaixonado por tecnologia e desenvolvimento de soluções inovadoras. Especialista em Python, JavaScript e frameworks modernos.',
+            phone='(98) 98100-0099',
+            copyright_text='Todos os direitos reservados © 2025 - Powered by LinkStack',
+            copyright_icon='fa-copyright'
         )
         demo_user.set_password('demo1234')
         
@@ -79,8 +82,11 @@ def index():
     profile = {
         'name': user.name,
         'bio': user.bio,
+        'description': user.description or '',
         'phone': user.phone,
         'image_url': user.profile_image,
+        'copyright_text': user.copyright_text or 'Todos os direitos reservados © 2025 - Powered by LinkStack',
+        'copyright_icon': user.copyright_icon or 'fa-copyright',
         'social_links': [
             {
                 'platform': link.platform, 
@@ -127,7 +133,10 @@ def update_profile():
         # Atualizar dados do usuário
         user.name = data.get('name')
         user.bio = data.get('bio')
+        user.description = data.get('description', '')
         user.phone = data.get('phone')
+        user.copyright_text = data.get('copyright_text', '')
+        user.copyright_icon = data.get('copyright_icon', 'fa-copyright')
         
         # Atualizar tema e padrão de fundo
         if 'theme' in data and data['theme']:
