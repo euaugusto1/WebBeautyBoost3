@@ -1033,6 +1033,8 @@ function initEditSystem() {
   
   // Coletar dados editados
   function collectEditedData() {
+    console.log("Coletando dados editados...");
+    
     const data = {
       name: document.querySelector('.username-input').value,
       bio: document.querySelector('.bio-input').value,
@@ -1046,6 +1048,12 @@ function initEditSystem() {
       copyright_text: document.querySelector('.footer-copyright-input') ? document.querySelector('.footer-copyright-input').value : '',
       copyright_icon: document.querySelector('.copyright-wrapper .footer-icon-select') ? document.querySelector('.copyright-wrapper .footer-icon-select').value : 'fa-copyright'
     };
+    
+    console.log("Dados básicos coletados:", {
+      name: data.name,
+      bio: data.bio,
+      description: data.description
+    });
     
     // Coletar tema selecionado
     const activeTheme = document.querySelector('.theme-option.active');
@@ -1121,6 +1129,7 @@ function initEditSystem() {
   // Salvar alterações no servidor
   function saveChanges() {
     const data = collectEditedData();
+    console.log("Dados a serem salvos:", data);
     
     // Enviar dados para o servidor
     fetch('/update-profile', {
@@ -1131,8 +1140,9 @@ function initEditSystem() {
       body: JSON.stringify(data),
     })
     .then(response => {
+      console.log("Resposta do servidor:", response.status, response.statusText);
       if (!response.ok) {
-        throw new Error('Falha ao salvar as alterações');
+        throw new Error(`Falha ao salvar as alterações: ${response.status} ${response.statusText}`);
       }
       return response.json();
     })
