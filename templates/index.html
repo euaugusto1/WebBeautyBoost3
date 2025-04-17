@@ -16,6 +16,7 @@
   
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/edit-mode.css') }}">
 </head>
 <body class="{{ theme }}">
   <!-- Theme Switcher -->
@@ -79,7 +80,19 @@
   <!-- AOS Animation Library -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   
+  <!-- Controles de edição -->
+  <div class="edit-controls" id="edit-controls">
+    <button class="edit-toggle" id="edit-toggle">
+      <i class="fas fa-pencil-alt"></i>
+    </button>
+    <div class="edit-action-buttons">
+      <button class="save-button" id="save-button">Salvar</button>
+      <button class="cancel-button" id="cancel-button">Cancelar</button>
+    </div>
+  </div>
+
   <!-- Custom JavaScript -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/edit-mode.js') }}"></script>
 </body>
 </html>

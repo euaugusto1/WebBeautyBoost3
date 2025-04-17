@@ -1,0 +1,340 @@
+/* Estilos para o modo de edição */
+
+/* Controles de edição */
+.edit-controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  z-index: 100;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.edit-controls.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.edit-toggle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.edit-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.edit-action-buttons {
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  visibility: hidden;
+}
+
+.edit-controls.active .edit-action-buttons {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.save-button,
+.cancel-button {
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.save-button {
+  background-color: #4CAF50;
+}
+
+.cancel-button {
+  background-color: #f44336;
+}
+
+.save-button:hover,
+.cancel-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Campos editáveis */
+.edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  margin-bottom: 5px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.edit-input:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.3);
+}
+
+.edit-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Username input */
+.username-input {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  padding-bottom: 5px;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+/* Bio input */
+.bio-input {
+  min-height: 60px;
+  resize: vertical;
+  text-align: center;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+/* Link edit wrapper */
+.link-edit-wrapper {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  grid-template-rows: auto auto auto;
+  grid-gap: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.icon-preview {
+  grid-row: 1 / span 3;
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.link-title-input {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.link-url-input {
+  grid-row: 2;
+  grid-column: 2;
+}
+
+.icon-select, .class-select {
+  grid-row: 3;
+  grid-column: 2;
+  width: 48%;
+  margin-right: 2%;
+  display: inline-block;
+}
+
+/* Social edit wrapper */
+.social-edit-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.social-url-input, 
+.platform-select {
+  width: 120px;
+  max-width: 100%;
+  margin-top: 8px;
+  font-size: 12px;
+  padding: 6px;
+}
+
+/* Botões para adicionar novos itens */
+.add-social-btn, 
+.add-link-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.add-social-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 18px;
+  margin: 0 10px;
+}
+
+.add-link-btn {
+  width: 100%;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.add-social-btn:hover,
+.add-link-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: var(--accent);
+}
+
+/* Botão para remover itens */
+.remove-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s ease;
+  z-index: 5;
+}
+
+.social-edit-wrapper:hover .remove-btn,
+.link-edit-wrapper:hover .remove-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Mensagem de feedback */
+.message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  padding: 12px 25px;
+  border-radius: 30px;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.message.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.message.success {
+  background-color: #4CAF50;
+}
+
+.message.error {
+  background-color: #f44336;
+}
+
+/* Adicionar aos media queries existentes */
+@media (max-width: 600px) {
+  .edit-controls {
+    bottom: 75px;
+    right: 10px;
+  }
+  
+  .link-edit-wrapper {
+    grid-template-columns: 30px 1fr;
+    padding: 10px;
+  }
+  
+  .icon-select, 
+  .class-select {
+    width: 100%;
+    margin-right: 0;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .social-url-input, 
+  .platform-select {
+    width: 100px;
+  }
+  
+  .add-social-btn {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 380px) {
+  .username-input {
+    font-size: 16px;
+  }
+  
+  .edit-controls {
+    bottom: 70px;
+    right: 10px;
+  }
+  
+  .edit-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .save-button,
+  .cancel-button {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}

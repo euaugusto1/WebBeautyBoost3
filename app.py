@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from models import db, User, SocialLink, ProfileLink, ThemeSetting
 
 app = Flask(__name__)
@@ -96,6 +96,61 @@ def index():
         theme = user.theme_settings.theme_name
     
     return render_template('index.html', profile=profile, theme=theme)
+
+@app.route('/update-profile', methods=['POST'])
+def update_profile():
+    try:
+        # Obter dados do formulário
+        data = request.json
+        
+        # Obter usuário (usamos o demo por enquanto)
+        user = User.query.filter_by(username='demo').first_or_404()
+        
+        # Atualizar dados do usuário
+        user.name = data.get('name')
+        user.bio = data.get('bio')
+        user.phone = data.get('phone')
+        
+        # Atualizar links sociais
+        # Primeiro, remover todos os links existentes
+        for link in user.social_links:
+            db.session.delete(link)
+        
+        # Adicionar os novos links sociais
+        for link_data in data.get('social_links', []):
+            social_link = SocialLink(
+                user_id=user.id,
+                platform=link_data.get('platform'),
+                url=link_data.get('url'),
+                icon=link_data.get('icon')
+            )
+            db.session.add(social_link)
+        
+        # Atualizar links do perfil
+        # Primeiro, remover todos os links existentes
+        for link in user.profile_links:
+            db.session.delete(link)
+        
+        # Adicionar os novos links do perfil
+        for index, link_data in enumerate(data.get('profile_links', [])):
+            profile_link = ProfileLink(
+                user_id=user.id,
+                title=link_data.get('title'),
+                url=link_data.get('url'),
+                icon=link_data.get('icon'),
+                css_class=link_data.get('class'),
+                position=index + 1
+            )
+            db.session.add(profile_link)
+        
+        # Salvar as alterações no banco de dados
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Perfil atualizado com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        print(f'Erro ao atualizar perfil: {str(e)}')
+        return jsonify({'success': False, 'message': f'Erro ao atualizar o perfil: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
