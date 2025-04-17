@@ -1,15 +1,20 @@
 :root {
-  /* Theme gradients */
-  --gradient-1: linear-gradient(135deg, #DA22FF, #9733EE);
-  --gradient-2: linear-gradient(135deg, #8A2387, #E94057, #F27121);
-  --gradient-3: linear-gradient(135deg, #000428, #004e92);
-  --gradient-4: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
-  --gradient-5: linear-gradient(135deg, #11998e, #38ef7d);
+  /* Theme gradients - Minimalistas masculinos */
+  --gradient-1: linear-gradient(135deg, #1A2980, #26D0CE); /* Azul oceano */
+  --gradient-2: linear-gradient(135deg, #232526, #414345); /* Escala de cinza */
+  --gradient-3: linear-gradient(135deg, #000428, #004e92); /* Azul profundo */
+  --gradient-4: linear-gradient(135deg, #0F2027, #203A43, #2C5364); /* Marinho */
+  --gradient-5: linear-gradient(135deg, #16222A, #3A6073); /* Escuro elegante */
+  --gradient-6: linear-gradient(135deg, #0B486B, #F56217); /* Azul e laranja */
+  --gradient-7: linear-gradient(135deg, #3C3B3F, #605C3C); /* Carvão e oliva */
+  --gradient-8: linear-gradient(135deg, #1F1C2C, #928DAB); /* Violeta escuro */
+  --gradient-9: linear-gradient(135deg, #141E30, #243B55); /* Noite estrelada */
+  --gradient-10: linear-gradient(135deg, #2C3E50, #4CA1AF); /* Cinza e turquesa */
   
   /* Button colors */
-  --button-1: linear-gradient(135deg, #ff416c, #ff4b2b);
-  --button-2: linear-gradient(135deg, #11998e, #38ef7d);
-  --button-3: linear-gradient(135deg, #4e54c8, #8f94fb);
+  --button-1: linear-gradient(135deg, #2c3e50, #4ca1af);
+  --button-2: linear-gradient(135deg, #3a6186, #89253e);
+  --button-3: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
   
   /* Social media colors */
   --instagram: #E1306C;
@@ -94,33 +99,56 @@ body {
   margin-bottom: 20px;
   position: relative;
   border-radius: 50%;
-  background: var(--gradient-1);
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.025));
   padding: 4px;
   box-shadow: var(--shadow-strong);
   overflow: hidden;
   z-index: 1;
+  transition: all 0.4s ease;
+}
+
+.logo::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg, 
+    transparent 0%, 
+    var(--accent) 25%, 
+    rgba(255,255,255,0.3) 50%, 
+    var(--accent) 75%, 
+    transparent 100%
+  );
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .logo-inner {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   position: relative;
+  border: 2px solid rgba(255,255,255,0.05);
 }
 
 .logo-outline {
   position: absolute;
   inset: -2px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  opacity: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   z-index: 2;
-  transition: opacity var(--transition-medium);
+  box-shadow: inset 0 0 15px rgba(255,255,255,0.1);
 }
 
 .profile-img {
@@ -141,11 +169,14 @@ body {
 
 /* Username */
 .username {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
   margin-bottom: 5px;
   text-align: center;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
   background: linear-gradient(to right, #ffffff, var(--accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -153,10 +184,26 @@ body {
   text-fill-color: transparent;
 }
 
+.username::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--accent), transparent);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+.username:hover::after {
+  width: 100px;
+}
+
 .username .dot {
   color: var(--accent);
   display: inline-block;
-  animation: pulse 2s infinite;
+  animation: pulse 3s infinite;
   margin: 0 2px;
   -webkit-text-fill-color: var(--accent);
 }
@@ -493,6 +540,26 @@ body {
   background: var(--gradient-5);
 }
 
+.theme-preview.theme-6 {
+  background: var(--gradient-6);
+}
+
+.theme-preview.theme-7 {
+  background: var(--gradient-7);
+}
+
+.theme-preview.theme-8 {
+  background: var(--gradient-8);
+}
+
+.theme-preview.theme-9 {
+  background: var(--gradient-9);
+}
+
+.theme-preview.theme-10 {
+  background: var(--gradient-10);
+}
+
 /* Theme variations */
 body.theme-1 {
   background: var(--gradient-1);
@@ -512,6 +579,26 @@ body.theme-4 {
 
 body.theme-5 {
   background: var(--gradient-5);
+}
+
+body.theme-6 {
+  background: var(--gradient-6);
+}
+
+body.theme-7 {
+  background: var(--gradient-7);
+}
+
+body.theme-8 {
+  background: var(--gradient-8);
+}
+
+body.theme-9 {
+  background: var(--gradient-9);
+}
+
+body.theme-10 {
+  background: var(--gradient-10);
 }
 
 /* Media Queries */

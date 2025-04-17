@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const themeClass = preview.dataset.theme;
       
       // Remove all theme classes from body
-      body.classList.remove('theme-1', 'theme-2', 'theme-3', 'theme-4', 'theme-5');
+      body.classList.remove('theme-1', 'theme-2', 'theme-3', 'theme-4', 'theme-5', 
+                          'theme-6', 'theme-7', 'theme-8', 'theme-9', 'theme-10');
       
       // Add selected theme class
       body.classList.add(themeClass);
