@@ -1,12 +1,18 @@
 # Solução Final para Deploy no EasyPanel
 
-## Dockerfile Atualizado para Flask
+## Dockerfile Robusto para Flask
 
-O Dockerfile principal foi atualizado para ser compatível com aplicações Flask. Agora ele é baseado em `python:3.11-slim` e configurado corretamente para o ambiente de produção, sem necessidade de renomear arquivos.
+O Dockerfile foi completamente atualizado para aplicações Flask com recursos avançados:
+
+1. **Base confiável**: Usa python:3.11-slim como imagem base
+2. **Dependências completas**: Instalação de todas as dependências necessárias para PostgreSQL
+3. **Processo de inicialização robusto**: Scripts inteligentes para verificação de banco de dados
+4. **Healthcheck integrado**: Monitoramento automático da aplicação
+5. **Tratamento correto de sinais**: Usando tini para evitar problemas de processos zumbis
 
 ## Instruções para Deploy Correto
 
-### 2. Configure o EasyPanel para usar o Dockerfile padrão
+### 1. Configure o EasyPanel para usar o Dockerfile padrão
 
 1. **No EasyPanel, crie um novo serviço customizado**:
    - Tipo: **Custom**
@@ -29,13 +35,17 @@ O Dockerfile principal foi atualizado para ser compatível com aplicações Flas
    - Porta: **5000**
    - Protocolo: **HTTP**
 
-### Por que isso vai funcionar:
+### 2. Resolução de Problemas
 
-1. O Dockerfile foi agora atualizado para ser compatível com o seu aplicativo Flask
-2. Ele usa python:3.11-slim como base (não Alpine Linux)
-3. Inclui configuração PIP_BREAK_SYSTEM_PACKAGES=1 para evitar problemas de ambiente gerenciado
-4. Instala dependências específicas para psycopg2-binary (build-essential e libpq-dev)
-5. Configura gunicorn corretamente para executar a aplicação
+Se encontrar um erro como "container is not running", siga as orientações no arquivo TROUBLESHOOTING_CONTAINER.md.
+
+### 3. Benefícios das Melhorias Implementadas:
+
+1. **Inicialização inteligente**: O script entrypoint.sh verifica a disponibilidade do banco de dados antes de iniciar a aplicação
+2. **Diagnóstico automático**: Detecção e relatório sobre problemas comuns (dependências, arquivos ausentes, etc.)
+3. **Healthcheck integrado**: O Docker agora monitora se a aplicação está respondendo corretamente
+4. **Tratamento correto de sinais**: Usando tini para garantir que os processos sejam encerrados corretamente
+5. **Logs informativos**: Mensagens claras sobre o progresso da inicialização
 
 ## Alternativa: Branch de Deploy
 

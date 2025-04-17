@@ -11,6 +11,9 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
+    curl \
+    postgresql-client \
+    tini \
     && rm -rf /var/lib/apt/lists/*
 
 # Verificar se existe REQUISITOS.txt e copiar para requirements.txt
@@ -20,7 +23,14 @@ RUN if [ -f REQUISITOS.txt ]; then \
 fi
 
 # Instalar dependências Python
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt gunicorn
+
+# Copiar scripts de healthcheck e entrypoint
+COPY healthcheck.sh /healthcheck.sh
+COPY entrypoint.sh /entrypoint.sh
+
+# Tornar os scripts executáveis
+RUN chmod +x /healthcheck.sh /entrypoint.sh
 
 # Copiar código-fonte da aplicação
 COPY . .
@@ -29,9 +39,17 @@ COPY . .
 ENV FLASK_APP=main.py
 ENV FLASK_ENV=production
 ENV DEBUG=False
+ENV PYTHONUNBUFFERED=1
+
+# Configurar healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
+  CMD /healthcheck.sh
 
 # Expor porta para a aplicação
 EXPOSE 5000
 
-# Comando para iniciar a aplicação
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--threads", "2", "main:app"]
+# Usar tini como ponto de entrada para manipulação correta de sinais
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+# Usar o script de entrypoint para inicialização robusta
+CMD ["/entrypoint.sh"]
