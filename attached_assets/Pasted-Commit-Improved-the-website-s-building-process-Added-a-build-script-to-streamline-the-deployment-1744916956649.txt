@@ -1,0 +1,50 @@
+Commit: Improved the website's building process
+
+Added a build script to streamline the deployment process by handling the renaming of the requirements file and installing dependencies, fixing a previous build failure.  The `build.sh` script now handles copying `REQUISITOS.txt` to `requirements.txt` and running `pip install`.  The `CORRECAO_DEPLOY.md` file was updated to reflect these changes.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 8580ea19-0134-4eb4-9113-2bf77d58a295
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/e92c9ac1-f45a-45b8-b7f7-a9398957e1e5/ff7bee85-c72a-49f3-83f6-6419c8b2f4f3.jpg 
+##########################################
+### Download Github Archive Started...
+### Thu, 17 Apr 2025 19:08:06 GMT
+##########################################
+
+20: Pulling from heroku/builder
+Digest: sha256:a9a48dd3e858a5ab24fd469aef7e17c950f923f5beb69681a60bae3e3c443884
+Status: Image is up to date for heroku/builder:20
+20-cnb: Pulling from heroku/heroku
+Digest: sha256:00ee094d57858a8e372c79c2e92ae0b2b0134e852ded0c9ed906db7b886c2016
+Status: Image is up to date for heroku/heroku:20-cnb
+===> ANALYZING
+Image with name "easypanel/repo-personal/new" not found
+===> DETECTING
+heroku/python      0.26.1
+heroku/procfile    4.2.1
+heroku/eol-warning 1.0.0
+===> RESTORING
+Skipping buildpack layer analysis
+===> BUILDING
+
+[Error: Couldn't find any supported Python package manager files]
+Your app must have either a pip requirements file ('requirements.txt')
+or Poetry lockfile ('poetry.lock') in the root directory of its source
+code, so your app's dependencies can be installed.
+
+If your app already has one of those files, check that it:
+
+1. Is in the top level directory (not a subdirectory).
+2. Has the correct spelling (the filenames are case-sensitive).
+3. Isn't excluded by '.gitignore' or 'project.toml'.
+
+Otherwise, add a package manager file to your app. If your app has
+no dependencies, then create an empty 'requirements.txt' file.
+
+ERROR: failed to build: exit status 1
+ERROR: failed to build: executing lifecycle: failed with status code: 51
+##########################################
+### Error
+### Thu, 17 Apr 2025 19:08:09 GMT
+##########################################
+
+Command failed with exit code 1: pack build easypanel/repo-personal/new --path /etc/easypanel/projects/repo-personal/new/code/ --default-process web --network easypanel --clear-cache --env 'DATABASE_URL=postgresql://postgres:senha@linkstack-db:5432/postgres' --env 'PGHOST=linkstack-db' --env 'PGPORT=5432' --env 'PGUSER=postgres' --env 'PGPASSWORD=i8iLRKW4yLRkXbyjumnoAInHGZSbiuIlwvAqiuwj' --env 'PGDATABASE=postgres' --env 'SESSION_SECRET=d6d0b89d23827d16fe0c225aef457c1e0a0e7c2001d' --env 'FLASK_ENV=production' --env 'DEBUG=False' --env 'GIT_SHA=b9592610af31c87e31ebb077d902a6bbe169f687' --builder 'heroku/builder:20'
