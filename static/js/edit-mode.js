@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const editControls = document.getElementById('edit-controls');
   const profileContainer = document.querySelector('.container');
   
+  // Garantir que os botões estejam disponíveis e visíveis (bugfix)
+  if (!saveButton || !cancelButton) {
+    console.warn('Botões de salvar/cancelar não encontrados. Criando novamente...');
+    createActionButtons();
+  }
+  
   // Estado de edição
   let isEditMode = false;
   let originalData = {};
