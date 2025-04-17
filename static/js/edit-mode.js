@@ -1,34 +1,63 @@
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Edit Mode: DOM completamente carregado');
-  // Elementos principais
-  const editToggle = document.getElementById('edit-toggle');
-  console.log('Edit Toggle Button encontrado:', editToggle);
   
-  // Os botões de salvar e cancelar são criados dinamicamente quando o modo de edição é ativado
-  // então não precisamos buscá-los agora
-  const editControls = document.getElementById('edit-controls');
-  const profileContainer = document.querySelector('.container');
+  // Inicializar o sistema de edição com prioridade alta
+  setTimeout(function() {
+    initEditSystem();
+  }, 100);
   
-  // Criar o botão de edição caso não exista
-  if (!editToggle) {
-    console.warn('Botão de edição não encontrado. Criando um novo botão...');
-    const newEditButton = document.createElement('button');
-    newEditButton.id = 'edit-toggle';
-    newEditButton.className = 'edit-toggle';
-    newEditButton.innerHTML = '<i class="fas fa-edit"></i>';
-    document.body.appendChild(newEditButton);
+  function initEditSystem() {
+    // Elementos principais
+    const editToggle = document.getElementById('edit-toggle');
+    console.log('Edit Toggle Button encontrado:', editToggle);
     
-    // Atualizar a referência
-    const updatedEditToggle = document.getElementById('edit-toggle');
-    console.log('Novo botão de edição criado:', updatedEditToggle);
+    // Os botões de salvar e cancelar são criados dinamicamente quando o modo de edição é ativado
+    const editControls = document.getElementById('edit-controls');
+    const profileContainer = document.querySelector('.container');
     
-    // Adicionar evento ao botão recém-criado
-    if (updatedEditToggle) {
-      updatedEditToggle.addEventListener('click', function() {
-        console.log('Botão de edição clicado!');
+    // Verificar se o botão de edição existe
+    if (editToggle) {
+      // Configuração adicional do botão para garantir visibilidade
+      editToggle.style.visibility = 'visible';
+      editToggle.style.opacity = '1';
+      editToggle.style.zIndex = '10000';
+      editToggle.style.pointerEvents = 'auto';
+      
+      // Função direta no botão que será executada ao clicar
+      window.handleEditButtonClick = function() {
+        console.log('Função handleEditButtonClick chamada');
         enableEditMode();
         createActionButtons();
-      });
+        return false; // Prevenir comportamentos padrão
+      };
+      
+      // Adicionar evento click diretamente
+      editToggle.onclick = window.handleEditButtonClick;
+      
+      console.log('Botão de edição inicializado com sucesso.');
+    } else {
+      console.error('Botão de edição não encontrado!');
+      
+      // Criar o botão manualmente se não existir
+      const newEditButton = document.createElement('button');
+      newEditButton.id = 'edit-toggle';
+      newEditButton.className = 'edit-toggle';
+      newEditButton.innerHTML = '<i class="fas fa-edit"></i>';
+      newEditButton.style.visibility = 'visible';
+      newEditButton.style.opacity = '1';
+      newEditButton.style.zIndex = '10000';
+      newEditButton.style.position = 'fixed';
+      newEditButton.style.bottom = '20px';
+      newEditButton.style.right = '20px';
+      newEditButton.onclick = function() {
+        console.log('Botão de edição criado manualmente e clicado');
+        enableEditMode();
+        createActionButtons();
+        return false;
+      };
+      
+      document.body.appendChild(newEditButton);
+      console.log('Novo botão de edição criado manualmente');
     }
   }
   
@@ -1122,49 +1151,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 3000);
   }
   
-  // Criar e adicionar botões de ação independentes
+  // Criar e adicionar botões de ação para o modo de edição
   function createActionButtons() {
-    // Remover botões existentes se houver
-    const existingButtons = document.querySelector('.edit-action-buttons');
-    if (existingButtons) {
-      existingButtons.remove();
+    console.log('Criando botões de ação...');
+    
+    // Obter o container de botões existente
+    const actionButtonsContainer = document.querySelector('.edit-action-buttons');
+    
+    // Limpar e preparar o container
+    if (actionButtonsContainer) {
+      actionButtonsContainer.innerHTML = '';
+      actionButtonsContainer.style.display = 'flex';
+      actionButtonsContainer.style.opacity = '1';
+      actionButtonsContainer.style.visibility = 'visible';
+      
+      // Botão Salvar
+      const newSaveButton = document.createElement('button');
+      newSaveButton.className = 'save-button';
+      newSaveButton.id = 'save-button';
+      newSaveButton.innerHTML = '<i class="fas fa-check"></i>';
+      newSaveButton.addEventListener('click', function() {
+        console.log('Botão Salvar clicado');
+        saveChanges();
+      });
+      
+      // Botão Cancelar
+      const newCancelButton = document.createElement('button');
+      newCancelButton.className = 'cancel-button';
+      newCancelButton.id = 'cancel-button';
+      newCancelButton.innerHTML = '<i class="fas fa-times"></i>';
+      newCancelButton.addEventListener('click', function() {
+        console.log('Botão Cancelar clicado');
+        disableEditMode();
+      });
+      
+      // Adicionar botões ao container
+      actionButtonsContainer.appendChild(newSaveButton);
+      actionButtonsContainer.appendChild(newCancelButton);
+      
+      console.log('Botões de ação criados com sucesso!');
+    } else {
+      console.error('Container de botões de ação não encontrado!');
     }
-    
-    // Criar nova div para os botões
-    const actionButtons = document.createElement('div');
-    actionButtons.className = 'edit-action-buttons';
-    actionButtons.style.display = 'flex';
-    actionButtons.style.opacity = '1';
-    actionButtons.style.visibility = 'visible';
-    actionButtons.style.position = 'fixed';
-    actionButtons.style.bottom = '20px';
-    actionButtons.style.right = '20px';
-    actionButtons.style.zIndex = '99999';
-    
-    // Botão Salvar
-    const newSaveButton = document.createElement('button');
-    newSaveButton.className = 'save-button';
-    newSaveButton.id = 'save-button';
-    newSaveButton.innerHTML = '<i class="fas fa-check"></i>';
-    newSaveButton.addEventListener('click', function() {
-      saveChanges();
-    });
-    
-    // Botão Cancelar
-    const newCancelButton = document.createElement('button');
-    newCancelButton.className = 'cancel-button';
-    newCancelButton.id = 'cancel-button';
-    newCancelButton.innerHTML = '<i class="fas fa-times"></i>';
-    newCancelButton.addEventListener('click', function() {
-      disableEditMode();
-    });
-    
-    // Adicionar botões à div
-    actionButtons.appendChild(newSaveButton);
-    actionButtons.appendChild(newCancelButton);
-    
-    // Adicionar ao corpo do documento
-    document.body.appendChild(actionButtons);
   }
   
   // Verificar se botão de edição existe e adicionar eventos
