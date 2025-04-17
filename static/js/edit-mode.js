@@ -152,19 +152,21 @@ document.addEventListener('DOMContentLoaded', function() {
     bio.innerHTML = '';
     bio.appendChild(bioInput);
     
-    // Telefone
-    const phone = document.querySelector('.footer p:first-child');
-    const phoneText = phone.textContent.replace(/.*: /, '');
-    const phoneIcon = document.createElement('i');
-    phoneIcon.className = 'fas fa-phone-alt';
-    const phoneInput = document.createElement('input');
-    phoneInput.type = 'text';
-    phoneInput.value = phoneText;
-    phoneInput.className = 'edit-input phone-input';
-    phone.innerHTML = '';
-    phone.appendChild(phoneIcon);
-    phone.appendChild(document.createTextNode(' '));
-    phone.appendChild(phoneInput);
+    // Telefone - apenas se existir um elemento com classe .contact-phone
+    const phoneElement = document.querySelector('.contact-phone');
+    if (phoneElement) {
+      const phoneText = phoneElement.textContent.replace(/.*: /, '');
+      const phoneIcon = document.createElement('i');
+      phoneIcon.className = 'fas fa-phone-alt';
+      const phoneInput = document.createElement('input');
+      phoneInput.type = 'text';
+      phoneInput.value = phoneText;
+      phoneInput.className = 'edit-input phone-input';
+      phoneElement.innerHTML = '';
+      phoneElement.appendChild(phoneIcon);
+      phoneElement.appendChild(document.createTextNode(' '));
+      phoneElement.appendChild(phoneInput);
+    }
     
     // Links sociais
     const socialIcons = document.querySelectorAll('.social-icon');
@@ -595,7 +597,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const data = {
       name: document.querySelector('.username-input').value,
       bio: document.querySelector('.bio-input').value,
-      phone: document.querySelector('.phone-input').value,
+      phone: document.querySelector('.phone-input') ? document.querySelector('.phone-input').value : '',
       social_links: [],
       profile_links: [],
       footer_items: [],
