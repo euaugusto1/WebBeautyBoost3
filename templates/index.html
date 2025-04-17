@@ -91,7 +91,7 @@
     <!-- Social Icons -->
     <div class="social-icons" data-aos="fade-up" data-aos-delay="500">
       {% for social in profile.social_links %}
-      <a href="{{ social.url }}" target="_blank" class="social-icon {{ social.platform }}" title="{{ social.platform|capitalize }}">
+      <a href="{{ social.url }}" class="social-icon {{ social.platform }}">
         <i class="fab {{ social.icon }}"></i>
       </a>
       {% endfor %}
@@ -153,5 +153,6 @@
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="{{ url_for('static', filename='js/edit-mode.js') }}"></script>
   <script src="{{ url_for('static', filename='js/animated-patterns.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/social-links.js') }}"></script>
 </body>
 </html>

@@ -342,6 +342,10 @@ body.theme-35 .logo::before { background: conic-gradient(from 0deg, transparent 
   gap: 15px;
   margin-bottom: 35px;
   align-items: center;
+  width: 100%;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .social-icon {
@@ -486,6 +490,49 @@ body.theme-35 .logo::before { background: conic-gradient(from 0deg, transparent 
 
 .link-btn.contact .btn-bg-effect {
   background: var(--button-3);
+}
+
+/* Community banner especial */
+.link-btn.community {
+  background: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.link-btn.community .btn-bg-effect {
+  background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  opacity: 0.9;
+}
+
+.link-btn.community::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  transform: rotate(30deg);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.link-btn.community i {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 22px;
+  transition: all 0.4s ease;
+}
+
+.link-btn.community span {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Link banners for theme-specific styles - masculinos */
