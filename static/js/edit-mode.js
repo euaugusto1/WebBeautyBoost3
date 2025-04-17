@@ -330,8 +330,25 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const iconSelect = document.createElement('select');
       iconSelect.className = 'edit-input icon-select';
-      ['fa-globe', 'fa-code', 'fa-envelope', 'fa-link', 'fa-file', 'fa-video', 'fa-image', 'fa-music', 'fa-shopping-cart', 
-       'fa-user', 'fa-heart', 'fa-star', 'fa-bookmark', 'fa-gift', 'fa-calendar', 'fa-home', 'fa-briefcase'].forEach(icon => {
+      
+      // Lista expandida de ícones
+      const icons = [
+        'fa-globe', 'fa-code', 'fa-envelope', 'fa-link', 'fa-file', 'fa-video', 'fa-image', 
+        'fa-music', 'fa-shopping-cart', 'fa-book', 'fa-graduation-cap', 'fa-briefcase', 
+        'fa-map-marker-alt', 'fa-phone', 'fa-calendar', 'fa-certificate', 'fa-trophy',
+        'fa-heart', 'fa-star', 'fa-users', 'fa-comments', 'fa-lightbulb', 'fa-chart-bar',
+        'fa-camera', 'fa-tools', 'fa-puzzle-piece', 'fa-gem', 'fa-gift', 'fa-podcast',
+        'fa-coffee', 'fa-id-card', 'fa-ticket', 'fa-film', 'fa-palette', 'fa-laptop',
+        'fa-gamepad', 'fa-hand-holding-heart', 'fa-newspaper', 'fa-microphone', 'fa-blog',
+        'fa-guitar', 'fa-glasses', 'fa-utensils', 'fa-carrot', 'fa-plane', 'fa-hotel', 
+        'fa-store', 'fa-medal', 'fa-user-graduate', 'fa-dumbbell', 'fa-wallet', 
+        'fa-credit-card', 'fa-key', 'fa-house', 'fa-car'
+      ];
+      
+      // Ordenar ícones alfabeticamente
+      icons.sort();
+      
+      icons.forEach(icon => {
         const option = document.createElement('option');
         option.value = icon;
         option.textContent = icon.replace('fa-', '');
@@ -343,10 +360,23 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const classSelect = document.createElement('select');
       classSelect.className = 'edit-input class-select';
-      ['website', 'store', 'contact'].forEach(cls => {
+      
+      // Lista expandida de classes/estilos
+      const classes = [
+        'website', 'store', 'contact', 'project', 'blog', 'video', 'music', 
+        'photo', 'event', 'download', 'social', 'newsletter', 'portfolio',
+        'primary', 'secondary', 'success', 'danger', 'warning', 'info',
+        'premium', 'new', 'featured', 'special', 'exclusive', 'popular',
+        'limited', 'free', 'pro', 'basic', 'advanced', 'business'
+      ];
+      
+      // Ordenar classes alfabeticamente
+      classes.sort();
+      
+      classes.forEach(cls => {
         const option = document.createElement('option');
         option.value = cls;
-        option.textContent = cls;
+        option.textContent = cls.charAt(0).toUpperCase() + cls.slice(1);
         if (link.classList.contains(cls)) {
           option.selected = true;
         }
@@ -413,7 +443,22 @@ document.addEventListener('DOMContentLoaded', function() {
       
       const iconSelect = document.createElement('select');
       iconSelect.className = 'edit-input footer-icon-select';
-      ['', 'fa-phone-alt', 'fa-envelope', 'fa-map-marker-alt', 'fa-clock', 'fa-calendar', 'fa-info-circle'].forEach(iconClass => {
+      
+      // Lista completa de ícones de rodapé
+      const footerIcons = [
+        '', 'fa-phone-alt', 'fa-envelope', 'fa-map-marker-alt', 'fa-clock', 'fa-calendar', 
+        'fa-info-circle', 'fa-copyright', 'fa-heart', 'fa-check-circle', 'fa-shield-alt',
+        'fa-user-shield', 'fa-cookie', 'fa-thumbs-up', 'fa-handshake', 'fa-award',
+        'fa-question-circle', 'fa-exclamation-circle', 'fa-file', 'fa-lock', 'fa-globe',
+        'fa-tag', 'fa-credit-card', 'fa-truck', 'fa-headset', 'fa-eye', 'fa-university'
+      ];
+      
+      // Ordenar ícones (exceto a opção vazia que deve permanecer primeiro)
+      const emptyOption = footerIcons.shift();
+      footerIcons.sort();
+      footerIcons.unshift(emptyOption);
+      
+      footerIcons.forEach(iconClass => {
         const option = document.createElement('option');
         option.value = iconClass;
         option.textContent = iconClass ? iconClass.replace('fa-', '') : 'Sem ícone';
@@ -461,6 +506,51 @@ document.addEventListener('DOMContentLoaded', function() {
       addNewFooterItem(footerContainer);
     });
     footerContainer.appendChild(addFooterBtn);
+    
+    // Tornar o texto de copyright editável
+    const copyrightText = document.querySelector('.footer-copyright');
+    if (copyrightText) {
+      const copyrightWrapper = document.createElement('div');
+      copyrightWrapper.className = 'edit-footer-wrapper copyright-wrapper';
+      
+      const textInput = document.createElement('input');
+      textInput.type = 'text';
+      textInput.className = 'edit-input footer-copyright-input';
+      textInput.value = copyrightText.textContent.trim();
+      textInput.style.width = '100%';
+      
+      const iconSelect = document.createElement('select');
+      iconSelect.className = 'edit-input footer-icon-select';
+      ['', 'fa-copyright', 'fa-registered', 'fa-trademark', 'fa-shield-alt', 'fa-award'].forEach(iconClass => {
+        const option = document.createElement('option');
+        option.value = iconClass;
+        option.textContent = iconClass ? iconClass.replace('fa-', '') : 'Sem ícone';
+        if (copyrightText.querySelector('i') && copyrightText.querySelector('i').className.includes(iconClass)) {
+          option.selected = true;
+        } else if (iconClass === 'fa-copyright') {
+          option.selected = true;
+        }
+        iconSelect.appendChild(option);
+      });
+      
+      copyrightWrapper.appendChild(iconSelect);
+      copyrightWrapper.appendChild(textInput);
+      
+      const label = document.createElement('div');
+      label.className = 'copyright-label';
+      label.textContent = 'Texto de Copyright';
+      label.style.fontSize = '12px';
+      label.style.color = 'rgba(255,255,255,0.7)';
+      label.style.marginBottom = '5px';
+      
+      // Inserir o wrapper após o último item do rodapé
+      footerContainer.appendChild(document.createElement('hr')).style.margin = '15px 0';
+      footerContainer.appendChild(label);
+      footerContainer.appendChild(copyrightWrapper);
+      
+      // Esconder o texto original
+      copyrightText.style.display = 'none';
+    }
     
     // Add theme selector in edit mode (as a floating panel)
     const themeSwitcher = document.createElement('div');
@@ -580,11 +670,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const iconSelect = document.createElement('select');
     iconSelect.className = 'edit-input footer-icon-select';
-    [
+    
+    // Lista completa de ícones de rodapé
+    const footerIcons = [
       '', 'fa-phone-alt', 'fa-envelope', 'fa-map-marker-alt', 'fa-clock', 'fa-calendar', 
       'fa-info-circle', 'fa-copyright', 'fa-heart', 'fa-check-circle', 'fa-shield-alt',
-      'fa-user-shield', 'fa-cookie', 'fa-thumbs-up', 'fa-handshake', 'fa-award'
-    ].forEach(iconClass => {
+      'fa-user-shield', 'fa-cookie', 'fa-thumbs-up', 'fa-handshake', 'fa-award',
+      'fa-question-circle', 'fa-exclamation-circle', 'fa-file', 'fa-lock', 'fa-globe',
+      'fa-tag', 'fa-credit-card', 'fa-truck', 'fa-headset', 'fa-eye', 'fa-university'
+    ];
+    
+    // Ordenar ícones (exceto a opção vazia que deve permanecer primeiro)
+    const emptyOption = footerIcons.shift();
+    footerIcons.sort();
+    footerIcons.unshift(emptyOption);
+    
+    footerIcons.forEach(iconClass => {
       const option = document.createElement('option');
       option.value = iconClass;
       option.textContent = iconClass ? iconClass.replace('fa-', '') : 'Sem ícone';
@@ -796,12 +897,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const data = {
       name: document.querySelector('.username-input').value,
       bio: document.querySelector('.bio-input').value,
+      description: document.querySelector('.description-input') ? document.querySelector('.description-input').value : '',
       phone: document.querySelector('.phone-input') ? document.querySelector('.phone-input').value : '',
       social_links: [],
       profile_links: [],
       footer_items: [],
       theme: '',
-      pattern: ''
+      pattern: '',
+      copyright_text: document.querySelector('.footer-copyright-input') ? document.querySelector('.footer-copyright-input').value : '',
+      copyright_icon: document.querySelector('.copyright-wrapper .footer-icon-select') ? document.querySelector('.copyright-wrapper .footer-icon-select').value : 'fa-copyright'
     };
     
     // Coletar tema selecionado
