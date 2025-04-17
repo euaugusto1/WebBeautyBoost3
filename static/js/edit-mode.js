@@ -280,11 +280,32 @@ document.addEventListener('DOMContentLoaded', function() {
       const iconWrapper = document.createElement('div');
       iconWrapper.className = 'social-edit-wrapper';
       
+      // Criar cabeçalho com ícone e plataforma
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'social-header';
+      
+      // Obter a plataforma a partir da classe da rede social
+      const platform = Array.from(icon.classList).find(c => c !== 'social-icon');
+      
+      // Manter o ícone original
+      const iconElement = icon.cloneNode(true);
+      
+      // Criar label para a plataforma
+      const platformLabel = document.createElement('h4');
+      platformLabel.textContent = platform ? platform.charAt(0).toUpperCase() + platform.slice(1) : 'Social Link';
+      platformLabel.style.margin = '0';
+      platformLabel.style.color = '#fff';
+      
+      headerDiv.appendChild(iconElement);
+      headerDiv.appendChild(platformLabel);
+      
+      // Criar input para URL
       const urlInput = document.createElement('input');
       urlInput.type = 'text';
       urlInput.value = icon.getAttribute('href');
       urlInput.className = 'edit-input social-url-input';
-      urlInput.setAttribute('data-platform', Array.from(icon.classList).find(c => c !== 'social-icon'));
+      urlInput.placeholder = 'URL da rede social';
+      urlInput.setAttribute('data-platform', platform);
       
       // Botão para remover link social
       const removeBtn = document.createElement('button');
@@ -294,10 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
         iconWrapper.remove();
       });
       
-      // Manter o ícone original
-      const iconElement = icon.cloneNode(true);
-      
-      iconWrapper.appendChild(iconElement);
+      iconWrapper.appendChild(headerDiv);
       iconWrapper.appendChild(urlInput);
       iconWrapper.appendChild(removeBtn);
       
@@ -739,14 +757,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const iconWrapper = document.createElement('div');
     iconWrapper.className = 'social-edit-wrapper';
     
-    const platformSelect = document.createElement('select');
-    platformSelect.className = 'edit-input platform-select';
+    // Criar cabeçalho com ícone e plataforma
+    const headerDiv = document.createElement('div');
+    headerDiv.className = 'social-header';
     
     // Lista mais completa de plataformas sociais
     const platforms = [
       'instagram', 'linkedin', 'github', 'twitter', 'facebook', 'youtube', 'tiktok', 'twitch',
       'pinterest', 'snapchat', 'reddit', 'whatsapp', 'telegram', 'discord', 'medium', 'spotify',
-      'behance', 'dribbble', 'vimeo', 'flickr', 'mastodon', 'tinder', 'quora', 'soundcloud', 
+      'behance', 'dribbble', 'vimeo', 'flickr', 'mastodon', 'quora', 'soundcloud', 
       'slack', 'skype', 'wordpress', 'tumblr', 'deviantart', 'meetup', 'gmail',
       'outlook', 'amazon', 'windows', 'xbox', 'playstation', 'apple'
     ];
@@ -754,28 +773,58 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ordenar plataformas alfabeticamente
     platforms.sort();
     
-    platforms.forEach(platform => {
-      const option = document.createElement('option');
-      option.value = platform;
-      option.textContent = platform.charAt(0).toUpperCase() + platform.slice(1);
-      platformSelect.appendChild(option);
-    });
+    // Plataforma padrão (Instagram)
+    const defaultPlatform = 'instagram';
     
+    // Criar o ícone social
     const iconElement = document.createElement('a');
-    iconElement.className = 'social-icon instagram';
-    iconElement.innerHTML = '<i class="fab fa-instagram"></i>';
+    iconElement.className = 'social-icon ' + defaultPlatform;
+    iconElement.innerHTML = '<i class="fab fa-' + defaultPlatform + '"></i>';
     
+    // Criar label para a plataforma
+    const platformLabel = document.createElement('h4');
+    platformLabel.textContent = defaultPlatform.charAt(0).toUpperCase() + defaultPlatform.slice(1);
+    platformLabel.style.margin = '0';
+    platformLabel.style.color = '#fff';
+    
+    // Adicionar elementos ao cabeçalho
+    headerDiv.appendChild(iconElement);
+    headerDiv.appendChild(platformLabel);
+    
+    // Criar input para URL
     const urlInput = document.createElement('input');
     urlInput.type = 'text';
     urlInput.value = '#';
     urlInput.className = 'edit-input social-url-input';
-    urlInput.placeholder = 'URL';
+    urlInput.placeholder = 'URL da rede social';
+    
+    // Criar seletor de plataforma 
+    const platformSelect = document.createElement('select');
+    platformSelect.className = 'edit-input platform-select';
+    
+    platforms.forEach(platform => {
+      const option = document.createElement('option');
+      option.value = platform;
+      option.textContent = platform.charAt(0).toUpperCase() + platform.slice(1);
+      if (platform === defaultPlatform) {
+        option.selected = true;
+      }
+      platformSelect.appendChild(option);
+    });
     
     // Atualizar plataforma quando selecionada
     platformSelect.addEventListener('change', function() {
-      iconElement.className = 'social-icon ' + platformSelect.value;
-      iconElement.innerHTML = `<i class="fab fa-${platformSelect.value}"></i>`;
+      const selectedPlatform = this.value;
+      iconElement.className = 'social-icon ' + selectedPlatform;
+      iconElement.innerHTML = `<i class="fab fa-${selectedPlatform}"></i>`;
+      platformLabel.textContent = selectedPlatform.charAt(0).toUpperCase() + selectedPlatform.slice(1);
     });
+    
+    // Container para o seletor de plataforma
+    const selectContainer = document.createElement('div');
+    selectContainer.style.marginTop = '10px';
+    selectContainer.appendChild(document.createTextNode('Alterar rede social: '));
+    selectContainer.appendChild(platformSelect);
     
     // Botão para remover link social
     const removeBtn = document.createElement('button');
@@ -785,9 +834,10 @@ document.addEventListener('DOMContentLoaded', function() {
       iconWrapper.remove();
     });
     
-    iconWrapper.appendChild(iconElement);
-    iconWrapper.appendChild(platformSelect);
+    // Montar o componente completo
+    iconWrapper.appendChild(headerDiv);
     iconWrapper.appendChild(urlInput);
+    iconWrapper.appendChild(selectContainer);
     iconWrapper.appendChild(removeBtn);
     
     // Inserir antes do botão de adicionar
