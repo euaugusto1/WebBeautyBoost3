@@ -10,6 +10,14 @@
   --gradient-8: linear-gradient(135deg, #1F1C2C, #928DAB); /* Violeta escuro */
   --gradient-9: linear-gradient(135deg, #004d7a, #008793); /* Verde-azulado */
   --gradient-10: linear-gradient(135deg, #0b8793, #360033); /* Púrpura escuro */
+  --gradient-21: linear-gradient(135deg, #134E5E, #71B280); /* Verde floresta */
+  --gradient-22: linear-gradient(135deg, #3A1C71, #D76D77, #FFAF7B); /* Três tons vibrantes */
+  --gradient-23: linear-gradient(135deg, #0f0c29, #302b63, #24243e); /* Noite estrelada */
+  --gradient-24: linear-gradient(135deg, #2b5876, #4e4376); /* Azul noite */
+  --gradient-25: linear-gradient(135deg, #4DA0B0, #D39D38); /* Turquesa âmbar */
+  --gradient-26: linear-gradient(135deg, #0F2027, #2C5364); /* Azul marinho */
+  --gradient-27: linear-gradient(135deg, #5C258D, #4389A2); /* Roxo azulado */
+  --gradient-28: linear-gradient(135deg, #182848, #4b6cb7); /* Azul denim */
   
   /* Temas femininos */
   --gradient-11: linear-gradient(135deg, #F8CDDA, #1D2B64); /* Rosa ouro */
@@ -22,6 +30,13 @@
   --gradient-18: linear-gradient(135deg, #eacda3, #d6ae7b); /* Dourado suave */
   --gradient-19: linear-gradient(135deg, #667eea, #764ba2); /* Púrpura vibrante */
   --gradient-20: linear-gradient(135deg, #ff758c, #ff7eb3); /* Rosa chiclete */
+  --gradient-29: linear-gradient(135deg, #FDCBF1, #E6DEE9); /* Rosa suave */
+  --gradient-30: linear-gradient(135deg, #F3A183, #B21F1F); /* Pôr do sol */
+  --gradient-31: linear-gradient(135deg, #F761A1, #8C1BAB); /* Magenta roxo */
+  --gradient-32: linear-gradient(135deg, #FFD26F, #3677FF); /* Amarelo azul */
+  --gradient-33: linear-gradient(135deg, #00F5A0, #00D9F5); /* Verde água */
+  --gradient-34: linear-gradient(135deg, #F5515F, #A1051D); /* Vermelho cereja */
+  --gradient-35: linear-gradient(135deg, #ED4264, #FFEDBC); /* Pêssego rosa */
   
   /* Button colors */
   --button-1: linear-gradient(135deg, #2c3e50, #4ca1af);
@@ -162,6 +177,14 @@ body.theme-7 .logo::before { background: conic-gradient(from 0deg, transparent 0
 body.theme-8 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #928DAB 20%, rgba(255,255,255,0.3) 50%, #1F1C2C 80%, transparent 100%); }
 body.theme-9 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #008793 20%, rgba(255,255,255,0.3) 50%, #004d7a 80%, transparent 100%); }
 body.theme-10 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #360033 20%, rgba(255,255,255,0.3) 50%, #0b8793 80%, transparent 100%); }
+body.theme-21 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #71B280 20%, rgba(255,255,255,0.3) 50%, #134E5E 80%, transparent 100%); }
+body.theme-22 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #FFAF7B 20%, rgba(255,255,255,0.3) 50%, #3A1C71 80%, transparent 100%); }
+body.theme-23 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #302b63 20%, rgba(255,255,255,0.3) 50%, #0f0c29 80%, transparent 100%); }
+body.theme-24 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #4e4376 20%, rgba(255,255,255,0.3) 50%, #2b5876 80%, transparent 100%); }
+body.theme-25 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #D39D38 20%, rgba(255,255,255,0.3) 50%, #4DA0B0 80%, transparent 100%); }
+body.theme-26 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #2C5364 20%, rgba(255,255,255,0.3) 50%, #0F2027 80%, transparent 100%); }
+body.theme-27 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #4389A2 20%, rgba(255,255,255,0.3) 50%, #5C258D 80%, transparent 100%); }
+body.theme-28 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #4b6cb7 20%, rgba(255,255,255,0.3) 50%, #182848 80%, transparent 100%); }
 
 /* Border styles for different themes - femininos */
 body.theme-11 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #1D2B64 20%, rgba(255,255,255,0.3) 50%, #F8CDDA 80%, transparent 100%); }
@@ -174,6 +197,13 @@ body.theme-17 .logo::before { background: conic-gradient(from 0deg, transparent 
 body.theme-18 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #d6ae7b 20%, rgba(255,255,255,0.3) 50%, #eacda3 80%, transparent 100%); }
 body.theme-19 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #764ba2 20%, rgba(255,255,255,0.3) 50%, #667eea 80%, transparent 100%); }
 body.theme-20 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #ff7eb3 20%, rgba(255,255,255,0.3) 50%, #ff758c 80%, transparent 100%); }
+body.theme-29 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #E6DEE9 20%, rgba(255,255,255,0.3) 50%, #FDCBF1 80%, transparent 100%); }
+body.theme-30 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #B21F1F 20%, rgba(255,255,255,0.3) 50%, #F3A183 80%, transparent 100%); }
+body.theme-31 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #8C1BAB 20%, rgba(255,255,255,0.3) 50%, #F761A1 80%, transparent 100%); }
+body.theme-32 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #3677FF 20%, rgba(255,255,255,0.3) 50%, #FFD26F 80%, transparent 100%); }
+body.theme-33 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #00D9F5 20%, rgba(255,255,255,0.3) 50%, #00F5A0 80%, transparent 100%); }
+body.theme-34 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #A1051D 20%, rgba(255,255,255,0.3) 50%, #F5515F 80%, transparent 100%); }
+body.theme-35 .logo::before { background: conic-gradient(from 0deg, transparent 0%, #FFEDBC 20%, rgba(255,255,255,0.3) 50%, #ED4264 80%, transparent 100%); }
 
 @keyframes spin {
   from { transform: rotate(0deg); }
@@ -580,13 +610,14 @@ body.theme-20 .link-btn .btn-bg-effect { background: linear-gradient(135deg, #ff
   -webkit-backdrop-filter: blur(10px);
   padding: 15px;
   border-radius: 15px;
-  width: 250px;
+  width: 350px;
+  max-height: 450px;
+  overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   transform-origin: bottom left;
   transform: scale(0);
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  overflow: hidden;
 }
 
 .theme-preview-container.active {
@@ -599,19 +630,24 @@ body.theme-20 .link-btn .btn-bg-effect { background: linear-gradient(135deg, #ff
   font-size: 14px;
   margin-bottom: 12px;
   text-align: center;
+  position: sticky;
+  top: 0;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 5px 0;
+  z-index: 5;
 }
 
 .theme-previews {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
 }
 
 .theme-preview {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   border: 2px solid transparent;
   cursor: pointer;
   transition: all var(--transition-medium);
@@ -708,85 +744,381 @@ body.theme-20 .link-btn .btn-bg-effect { background: linear-gradient(135deg, #ff
   background: var(--gradient-20);
 }
 
-/* Theme variations */
+.theme-preview.theme-21 {
+  background: var(--gradient-21);
+}
+
+.theme-preview.theme-22 {
+  background: var(--gradient-22);
+}
+
+.theme-preview.theme-23 {
+  background: var(--gradient-23);
+}
+
+.theme-preview.theme-24 {
+  background: var(--gradient-24);
+}
+
+.theme-preview.theme-25 {
+  background: var(--gradient-25);
+}
+
+.theme-preview.theme-26 {
+  background: var(--gradient-26);
+}
+
+.theme-preview.theme-27 {
+  background: var(--gradient-27);
+}
+
+.theme-preview.theme-28 {
+  background: var(--gradient-28);
+}
+
+.theme-preview.theme-29 {
+  background: var(--gradient-29);
+}
+
+.theme-preview.theme-30 {
+  background: var(--gradient-30);
+}
+
+.theme-preview.theme-31 {
+  background: var(--gradient-31);
+}
+
+.theme-preview.theme-32 {
+  background: var(--gradient-32);
+}
+
+.theme-preview.theme-33 {
+  background: var(--gradient-33);
+}
+
+.theme-preview.theme-34 {
+  background: var(--gradient-34);
+}
+
+.theme-preview.theme-35 {
+  background: var(--gradient-35);
+}
+
+/* Theme variations and username gradient styles */
 body.theme-1 {
   background: var(--gradient-1);
+}
+body.theme-1 .username {
+  background: linear-gradient(to right, #fff, #26D0CE);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 body.theme-2 {
   background: var(--gradient-2);
 }
+body.theme-2 .username {
+  background: linear-gradient(to right, #fff, #414345);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-3 {
   background: var(--gradient-3);
+}
+body.theme-3 .username {
+  background: linear-gradient(to right, #fff, #004e92);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 body.theme-4 {
   background: var(--gradient-4);
 }
+body.theme-4 .username {
+  background: linear-gradient(to right, #fff, #2C5364);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-5 {
   background: var(--gradient-5);
+}
+body.theme-5 .username {
+  background: linear-gradient(to right, #fff, #3A6073);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 body.theme-6 {
   background: var(--gradient-6);
 }
+body.theme-6 .username {
+  background: linear-gradient(to right, #fff, #F56217);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-7 {
   background: var(--gradient-7);
+}
+body.theme-7 .username {
+  background: linear-gradient(to right, #fff, #605C3C);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 body.theme-8 {
   background: var(--gradient-8);
 }
+body.theme-8 .username {
+  background: linear-gradient(to right, #fff, #928DAB);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-9 {
   background: var(--gradient-9);
+}
+body.theme-9 .username {
+  background: linear-gradient(to right, #fff, #008793);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 body.theme-10 {
   background: var(--gradient-10);
 }
+body.theme-10 .username {
+  background: linear-gradient(to right, #fff, #360033);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-11 {
   background: var(--gradient-11);
+}
+body.theme-11 .username {
+  background: linear-gradient(to right, #fff, #F8CDDA);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 body.theme-12 {
   background: var(--gradient-12);
 }
+body.theme-12 .username {
+  background: linear-gradient(to right, #555, #C9D6FF);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-13 {
   background: var(--gradient-13);
+}
+body.theme-13 .username {
+  background: linear-gradient(to right, #fff, #fbc2eb);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 body.theme-14 {
   background: var(--gradient-14);
 }
+body.theme-14 .username {
+  background: linear-gradient(to right, #fff, #a1c4fd);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-15 {
   background: var(--gradient-15);
+}
+body.theme-15 .username {
+  background: linear-gradient(to right, #fff, #f6d365);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 body.theme-16 {
   background: var(--gradient-16);
 }
+body.theme-16 .username {
+  background: linear-gradient(to right, #fff, #ff9a9e);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-17 {
   background: var(--gradient-17);
+}
+body.theme-17 .username {
+  background: linear-gradient(to right, #fff, #f093fb);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 body.theme-18 {
   background: var(--gradient-18);
 }
+body.theme-18 .username {
+  background: linear-gradient(to right, #fff, #eacda3);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-19 {
   background: var(--gradient-19);
 }
+body.theme-19 .username {
+  background: linear-gradient(to right, #fff, #667eea);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 body.theme-20 {
   background: var(--gradient-20);
+}
+body.theme-20 .username {
+  background: linear-gradient(to right, #fff, #ff758c);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Novos temas */
+body.theme-21 {
+  background: var(--gradient-21);
+}
+body.theme-21 .username {
+  background: linear-gradient(to right, #fff, #71B280);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-22 {
+  background: var(--gradient-22);
+}
+body.theme-22 .username {
+  background: linear-gradient(to right, #fff, #FFAF7B);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-23 {
+  background: var(--gradient-23);
+}
+body.theme-23 .username {
+  background: linear-gradient(to right, #fff, #302b63);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-24 {
+  background: var(--gradient-24);
+}
+body.theme-24 .username {
+  background: linear-gradient(to right, #fff, #4e4376);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-25 {
+  background: var(--gradient-25);
+}
+body.theme-25 .username {
+  background: linear-gradient(to right, #fff, #D39D38);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-26 {
+  background: var(--gradient-26);
+}
+body.theme-26 .username {
+  background: linear-gradient(to right, #fff, #2C5364);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-27 {
+  background: var(--gradient-27);
+}
+body.theme-27 .username {
+  background: linear-gradient(to right, #fff, #4389A2);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-28 {
+  background: var(--gradient-28);
+}
+body.theme-28 .username {
+  background: linear-gradient(to right, #fff, #4b6cb7);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-29 {
+  background: var(--gradient-29);
+}
+body.theme-29 .username {
+  background: linear-gradient(to right, #555, #FDCBF1);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-30 {
+  background: var(--gradient-30);
+}
+body.theme-30 .username {
+  background: linear-gradient(to right, #fff, #B21F1F);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-31 {
+  background: var(--gradient-31);
+}
+body.theme-31 .username {
+  background: linear-gradient(to right, #fff, #8C1BAB);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-32 {
+  background: var(--gradient-32);
+}
+body.theme-32 .username {
+  background: linear-gradient(to right, #fff, #3677FF);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-33 {
+  background: var(--gradient-33);
+}
+body.theme-33 .username {
+  background: linear-gradient(to right, #fff, #00D9F5);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-34 {
+  background: var(--gradient-34);
+}
+body.theme-34 .username {
+  background: linear-gradient(to right, #fff, #A1051D);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+body.theme-35 {
+  background: var(--gradient-35);
+}
+body.theme-35 .username {
+  background: linear-gradient(to right, #fff, #ED4264);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 /* Media Queries */
