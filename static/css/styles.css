@@ -10,33 +10,48 @@
   --gradient-8: linear-gradient(135deg, #1F1C2C, #928DAB); /* Violeta escuro */
   --gradient-9: linear-gradient(135deg, #004d7a, #008793); /* Verde-azulado */
   --gradient-10: linear-gradient(135deg, #0b8793, #360033); /* Púrpura escuro */
-  --gradient-21: linear-gradient(135deg, #134E5E, #71B280); /* Verde floresta */
-  --gradient-22: linear-gradient(135deg, #3A1C71, #D76D77, #FFAF7B); /* Três tons vibrantes */
-  --gradient-23: linear-gradient(135deg, #0f0c29, #302b63, #24243e); /* Noite estrelada */
-  --gradient-24: linear-gradient(135deg, #2b5876, #4e4376); /* Azul noite */
-  --gradient-25: linear-gradient(135deg, #4DA0B0, #D39D38); /* Turquesa âmbar */
-  --gradient-26: linear-gradient(135deg, #0F2027, #2C5364); /* Azul marinho */
-  --gradient-27: linear-gradient(135deg, #5C258D, #4389A2); /* Roxo azulado */
-  --gradient-28: linear-gradient(135deg, #182848, #4b6cb7); /* Azul denim */
+  --gradient-11: linear-gradient(135deg, #141E30, #243B55); /* Noite profunda */
+  --gradient-12: linear-gradient(135deg, #1e3c72, #2a5298); /* Azul real */
+  --gradient-13: linear-gradient(135deg, #2C3E50, #4CA1AF); /* Azul petróleo */
+  --gradient-14: linear-gradient(135deg, #304352, #d7d2cc); /* Cinza escuro */
+  --gradient-15: linear-gradient(135deg, #5A3F37, #2C7744); /* Marrom e verde */
+  --gradient-16: linear-gradient(135deg, #1c1c1c, #323232); /* Dark mode */
+  --gradient-17: linear-gradient(135deg, #283c86, #45a247); /* Azul verde */
+  --gradient-18: linear-gradient(135deg, #3A6073, #16222A); /* Azul escuro */
+  --gradient-19: linear-gradient(135deg, #0F2027, #203A43); /* Azul marinho */
+  --gradient-20: linear-gradient(135deg, #134E5E, #71B280); /* Verde floresta */
+  --gradient-21: linear-gradient(135deg, #3A1C71, #D76D77, #FFAF7B); /* Três tons vibrantes */
+  --gradient-22: linear-gradient(135deg, #0f0c29, #302b63, #24243e); /* Noite estrelada */
+  --gradient-23: linear-gradient(135deg, #2b5876, #4e4376); /* Azul noite */
+  --gradient-24: linear-gradient(135deg, #4DA0B0, #D39D38); /* Turquesa âmbar */
+  --gradient-25: linear-gradient(135deg, #5C258D, #4389A2); /* Roxo azulado */
   
   /* Temas femininos */
-  --gradient-11: linear-gradient(135deg, #F8CDDA, #1D2B64); /* Rosa ouro */
-  --gradient-12: linear-gradient(135deg, #C9D6FF, #E2E2E2); /* Lavanda */
-  --gradient-13: linear-gradient(135deg, #fbc2eb, #a6c1ee); /* Rosa e lilás */
-  --gradient-14: linear-gradient(135deg, #a1c4fd, #c2e9fb); /* Azul suave */
-  --gradient-15: linear-gradient(135deg, #f6d365, #fda085); /* Pêssego */
-  --gradient-16: linear-gradient(135deg, #ff9a9e, #fad0c4); /* Rosa coral */
-  --gradient-17: linear-gradient(135deg, #f093fb, #f5576c); /* Rosa quente */
-  --gradient-18: linear-gradient(135deg, #eacda3, #d6ae7b); /* Dourado suave */
-  --gradient-19: linear-gradient(135deg, #667eea, #764ba2); /* Púrpura vibrante */
-  --gradient-20: linear-gradient(135deg, #ff758c, #ff7eb3); /* Rosa chiclete */
-  --gradient-29: linear-gradient(135deg, #FDCBF1, #E6DEE9); /* Rosa suave */
-  --gradient-30: linear-gradient(135deg, #F3A183, #B21F1F); /* Pôr do sol */
-  --gradient-31: linear-gradient(135deg, #F761A1, #8C1BAB); /* Magenta roxo */
-  --gradient-32: linear-gradient(135deg, #FFD26F, #3677FF); /* Amarelo azul */
-  --gradient-33: linear-gradient(135deg, #00F5A0, #00D9F5); /* Verde água */
-  --gradient-34: linear-gradient(135deg, #F5515F, #A1051D); /* Vermelho cereja */
-  --gradient-35: linear-gradient(135deg, #ED4264, #FFEDBC); /* Pêssego rosa */
+  --gradient-26: linear-gradient(135deg, #F8CDDA, #1D2B64); /* Rosa ouro */
+  --gradient-27: linear-gradient(135deg, #C9D6FF, #E2E2E2); /* Lavanda */
+  --gradient-28: linear-gradient(135deg, #fbc2eb, #a6c1ee); /* Rosa e lilás */
+  --gradient-29: linear-gradient(135deg, #a1c4fd, #c2e9fb); /* Azul suave */
+  --gradient-30: linear-gradient(135deg, #f6d365, #fda085); /* Pêssego */
+  --gradient-31: linear-gradient(135deg, #ff9a9e, #fad0c4); /* Rosa coral */
+  --gradient-32: linear-gradient(135deg, #f093fb, #f5576c); /* Rosa quente */
+  --gradient-33: linear-gradient(135deg, #eacda3, #d6ae7b); /* Dourado suave */
+  --gradient-34: linear-gradient(135deg, #667eea, #764ba2); /* Púrpura vibrante */
+  --gradient-35: linear-gradient(135deg, #ff758c, #ff7eb3); /* Rosa chiclete */
+  --gradient-36: linear-gradient(135deg, #FDCBF1, #E6DEE9); /* Rosa suave */
+  --gradient-37: linear-gradient(135deg, #F3A183, #B21F1F); /* Pôr do sol */
+  --gradient-38: linear-gradient(135deg, #F761A1, #8C1BAB); /* Magenta roxo */
+  --gradient-39: linear-gradient(135deg, #FFD26F, #3677FF); /* Amarelo azul */
+  --gradient-40: linear-gradient(135deg, #00F5A0, #00D9F5); /* Verde água */
+  --gradient-41: linear-gradient(135deg, #F5515F, #A1051D); /* Vermelho cereja */
+  --gradient-42: linear-gradient(135deg, #ED4264, #FFEDBC); /* Pêssego rosa */
+  --gradient-43: linear-gradient(135deg, #f78ca0, #fe9a8b); /* Rosa salmão */
+  --gradient-44: linear-gradient(135deg, #E8CBC0, #636FA4); /* Malva e lavanda */
+  --gradient-45: linear-gradient(135deg, #FFB88C, #DE6262); /* Laranja e rosa */
+  --gradient-46: linear-gradient(135deg, #DCE35B, #45B649); /* Lima limão */
+  --gradient-47: linear-gradient(135deg, #c2e59c, #64b3f4); /* Verde azulado */
+  --gradient-48: linear-gradient(135deg, #FFAFBD, #ffc3a0); /* Rosa pêssego */
+  --gradient-49: linear-gradient(135deg, #B0F3F1, #FFCFDF); /* Acqua rosa */
+  --gradient-50: linear-gradient(135deg, #D9AFD9, #97D9E1); /* Lavanda acqua */
   
   /* Button colors */
   --button-1: linear-gradient(135deg, #2c3e50, #4ca1af);

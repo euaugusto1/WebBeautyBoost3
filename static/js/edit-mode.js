@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', function() {
     themeSelect.className = 'theme-select-grid';
     
     // Adicionar opções de tema - 10 masculinos e 10 femininos
-    const totalThemes = 20;
+    const totalThemes = 50;
     
     // Título para temas masculinos
     const maleTitleDiv = document.createElement('div');
