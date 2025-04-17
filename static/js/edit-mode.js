@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
     originalData.name = document.querySelector('.username').textContent.replace('•', '').trim();
     originalData.bio = document.querySelector('.bio').textContent;
     
+    // Descrição adicional
+    const descriptionElement = document.querySelector('.description');
+    originalData.description = descriptionElement ? descriptionElement.textContent : '';
+    
     // Links sociais
     originalData.socialLinks = [];
     document.querySelectorAll('.social-icon').forEach(icon => {
