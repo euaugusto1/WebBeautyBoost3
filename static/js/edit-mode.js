@@ -15,10 +15,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Definir a função de clique de edição no escopo global
-window.handleEditButtonClick = function() {
+window.handleEditButtonClick = function(e) {
   console.log('Função handleEditButtonClick chamada');
-  enableEditMode();
-  createActionButtons();
+  // Parar qualquer propagação e comportamento padrão
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
+  // Forçar a execução das funções diretamente
+  try {
+    enableEditMode();
+    createActionButtons();
+  } catch (error) {
+    console.error('Erro ao ativar modo de edição:', error);
+  }
+  
   return false; // Prevenir comportamentos padrão
 };
 

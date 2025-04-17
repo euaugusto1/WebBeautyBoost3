@@ -505,17 +505,34 @@ body.edit-mode .social-icon::after {
   transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Default button backgrounds */
-.link-btn.website .btn-bg-effect {
-  background: var(--button-1);
+/* Link buttons using theme colors */
+.link-btn .btn-bg-effect {
+  background: var(--gradient, linear-gradient(135deg, var(--accent), var(--accent-alt)));
+  opacity: 0.9;
 }
 
-.link-btn.store .btn-bg-effect {
-  background: var(--button-2);
+/* Special class for banner 1 */
+.link-btn:nth-child(1) .btn-bg-effect {
+  background: var(--gradient, linear-gradient(135deg, var(--accent), var(--accent-alt)));
+  opacity: 0.95;
 }
 
-.link-btn.contact .btn-bg-effect {
-  background: var(--button-3);
+/* Special class for banner 2 */
+.link-btn:nth-child(2) .btn-bg-effect {
+  background: var(--gradient, linear-gradient(45deg, var(--accent-alt), var(--accent)));
+  opacity: 0.85;
+}
+
+/* Special class for banner 3 */
+.link-btn:nth-child(3) .btn-bg-effect {
+  background: var(--gradient, linear-gradient(225deg, var(--accent), var(--accent-alt)));
+  opacity: 0.8;
+}
+
+/* Special class for banner 4 */
+.link-btn:nth-child(4) .btn-bg-effect {
+  background: var(--gradient, linear-gradient(315deg, var(--accent-alt), var(--accent)));
+  opacity: 0.85;
 }
 
 /* Community banner especial */
@@ -600,6 +617,17 @@ body.theme-20 .link-btn .btn-bg-effect { background: linear-gradient(135deg, #ff
 
 .link-btn:hover .btn-bg-effect {
   filter: brightness(1.2) contrast(1.1);
+}
+
+/* Visual effects for clicked state */
+.link-btn.clicked {
+  animation: click-pulse 0.3s ease forwards;
+}
+
+@keyframes click-pulse {
+  0% { transform: scale(1.0); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); }
+  50% { transform: scale(0.95); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+  100% { transform: scale(1.0); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); }
 }
 
 /* Click Stats Counter */

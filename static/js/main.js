@@ -109,45 +109,66 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // Rastreador de cliques para links
-  const trackableLinks = document.querySelectorAll('.track-click');
-  trackableLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      const linkId = this.getAttribute('data-link-id');
-      const linkUrl = this.getAttribute('data-url');
-      const clickStatsElement = this.querySelector('.click-stats');
-      
-      // Enviar solicitação para registrar o clique
-      fetch(`/click-link/${linkId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Atualizar contador na interface
-          if (clickStatsElement) {
-            clickStatsElement.textContent = `${data.click_count} cliques`;
-          }
-          
-          // Abrir URL em nova aba após um pequeno atraso
-          setTimeout(() => {
-            window.open(linkUrl, '_blank');
-          }, 300);
-        } else {
-          console.error('Erro ao registrar clique:', data.message);
-          window.open(linkUrl, '_blank');
-        }
-      })
-      .catch(error => {
-        console.error('Erro ao registrar clique:', error);
-        window.open(linkUrl, '_blank');
-      });
+  function setupTrackableLinks() {
+    const trackableLinks = document.querySelectorAll('.track-click');
+    console.log('Configurando links rastreáveis:', trackableLinks.length);
+    
+    trackableLinks.forEach(link => {
+      // Remover listener antigo se existir
+      link.removeEventListener('click', handleLinkClick);
+      // Adicionar novo listener
+      link.addEventListener('click', handleLinkClick);
     });
-  });
+  }
+  
+  // Função de manipulação de clique separada para melhor organização
+  function handleLinkClick(e) {
+    e.preventDefault();
+    e.stopPropagation(); // Impedir propagação do evento
+    
+    const link = this;
+    const linkId = link.getAttribute('data-link-id');
+    const linkUrl = link.getAttribute('href') || link.getAttribute('data-url');
+    const clickStatsElement = link.querySelector('.click-stats');
+    
+    console.log('Link clicado:', linkId, linkUrl);
+    
+    // Adicionar um efeito visual de clique
+    link.classList.add('clicked');
+    setTimeout(() => link.classList.remove('clicked'), 300);
+    
+    // Enviar solicitação para registrar o clique
+    fetch(`/click-link/${linkId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Atualizar contador na interface
+        if (clickStatsElement) {
+          clickStatsElement.textContent = `${data.click_count} cliques`;
+        }
+        
+        // Abrir URL em nova aba após um pequeno atraso
+        setTimeout(() => {
+          window.open(linkUrl, '_blank');
+        }, 300);
+      } else {
+        console.error('Erro ao registrar clique:', data.message);
+        window.open(linkUrl, '_blank');
+      }
+    })
+    .catch(error => {
+      console.error('Erro ao registrar clique:', error);
+      window.open(linkUrl, '_blank');
+    });
+  }
+  
+  // Chamar a configuração dos links quando a página carregar
+  setupTrackableLinks();
   
   // Add light beam effect on hover for the container, only for non-touch devices
   const container = document.querySelector('.container');
