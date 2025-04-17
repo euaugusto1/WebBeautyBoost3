@@ -254,9 +254,11 @@ def update_profile():
     try:
         # Obter dados do formulário
         data = request.json
+        print(f"Dados recebidos para atualização: {data}")
         
         # Obter o usuário atual
         user = current_user
+        print(f"Usuário autenticado: {user.username} (ID: {user.id})")
         
         # Atualizar dados do usuário
         user.name = data.get('name')
@@ -365,11 +367,15 @@ def update_profile():
         
         # Salvar as alterações no banco de dados
         db.session.commit()
+        print(f"Perfil atualizado com sucesso para o usuário {user.username}")
         
+        # Recarregar página após salvar
         return jsonify({'success': True, 'message': 'Perfil atualizado com sucesso!'})
     except Exception as e:
         db.session.rollback()
         print(f'Erro ao atualizar perfil: {str(e)}')
+        import traceback
+        print(traceback.format_exc())
         return jsonify({'success': False, 'message': f'Erro ao atualizar o perfil: {str(e)}'}), 500
 
 @app.route('/click-link/<int:link_id>', methods=['POST'])

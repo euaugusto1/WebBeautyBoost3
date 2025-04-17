@@ -1151,9 +1151,10 @@ function initEditSystem() {
         // Mostrar mensagem de sucesso
         showMessage('Perfil atualizado com sucesso!', 'success');
         
-        // Desativar modo de edição e recarregar a página
+        // Desativar modo de edição e recarregar a página para exibir alterações
         setTimeout(() => {
-          disableEditMode();
+          console.log("Recarregando a página para mostrar alterações...");
+          window.location.reload();
         }, 1000);
       } else {
         showMessage(data.message || 'Ocorreu um erro ao salvar as alterações.', 'error');
