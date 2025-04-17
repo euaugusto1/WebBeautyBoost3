@@ -130,14 +130,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Adicionar botão para novo link social
-    const socialIcons = document.querySelector('.social-icons');
+    const socialIconsContainer = document.querySelector('.social-icons');
     const addSocialBtn = document.createElement('button');
     addSocialBtn.className = 'add-social-btn';
     addSocialBtn.innerHTML = '<i class="fas fa-plus"></i>';
     addSocialBtn.addEventListener('click', function() {
-      addNewSocialLink(socialIcons);
+      addNewSocialLink(socialIconsContainer);
     });
-    socialIcons.appendChild(addSocialBtn);
+    socialIconsContainer.appendChild(addSocialBtn);
     
     // Links do perfil
     const profileLinks = document.querySelectorAll('.link-btn');
