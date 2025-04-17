@@ -463,8 +463,56 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeSelect = document.createElement('div');
     themeSelect.className = 'theme-select-grid';
     
-    // Add theme options
-    for (let i = 1; i <= 15; i++) {
+    // Adicionar opções de tema - 10 masculinos e 10 femininos
+    const totalThemes = 20;
+    
+    // Título para temas masculinos
+    const maleTitleDiv = document.createElement('div');
+    maleTitleDiv.style.width = '100%';
+    maleTitleDiv.style.textAlign = 'center';
+    maleTitleDiv.style.color = 'white';
+    maleTitleDiv.style.fontSize = '12px';
+    maleTitleDiv.style.marginBottom = '8px';
+    maleTitleDiv.style.marginTop = '5px';
+    maleTitleDiv.innerHTML = '<strong>Temas Masculinos</strong>';
+    themeSelect.appendChild(maleTitleDiv);
+    
+    // Opções para temas masculinos (1-10)
+    for (let i = 1; i <= 10; i++) {
+      const themeOption = document.createElement('div');
+      themeOption.className = `theme-option theme-${i} ${document.body.classList.contains(`theme-${i}`) ? 'active' : ''}`;
+      themeOption.setAttribute('data-theme', `theme-${i}`);
+      themeOption.title = `Tema ${i}`;
+      
+      themeOption.addEventListener('click', function() {
+        // Remove active class from all options
+        document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+        // Add active class to clicked option
+        this.classList.add('active');
+        
+        // Update body class
+        const themeClasses = Array.from(document.body.classList)
+          .filter(cls => cls.startsWith('theme-'));
+        themeClasses.forEach(cls => document.body.classList.remove(cls));
+        document.body.classList.add(this.getAttribute('data-theme'));
+      });
+      
+      themeSelect.appendChild(themeOption);
+    }
+    
+    // Título para temas femininos
+    const femaleTitleDiv = document.createElement('div');
+    femaleTitleDiv.style.width = '100%';
+    femaleTitleDiv.style.textAlign = 'center';
+    femaleTitleDiv.style.color = 'white';
+    femaleTitleDiv.style.fontSize = '12px';
+    femaleTitleDiv.style.marginBottom = '8px';
+    femaleTitleDiv.style.marginTop = '15px';
+    femaleTitleDiv.innerHTML = '<strong>Temas Femininos</strong>';
+    themeSelect.appendChild(femaleTitleDiv);
+    
+    // Opções para temas femininos (11-20)
+    for (let i = 11; i <= totalThemes; i++) {
       const themeOption = document.createElement('div');
       themeOption.className = `theme-option theme-${i} ${document.body.classList.contains(`theme-${i}`) ? 'active' : ''}`;
       themeOption.setAttribute('data-theme', `theme-${i}`);
