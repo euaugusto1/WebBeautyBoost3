@@ -1218,8 +1218,7 @@ function initEditSystem() {
       enableEditMode();
       createActionButtons(); // Criar botões quando o modo de edição for habilitado
     });
-  } else {
   */
-    console.error('Botão de edição não encontrado mesmo após tentativa de criação!');
-  //}
+  // Se ainda não encontrou o botão após todas as tentativas
+  console.error('Botão de edição não encontrado mesmo após tentativa de criação!');
 });
