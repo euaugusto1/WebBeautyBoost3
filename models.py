@@ -29,7 +29,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     name = db.Column(db.String(100))
     bio = db.Column(db.String(200))
-    phone = db.Column(db.String(20))
+    phone = db.Column(db.String(50))
     profile_image = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

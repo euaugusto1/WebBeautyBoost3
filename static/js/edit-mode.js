@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
     themeSelect.className = 'theme-select-grid';
     
     // Add theme options
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 15; i++) {
       const themeOption = document.createElement('div');
       themeOption.className = `theme-option theme-${i} ${document.body.classList.contains(`theme-${i}`) ? 'active' : ''}`;
       themeOption.setAttribute('data-theme', `theme-${i}`);

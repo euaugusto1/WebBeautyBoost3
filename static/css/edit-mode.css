@@ -392,15 +392,15 @@
 /* Tema editor */
 .theme-editor {
   margin-top: 20px;
-  padding: 15px;
+  padding: 12px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
 }
 
 .theme-editor h3 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   color: #fff;
   text-align: center;
 }
@@ -408,13 +408,13 @@
 .theme-select-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
 .theme-option {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
@@ -442,6 +442,11 @@
 .theme-option.theme-8 { background: var(--gradient-8); }
 .theme-option.theme-9 { background: var(--gradient-9); }
 .theme-option.theme-10 { background: var(--gradient-10); }
+.theme-option.theme-11 { background: var(--gradient-11); }
+.theme-option.theme-12 { background: var(--gradient-12); }
+.theme-option.theme-13 { background: var(--gradient-13); }
+.theme-option.theme-14 { background: var(--gradient-14); }
+.theme-option.theme-15 { background: var(--gradient-15); }
 
 /* Responsive */
 @media (max-width: 768px) {

@@ -1,5 +1,5 @@
 :root {
-  /* Theme gradients - Minimalistas masculinos */
+  /* Temas masculinos */
   --gradient-1: linear-gradient(135deg, #1A2980, #26D0CE); /* Azul oceano */
   --gradient-2: linear-gradient(135deg, #232526, #414345); /* Escala de cinza */
   --gradient-3: linear-gradient(135deg, #000428, #004e92); /* Azul profundo */
@@ -8,8 +8,17 @@
   --gradient-6: linear-gradient(135deg, #0B486B, #F56217); /* Azul e laranja */
   --gradient-7: linear-gradient(135deg, #3C3B3F, #605C3C); /* Carvão e oliva */
   --gradient-8: linear-gradient(135deg, #1F1C2C, #928DAB); /* Violeta escuro */
-  --gradient-9: linear-gradient(135deg, #141E30, #243B55); /* Noite estrelada */
-  --gradient-10: linear-gradient(135deg, #2C3E50, #4CA1AF); /* Cinza e turquesa */
+  
+  /* Temas femininos */
+  --gradient-9: linear-gradient(135deg, #F8CDDA, #1D2B64); /* Rosa ouro */
+  --gradient-10: linear-gradient(135deg, #C9D6FF, #E2E2E2); /* Lavanda */
+  --gradient-11: linear-gradient(135deg, #fbc2eb, #a6c1ee); /* Rosa e lilás */
+  --gradient-12: linear-gradient(135deg, #a1c4fd, #c2e9fb); /* Azul suave */
+  
+  /* Temas neutros */
+  --gradient-13: linear-gradient(135deg, #141E30, #243B55); /* Noite estrelada */
+  --gradient-14: linear-gradient(135deg, #2C3E50, #4CA1AF); /* Cinza e turquesa */
+  --gradient-15: linear-gradient(135deg, #2b5876, #4e4376); /* Índigo */
   
   /* Button colors */
   --button-1: linear-gradient(135deg, #2c3e50, #4ca1af);
@@ -575,6 +584,26 @@ body {
   background: var(--gradient-10);
 }
 
+.theme-preview.theme-11 {
+  background: var(--gradient-11);
+}
+
+.theme-preview.theme-12 {
+  background: var(--gradient-12);
+}
+
+.theme-preview.theme-13 {
+  background: var(--gradient-13);
+}
+
+.theme-preview.theme-14 {
+  background: var(--gradient-14);
+}
+
+.theme-preview.theme-15 {
+  background: var(--gradient-15);
+}
+
 /* Theme variations */
 body.theme-1 {
   background: var(--gradient-1);
@@ -614,6 +643,26 @@ body.theme-9 {
 
 body.theme-10 {
   background: var(--gradient-10);
+}
+
+body.theme-11 {
+  background: var(--gradient-11);
+}
+
+body.theme-12 {
+  background: var(--gradient-12);
+}
+
+body.theme-13 {
+  background: var(--gradient-13);
+}
+
+body.theme-14 {
+  background: var(--gradient-14);
+}
+
+body.theme-15 {
+  background: var(--gradient-15);
 }
 
 /* Media Queries */
