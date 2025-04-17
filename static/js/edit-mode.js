@@ -65,6 +65,85 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Tornar campos editáveis
     makeFieldsEditable();
+    
+    // Adicionar seletor de padrões animados
+    addPatternSelector();
+  }
+  
+  // Adicionar o seletor de padrões de fundo animados
+  function addPatternSelector() {
+    // Criar o seletor de padrões
+    const patternSelector = document.createElement('div');
+    patternSelector.className = 'pattern-editor';
+    patternSelector.innerHTML = '<h3>Padrões Animados</h3>';
+    
+    // Adicionar botão de alternância para o seletor de padrões
+    const patternToggleBtn = document.createElement('button');
+    patternToggleBtn.className = 'pattern-toggle-btn';
+    patternToggleBtn.innerHTML = '<i class="fas fa-magic"></i>';
+    patternToggleBtn.addEventListener('click', function() {
+      patternSelector.classList.toggle('active');
+    });
+    
+    patternSelector.appendChild(patternToggleBtn);
+    
+    // Grid de seleção de padrões
+    const patternGrid = document.createElement('div');
+    patternGrid.className = 'pattern-select-grid';
+    
+    // Adicionar opções de padrões
+    const patterns = [
+      { id: 'none', name: 'Nenhum' },
+      { id: 'particles', name: 'Partículas' },
+      { id: 'wave', name: 'Ondas' },
+      { id: 'pulse', name: 'Pulso' },
+      { id: 'geometric', name: 'Formas' },
+      { id: 'bubbles', name: 'Bolhas' },
+      { id: 'grid', name: 'Grade' },
+      { id: 'starfield', name: 'Estrelas' },
+      { id: 'noise', name: 'Ruído' },
+      { id: 'lines', name: 'Linhas' },
+      { id: 'ripple', name: 'Ondulação' }
+    ];
+    
+    // Obter o padrão atual
+    const currentPattern = document.body.getAttribute('data-pattern') || 'none';
+    
+    // Criar opções para cada padrão
+    patterns.forEach(pattern => {
+      const patternOption = document.createElement('div');
+      patternOption.className = `pattern-option ${pattern.id === currentPattern ? 'active' : ''}`;
+      patternOption.setAttribute('data-pattern', pattern.id);
+      patternOption.title = pattern.name;
+      
+      // Adicionar texto descritivo
+      const patternName = document.createElement('span');
+      patternName.textContent = pattern.name;
+      patternOption.appendChild(patternName);
+      
+      // Evento de clique para selecionar padrão
+      patternOption.addEventListener('click', function() {
+        // Remover classe ativa de todas as opções
+        document.querySelectorAll('.pattern-option').forEach(opt => opt.classList.remove('active'));
+        // Adicionar classe ativa à opção clicada
+        this.classList.add('active');
+        
+        // Aplicar o padrão imediatamente para visualização
+        if (window.applyAnimatedPattern) {
+          window.applyAnimatedPattern(pattern.id);
+        }
+      });
+      
+      patternGrid.appendChild(patternOption);
+    });
+    
+    patternSelector.appendChild(patternGrid);
+    document.body.appendChild(patternSelector);
+    
+    // Ativar o editor de padrões automaticamente após um breve atraso
+    setTimeout(() => {
+      patternSelector.classList.add('active');
+    }, 800);
   }
   
   // Desativar modo de edição
@@ -75,6 +154,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Remover elementos de edição
     removeEditableFields();
+    
+    // Remover o seletor de padrões de fundo
+    const patternEditor = document.querySelector('.pattern-editor');
+    if (patternEditor) {
+      patternEditor.remove();
+    }
   }
   
   // Tornar campos editáveis

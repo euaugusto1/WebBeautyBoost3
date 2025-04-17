@@ -492,6 +492,201 @@
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
 }
 
+/* Pattern editor - Seletor de padrões animados */
+.pattern-editor {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: auto;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateX(calc(-100% - 20px));
+  transition: transform 0.3s ease;
+}
+
+.pattern-editor.active {
+  transform: translateX(0);
+}
+
+.pattern-toggle-btn {
+  position: absolute;
+  right: -40px;
+  top: 0;
+  width: 35px;
+  height: 35px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: white;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pattern-editor h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #fff;
+  text-align: center;
+}
+
+.pattern-select-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.pattern-option {
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pattern-option::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.2;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+.pattern-option:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.pattern-option.active {
+  border-color: var(--accent, #3498db);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.pattern-option span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Estilos de previsualização para cada padrão */
+.pattern-option[data-pattern="particles"]::before { 
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0) 70%);
+  animation: pulse 3s infinite alternate;
+}
+
+.pattern-option[data-pattern="wave"]::before { 
+  background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent);
+  background-size: 20px 20px;
+  animation: move 2s linear infinite;
+}
+
+.pattern-option[data-pattern="pulse"]::before { 
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0) 70%);
+  animation: pulse 3s infinite alternate;
+}
+
+.pattern-option[data-pattern="geometric"]::before { 
+  background-image: 
+    linear-gradient(45deg, transparent 0%, transparent 45%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.15) 55%, transparent 55%, transparent 100%),
+    linear-gradient(135deg, transparent 0%, transparent 45%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.15) 55%, transparent 55%, transparent 100%);
+  background-size: 20px 20px;
+  animation: rotate 10s linear infinite;
+}
+
+.pattern-option[data-pattern="bubbles"]::before { 
+  background: radial-gradient(circle at 50% 100%, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0) 60%);
+  animation: rise 4s ease-in infinite;
+}
+
+.pattern-option[data-pattern="grid"]::before { 
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 10px 10px;
+  animation: move 5s linear infinite;
+}
+
+.pattern-option[data-pattern="starfield"]::before { 
+  background-image: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.8) 1px, transparent 1px),
+                    radial-gradient(circle at 30% 40%, rgba(255,255,255,0.6) 1px, transparent 1px),
+                    radial-gradient(circle at 50% 60%, rgba(255,255,255,0.4) 1px, transparent 1px);
+  animation: twinkle 3s ease-in-out infinite alternate;
+}
+
+.pattern-option[data-pattern="noise"]::before { 
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.25"/></svg>');
+  animation: shift 5s steps(10) infinite;
+}
+
+.pattern-option[data-pattern="lines"]::before { 
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    rgba(255,255,255,0.1) 5px,
+    rgba(255,255,255,0.1) 10px
+  );
+  animation: move 15s linear infinite;
+}
+
+.pattern-option[data-pattern="ripple"]::before { 
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 10%, transparent 10.5%, transparent 20%, rgba(255,255,255,0.2) 20.5%, transparent 30%);
+  background-size: 100px 100px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+/* Animações para previsualização */
+@keyframes move {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.3; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+}
+
+@keyframes rise {
+  0% { transform: translateY(100%) scale(0.8); opacity: 0.5; }
+  100% { transform: translateY(0%) scale(1.2); opacity: 0; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes shift {
+  0% { background-position: 0 0; }
+  100% { background-position: 10px 10px; }
+}
+
 /* Tema options previews */
 .theme-option.theme-1 { background: var(--gradient-1); }
 .theme-option.theme-2 { background: var(--gradient-2); }
