@@ -2,13 +2,26 @@ import os
 import json
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, SocialLink, ProfileLink, ThemeSetting, FooterItem
+from forms import LoginForm, RegistrationForm
 
 # Carregar variáveis de ambiente do .env
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev_secret_key")
+
+# Configurar Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+login_manager.login_message = 'Você precisa fazer login para acessar esta página.'
+login_manager.login_message_category = 'error'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # Configuração do banco de dados
 # Verificar se DATABASE_URL está definido, caso contrário usar variáveis individuais para construir a URL
