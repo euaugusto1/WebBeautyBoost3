@@ -1,15 +1,35 @@
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('Edit Mode: DOM completamente carregado');
   // Elementos principais
   const editToggle = document.getElementById('edit-toggle');
-  const saveButton = document.getElementById('save-button');
-  const cancelButton = document.getElementById('cancel-button');
+  console.log('Edit Toggle Button encontrado:', editToggle);
+  
+  // Os botões de salvar e cancelar são criados dinamicamente quando o modo de edição é ativado
+  // então não precisamos buscá-los agora
   const editControls = document.getElementById('edit-controls');
   const profileContainer = document.querySelector('.container');
   
-  // Garantir que os botões estejam disponíveis e visíveis (bugfix)
-  if (!saveButton || !cancelButton) {
-    console.warn('Botões de salvar/cancelar não encontrados. Criando novamente...');
-    createActionButtons();
+  // Criar o botão de edição caso não exista
+  if (!editToggle) {
+    console.warn('Botão de edição não encontrado. Criando um novo botão...');
+    const newEditButton = document.createElement('button');
+    newEditButton.id = 'edit-toggle';
+    newEditButton.className = 'edit-toggle';
+    newEditButton.innerHTML = '<i class="fas fa-edit"></i>';
+    document.body.appendChild(newEditButton);
+    
+    // Atualizar a referência
+    const updatedEditToggle = document.getElementById('edit-toggle');
+    console.log('Novo botão de edição criado:', updatedEditToggle);
+    
+    // Adicionar evento ao botão recém-criado
+    if (updatedEditToggle) {
+      updatedEditToggle.addEventListener('click', function() {
+        console.log('Botão de edição clicado!');
+        enableEditMode();
+        createActionButtons();
+      });
+    }
   }
   
   // Estado de edição
@@ -1149,11 +1169,20 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Verificar se botão de edição existe e adicionar eventos
   if (editToggle) {
-    editToggle.addEventListener('click', function() {
+    console.log('Adicionando event listener ao botão de edição existente');
+    // Remover event listeners antigos (se houver)
+    const newEditToggle = editToggle.cloneNode(true);
+    editToggle.parentNode.replaceChild(newEditToggle, editToggle);
+    
+    // Adicionar event listener ao botão clonado
+    newEditToggle.addEventListener('click', function(e) {
+      console.log('Botão de edição clicado!');
+      e.preventDefault();
+      e.stopPropagation();
       enableEditMode();
       createActionButtons(); // Criar botões quando o modo de edição for habilitado
     });
-    
-    // Os event listeners para saveButton e cancelButton agora são adicionados dinamicamente
+  } else {
+    console.error('Botão de edição não encontrado mesmo após tentativa de criação!');
   }
 });

@@ -10,28 +10,36 @@
 }
 
 .edit-toggle {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: var(--accent);
-  border: none;
-  color: white;
-  font-size: 18px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #6a11cb, #2575fc) !important;
+  color: #fff !important;
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+  z-index: 10000 !important;
+  transition: all 0.3s ease !important;
+  font-size: 18px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .edit-toggle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  transform: scale(1.15) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5) !important;
+  background: linear-gradient(135deg, #8e24aa, #3949ab) !important;
+}
+
+.edit-toggle i {
+  font-size: 22px !important;
+  color: white !important;
 }
 
 .edit-controls {
