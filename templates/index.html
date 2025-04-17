@@ -41,7 +41,7 @@
       <div class="logo" data-aos="zoom-in" data-aos-delay="200">
         <div class="logo-inner">
           <div class="logo-outline"></div>
-          <img src="https://source.unsplash.com/random/400x400/?person" alt="{{ profile.name }}" class="profile-img">
+          <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="{{ profile.name }}" class="profile-img" onerror="this.src='https://source.unsplash.com/random/400x400/?person'">
         </div>
       </div>
       <h1 class="username" data-aos="fade-up" data-aos-delay="300">{{ profile.name }}<span class="dot">•</span></h1>

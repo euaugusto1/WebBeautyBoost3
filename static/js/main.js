@@ -66,20 +66,23 @@ document.addEventListener('DOMContentLoaded', function() {
   const profileImg = document.querySelector('.profile-img');
   const logo = document.querySelector('.logo');
   
-  logo.addEventListener('mousemove', (e) => {
-    const rect = logo.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
+  // Only add mouse effects on devices that likely have a mouse (non-touch devices)
+  if (window.matchMedia("(hover: hover)").matches) {
+    logo.addEventListener('mousemove', (e) => {
+      const rect = logo.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      
+      const tiltX = (x - 0.5) * 10;
+      const tiltY = (y - 0.5) * 10;
+      
+      logo.style.transform = `perspective(1000px) rotateX(${-tiltY}deg) rotateY(${tiltX}deg)`;
+    });
     
-    const tiltX = (x - 0.5) * 10;
-    const tiltY = (y - 0.5) * 10;
-    
-    logo.style.transform = `perspective(1000px) rotateX(${-tiltY}deg) rotateY(${tiltX}deg)`;
-  });
-  
-  logo.addEventListener('mouseleave', () => {
-    logo.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-  });
+    logo.addEventListener('mouseleave', () => {
+      logo.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+    });
+  }
   
   // Add smooth scroll behavior
   const smoothScroll = (target) => {
@@ -97,14 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 300);
   });
   
-  // Add light beam effect on hover for the container
+  // Add light beam effect on hover for the container, only for non-touch devices
   const container = document.querySelector('.container');
-  container.addEventListener('mousemove', (e) => {
-    const rect = container.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    container.style.setProperty('--mouse-x', `${x}px`);
-    container.style.setProperty('--mouse-y', `${y}px`);
-  });
+  if (window.matchMedia("(hover: hover)").matches) {
+    container.addEventListener('mousemove', (e) => {
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      container.style.setProperty('--mouse-x', `${x}px`);
+      container.style.setProperty('--mouse-y', `${y}px`);
+    });
+  }
 });
