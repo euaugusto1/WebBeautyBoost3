@@ -7,12 +7,15 @@ let originalData = {};
 
 // Inicialização inicial
 console.log('Início da execução de edit-mode.js');
-initEditSystem();
 
+// Aguardar o carregamento completo do DOM antes de inicializar o sistema
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Edit Mode: DOM completamente carregado');
   
-  // Inicializar o sistema de edição com prioridade alta
+  // Inicializar o sistema de edição após o DOM estar pronto
+  initEditSystem();
+  
+  // Tentar novamente após 100ms, para garantir que todos os elementos foram carregados
   setTimeout(function() {
     console.log('Tentando inicializar o sistema de edição novamente');
     initEditSystem();
@@ -1429,4 +1432,3 @@ function initEditSystem() {
   
   // Log de debug final
   console.log('Inicialização do sistema de edição concluída');
-});
