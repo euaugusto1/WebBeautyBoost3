@@ -33,9 +33,10 @@ if db_url is None:
     db_port = os.environ.get("PGPORT", "5432")
     db_user = os.environ.get("PGUSER", "postgres")
     db_password = os.environ.get("PGPASSWORD", "")
-    db_name = os.environ.get("PGDATABASE", "linkstack")
+    db_name = os.environ.get("PGDATABASE", "postgres")
     
     db_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    print(f"URL do banco de dados construída a partir de variáveis: {db_url}")
     
     # Fallback para SQLite se mesmo assim não tivermos as variáveis
     if not all([db_host, db_user, db_name]):
