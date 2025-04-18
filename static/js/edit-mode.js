@@ -181,13 +181,99 @@ function initEditSystem() {
       
       // Adicionar seletor de tema se não estiver presente
       if (!document.querySelector('.theme-editor')) {
-        addThemeSelector();
+        // Verificar se a função de criação de temas existe
+        if (typeof addThemeSelector === 'function') {
+          addThemeSelector();
+        } else {
+          console.log('Função addThemeSelector não encontrada, pulando...');
+        }
       }
       
       console.log('Modo de edição ativado com sucesso!');
     } catch (error) {
       console.error('Erro ao ativar modo de edição:', error);
     }
+  }
+  
+  // Função para adicionar o seletor de temas
+  function addThemeSelector() {
+    console.log('Adicionando seletor de temas...');
+    
+    // Criar o seletor de temas
+    const themeSelector = document.createElement('div');
+    themeSelector.className = 'theme-editor';
+    themeSelector.innerHTML = '<h3>Temas</h3>';
+    
+    // Botão de alternância para o seletor de temas
+    const themeToggleBtn = document.createElement('button');
+    themeToggleBtn.className = 'theme-toggle-btn';
+    themeToggleBtn.innerHTML = '<i class="fas fa-palette"></i>';
+    themeToggleBtn.addEventListener('click', function() {
+      themeSelector.classList.toggle('active');
+    });
+    
+    themeSelector.appendChild(themeToggleBtn);
+    
+    // Grid de seleção de temas
+    const themeGrid = document.createElement('div');
+    themeGrid.className = 'theme-select-grid';
+    
+    // Definir os temas disponíveis
+    const themes = [
+      { id: 'theme-1', name: 'Azul' },
+      { id: 'theme-2', name: 'Verde' },
+      { id: 'theme-3', name: 'Roxo' },
+      { id: 'theme-4', name: 'Laranja' },
+      { id: 'theme-5', name: 'Rosa' },
+      { id: 'theme-6', name: 'Azul Escuro' },
+      { id: 'theme-7', name: 'Verde Escuro' },
+      { id: 'theme-8', name: 'Preto' }
+    ];
+    
+    // Obter o tema atual
+    const bodyClasses = document.body.className.split(' ');
+    const currentTheme = bodyClasses.find(cls => cls.startsWith('theme-')) || 'theme-1';
+    
+    // Criar opções para cada tema
+    themes.forEach(theme => {
+      const themeOption = document.createElement('div');
+      themeOption.className = `theme-option ${theme.id === currentTheme ? 'active' : ''}`;
+      themeOption.setAttribute('data-theme', theme.id);
+      themeOption.title = theme.name;
+      
+      // Adicionar texto descritivo
+      const themeName = document.createElement('span');
+      themeName.textContent = theme.name;
+      themeOption.appendChild(themeName);
+      
+      // Adicionar evento de clique para selecionar tema
+      themeOption.addEventListener('click', function() {
+        // Remover classe ativa de todas as opções
+        document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+        // Adicionar classe ativa à opção clicada
+        this.classList.add('active');
+        
+        // Remover todas as classes de tema do body
+        bodyClasses.forEach(cls => {
+          if (cls.startsWith('theme-')) {
+            document.body.classList.remove(cls);
+          }
+        });
+        
+        // Adicionar a nova classe de tema
+        document.body.classList.add(theme.id);
+      });
+      
+      themeGrid.appendChild(themeOption);
+    });
+    
+    themeSelector.appendChild(themeGrid);
+    document.body.appendChild(themeSelector);
+    
+    // Ativar o editor de temas automaticamente após um breve atraso
+    setTimeout(() => {
+      themeSelector.classList.add('active');
+    }, 1000);
   }
   
   // Adicionar o seletor de padrões de fundo animados
@@ -268,9 +354,16 @@ function initEditSystem() {
   
   // Desativar modo de edição
   function disableEditMode() {
+    console.log('Desativando modo de edição...');
     isEditMode = false;
-    profileContainer.classList.remove('edit-mode');
-    editControls.classList.remove('active');
+    
+    if (profileContainer) {
+      profileContainer.classList.remove('edit-mode');
+    }
+    
+    if (editControls) {
+      editControls.classList.remove('active');
+    }
     
     // Remover elementos de edição
     removeEditableFields();
@@ -281,11 +374,19 @@ function initEditSystem() {
       patternEditor.remove();
     }
     
+    // Remover o seletor de temas
+    const themeEditor = document.querySelector('.theme-editor');
+    if (themeEditor) {
+      themeEditor.remove();
+    }
+    
     // Remover os botões de ação
     const actionButtons = document.querySelector('.edit-action-buttons');
     if (actionButtons) {
       actionButtons.remove();
     }
+    
+    console.log('Modo de edição desativado com sucesso!');
   }
   
   // Tornar campos editáveis
@@ -1323,7 +1424,9 @@ function initEditSystem() {
       enableEditMode();
       createActionButtons(); // Criar botões quando o modo de edição for habilitado
     });
+  }
   */
-  // Se ainda não encontrou o botão após todas as tentativas
-  console.error('Botão de edição não encontrado mesmo após tentativa de criação!');
+  
+  // Log de debug final
+  console.log('Inicialização do sistema de edição concluída');
 });
