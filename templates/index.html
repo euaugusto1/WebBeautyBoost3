@@ -250,8 +250,11 @@
   <script src="{{ url_for('static', filename='js/social-links.js') }}"></script>
   <script src="{{ url_for('static', filename='js/edit-mode.js') }}"></script>
   
+  <!-- Script desabilitado para evitar conflito com a versão melhorada no arquivo edit-mode.js -->
+  <!-- 
   <script>
-    // Sistema de edição completo e direto
+    // Sistema de edição completo e direto (DESATIVADO)
+  -->
     document.addEventListener('DOMContentLoaded', function() {
       // Variáveis globais
       let isEditMode = false;
@@ -1443,6 +1446,6 @@
         }, 3000);
       }
     });
-  </script>
+  <!-- </script> -->
 </body>
 </html>
