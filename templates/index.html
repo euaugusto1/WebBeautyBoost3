@@ -152,28 +152,17 @@
     // Sistema de edição completo e direto
     document.addEventListener('DOMContentLoaded', function() {
       // Variáveis globais
-      let isEditMode = false;
+      let isEditMode = {% if edit_mode %}true{% else %}false{% endif %};
       let originalData = {};
-      const editToggle = document.getElementById('edit-toggle');
+      // Não temos mais botão de edição visível na interface
       const editControls = document.getElementById('edit-controls');
       const profileContainer = document.querySelector('.container');
       
-      // Verificar se o botão existe
-      if (!editToggle) {
-        console.error('Botão de edição não encontrado!');
-        return;
-      }
-      
-      // Adicionar evento de clique
-      editToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Botão de edição clicado');
-        
-        // Alternar modo de edição
-        if (!isEditMode) {
+      // Se estivermos em modo de edição (via URL com token), ativá-lo automaticamente
+      if (isEditMode) {
+        console.log('Modo de edição ativado automaticamente via URL');
+        setTimeout(function() {
           // Ativar modo de edição
-          isEditMode = true;
           profileContainer.classList.add('edit-mode');
           editControls.classList.add('active');
           
@@ -191,13 +180,8 @@
           
           // Adicionar seletor de padrão de fundo
           addPatternSelector();
-        } else {
-          // Desativar modo de edição
-          disableEditMode();
-        }
-        
-        return false;
-      });
+        }, 500); // Pequeno delay para garantir que todos os elementos foram carregados
+      }
       
       // Guardar dados originais
       function saveOriginalData() {
@@ -286,16 +270,104 @@
           // Quando um arquivo for selecionado
           fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
+              // Validar o tipo de arquivo
+              const file = this.files[0];
+              const fileType = file.type;
+              
+              // Verificar se o arquivo é uma imagem
+              if (!fileType.match('image.*')) {
+                alert('Por favor, selecione uma imagem válida (JPEG, PNG, GIF, etc.)');
+                return;
+              }
+              
+              // Verificar o tamanho do arquivo (limitar a 5MB)
+              if (file.size > 5 * 1024 * 1024) {
+                alert('A imagem é muito grande. O tamanho máximo é 5MB.');
+                return;
+              }
+              
+              // Ler a imagem como DataURL
               const reader = new FileReader();
               
+              // Mostrar indicador de carregamento
+              originalImg.style.opacity = '0.5';
+              const loadingIndicator = document.createElement('div');
+              loadingIndicator.className = 'loading-indicator';
+              loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+              imgEditWrapper.appendChild(loadingIndicator);
+              
               reader.onload = function(e) {
-                // Atualizar a URL da imagem para o preview
-                originalImg.src = e.target.result;
-                // Guardar o conteúdo em base64 para enviar ao servidor
-                originalImg.setAttribute('data-image-base64', e.target.result);
+                // Remover indicador de carregamento
+                const indicator = imgEditWrapper.querySelector('.loading-indicator');
+                if (indicator) {
+                  indicator.remove();
+                }
+                
+                // Criar uma imagem temporária para verificar dimensões
+                const img = new Image();
+                img.onload = function() {
+                  // Restaurar opacidade
+                  originalImg.style.opacity = '1';
+                  
+                  // Atualizar a URL da imagem para o preview
+                  originalImg.src = e.target.result;
+                  
+                  // Guardar o conteúdo em base64 para enviar ao servidor
+                  originalImg.setAttribute('data-image-base64', e.target.result);
+                  
+                  // Adicionar indicador de sucesso
+                  const successIndicator = document.createElement('div');
+                  successIndicator.className = 'success-indicator';
+                  successIndicator.innerHTML = '<i class="fas fa-check"></i>';
+                  successIndicator.style.position = 'absolute';
+                  successIndicator.style.top = '10px';
+                  successIndicator.style.right = '10px';
+                  successIndicator.style.background = '#4CAF50';
+                  successIndicator.style.color = 'white';
+                  successIndicator.style.borderRadius = '50%';
+                  successIndicator.style.width = '25px';
+                  successIndicator.style.height = '25px';
+                  successIndicator.style.display = 'flex';
+                  successIndicator.style.alignItems = 'center';
+                  successIndicator.style.justifyContent = 'center';
+                  successIndicator.style.opacity = '0';
+                  successIndicator.style.transition = 'opacity 0.3s ease';
+                  
+                  imgEditWrapper.appendChild(successIndicator);
+                  
+                  // Mostrar o indicador com uma animação
+                  setTimeout(() => {
+                    successIndicator.style.opacity = '1';
+                  }, 100);
+                  
+                  // Remover o indicador após alguns segundos
+                  setTimeout(() => {
+                    successIndicator.style.opacity = '0';
+                    setTimeout(() => {
+                      successIndicator.remove();
+                    }, 300);
+                  }, 3000);
+                };
+                
+                img.onerror = function() {
+                  alert('Ocorreu um erro ao carregar a imagem. Por favor, tente novamente com outra imagem.');
+                  originalImg.style.opacity = '1';
+                };
+                
+                img.src = e.target.result;
               };
               
-              reader.readAsDataURL(this.files[0]);
+              reader.onerror = function() {
+                alert('Erro ao ler o arquivo. Por favor, tente novamente.');
+                // Remover indicador de carregamento
+                const indicator = imgEditWrapper.querySelector('.loading-indicator');
+                if (indicator) {
+                  indicator.remove();
+                }
+                originalImg.style.opacity = '1';
+              };
+              
+              reader.readAsDataURL(file);
             }
           });
           
@@ -1200,6 +1272,25 @@
       // Coletar dados editados
       function collectEditedData() {
         const editedData = {};
+        
+        // Imagem de perfil
+        const profileImgWrapper = document.querySelector('.img-edit-wrapper');
+        if (profileImgWrapper) {
+          const imgElement = profileImgWrapper.querySelector('img');
+          if (imgElement && imgElement.hasAttribute('data-image-base64')) {
+            const imageBase64 = imgElement.getAttribute('data-image-base64');
+            if (imageBase64 && imageBase64.length > 0) {
+              console.log('Imagem de perfil encontrada para enviar ao servidor');
+              editedData.profile_image = imageBase64;
+            } else {
+              console.log('Atributo data-image-base64 está vazio');
+            }
+          } else {
+            console.log('Imagem de perfil não encontrada no wrapper ou sem atributo data-image-base64');
+          }
+        } else {
+          console.log('Wrapper de imagem de perfil não encontrado');
+        }
         
         // Nome de usuário
         const usernameInput = document.querySelector('.username-input');

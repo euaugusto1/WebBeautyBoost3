@@ -92,9 +92,16 @@ with app.app_context():
         db.session.commit()
 
 @app.route('/')
-def index():
+@app.route('/<string:edit_token>')
+def index(edit_token=None):
     # Obter o usuário demo (por enquanto só temos esse)
     user = User.query.filter_by(username='demo').first_or_404()
+    
+    # Verificar se o token de edição é válido
+    # Token fixo para simplificar, em produção deveria ser gerado de forma segura
+    edit_mode = False
+    if edit_token == 'd6d0b89d23827d16fe0c225aef457c1e0a0e7c2001da4af3a29d846b4ac01c9b':
+        edit_mode = True
     
     # Montar o perfil a partir dos dados do usuário
     profile = {
@@ -139,7 +146,7 @@ def index():
         theme = user.theme_settings.theme_name
         pattern = user.theme_settings.background_pattern
     
-    return render_template('index.html', profile=profile, theme=theme, pattern=pattern)
+    return render_template('index.html', profile=profile, theme=theme, pattern=pattern, edit_mode=edit_mode)
 
 @app.route('/update-profile', methods=['POST'])
 def update_profile():
@@ -176,35 +183,49 @@ def update_profile():
         
         # Verificar se há uma nova imagem de perfil
         if 'profile_image' in data and data['profile_image']:
-            # Extrair apenas a parte base64 da string (remover o prefixo 'data:image/png;base64,')
-            if ',' in data['profile_image']:
-                base64_data = data['profile_image'].split(',')[1]
-            else:
-                base64_data = data['profile_image']
-            
-            # Salvar imagem como arquivo
-            import base64
-            import os
-            from datetime import datetime
-            
-            # Criar diretório de imagens se não existir
-            img_dir = os.path.join('static', 'images', 'uploads')
-            os.makedirs(img_dir, exist_ok=True)
-            
-            # Gerar nome de arquivo único
-            filename = f"profile_{user.id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
-            filepath = os.path.join(img_dir, filename)
-            
-            # Salvar imagem
+            # Verificar se a string base64 é válida
             try:
-                with open(filepath, "wb") as fh:
-                    fh.write(base64.b64decode(base64_data))
+                # Extrair apenas a parte base64 da string (remover o prefixo 'data:image/png;base64,')
+                if ',' in data['profile_image']:
+                    base64_data = data['profile_image'].split(',')[1]
+                else:
+                    base64_data = data['profile_image']
                 
-                # Atualizar caminho da imagem no usuário
-                user.profile_image = os.path.join('images', 'uploads', filename)
-            except Exception as img_error:
-                print(f"Erro ao salvar imagem: {str(img_error)}")
-                # Continuar mesmo se houver erro na imagem
+                # Verificar se a string base64 tem conteúdo
+                if base64_data and len(base64_data) > 0:
+                    # Salvar imagem como arquivo
+                    import base64
+                    import os
+                    from datetime import datetime
+                    
+                    # Criar diretório de imagens se não existir
+                    img_dir = os.path.join('static', 'images', 'uploads')
+                    os.makedirs(img_dir, exist_ok=True)
+                    
+                    # Gerar nome de arquivo único
+                    filename = f"profile_{user.id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
+                    filepath = os.path.join(img_dir, filename)
+                    
+                    # Salvar imagem
+                    try:
+                        with open(filepath, "wb") as fh:
+                            decoded_data = base64.b64decode(base64_data)
+                            fh.write(decoded_data)
+                        
+                        # Verificar se a imagem foi escrita corretamente
+                        if os.path.exists(filepath) and os.path.getsize(filepath) > 0:
+                            # Atualizar caminho da imagem no usuário
+                            user.profile_image = os.path.join('images', 'uploads', filename)
+                            print(f"Imagem de perfil salva com sucesso: {user.profile_image}")
+                        else:
+                            print("Arquivo de imagem foi criado, mas está vazio")
+                    except Exception as img_error:
+                        print(f"Erro ao salvar imagem: {str(img_error)}")
+                        # Continuar mesmo se houver erro na imagem
+                else:
+                    print("String base64 vazia ou inválida")
+            except Exception as decode_error:
+                print(f"Erro ao processar a string base64 da imagem: {str(decode_error)}")
         
         # Atualizar links sociais
         # Primeiro, remover todos os links existentes
