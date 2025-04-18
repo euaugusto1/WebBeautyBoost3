@@ -7,15 +7,12 @@ let originalData = {};
 
 // Inicialização inicial
 console.log('Início da execução de edit-mode.js');
+initEditSystem();
 
-// Aguardar o carregamento completo do DOM antes de inicializar o sistema
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Edit Mode: DOM completamente carregado');
   
-  // Inicializar o sistema de edição após o DOM estar pronto
-  initEditSystem();
-  
-  // Tentar novamente após 100ms, para garantir que todos os elementos foram carregados
+  // Inicializar o sistema de edição com prioridade alta
   setTimeout(function() {
     console.log('Tentando inicializar o sistema de edição novamente');
     initEditSystem();
@@ -142,141 +139,18 @@ function initEditSystem() {
   
   // Ativar modo de edição
   function enableEditMode() {
-    console.log('Ativando modo de edição - versão melhorada...');
     isEditMode = true;
-    
-    // Verificar se o container existe
-    if (!profileContainer) {
-      console.error('Container de perfil não encontrado');
-      profileContainer = document.querySelector('.container');
-      if (!profileContainer) {
-        alert('Erro: Container de perfil não encontrado');
-        return;
-      }
-    }
-    
     profileContainer.classList.add('edit-mode');
-    
-    // Verificar se os controles existem
-    if (!editControls) {
-      console.error('Controles de edição não encontrados');
-      editControls = document.getElementById('edit-controls');
-      if (!editControls) {
-        // Criar controles se não existirem
-        editControls = document.createElement('div');
-        editControls.id = 'edit-controls';
-        editControls.className = 'edit-controls';
-        document.body.appendChild(editControls);
-      }
-    }
-    
     editControls.classList.add('active');
     
-    try {
-      // Salvar dados originais
-      saveOriginalData();
-      
-      // Tornar campos editáveis
-      makeFieldsEditable();
-      
-      // Adicionar seletor de padrões animados
-      addPatternSelector();
-      
-      // Adicionar seletor de tema se não estiver presente
-      if (!document.querySelector('.theme-editor')) {
-        // Verificar se a função de criação de temas existe
-        if (typeof addThemeSelector === 'function') {
-          addThemeSelector();
-        } else {
-          console.log('Função addThemeSelector não encontrada, pulando...');
-        }
-      }
-      
-      console.log('Modo de edição ativado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao ativar modo de edição:', error);
-    }
-  }
-  
-  // Função para adicionar o seletor de temas
-  function addThemeSelector() {
-    console.log('Adicionando seletor de temas...');
+    // Salvar dados originais
+    saveOriginalData();
     
-    // Criar o seletor de temas
-    const themeSelector = document.createElement('div');
-    themeSelector.className = 'theme-editor';
-    themeSelector.innerHTML = '<h3>Temas</h3>';
+    // Tornar campos editáveis
+    makeFieldsEditable();
     
-    // Botão de alternância para o seletor de temas
-    const themeToggleBtn = document.createElement('button');
-    themeToggleBtn.className = 'theme-toggle-btn';
-    themeToggleBtn.innerHTML = '<i class="fas fa-palette"></i>';
-    themeToggleBtn.addEventListener('click', function() {
-      themeSelector.classList.toggle('active');
-    });
-    
-    themeSelector.appendChild(themeToggleBtn);
-    
-    // Grid de seleção de temas
-    const themeGrid = document.createElement('div');
-    themeGrid.className = 'theme-select-grid';
-    
-    // Definir os temas disponíveis
-    const themes = [
-      { id: 'theme-1', name: 'Azul' },
-      { id: 'theme-2', name: 'Verde' },
-      { id: 'theme-3', name: 'Roxo' },
-      { id: 'theme-4', name: 'Laranja' },
-      { id: 'theme-5', name: 'Rosa' },
-      { id: 'theme-6', name: 'Azul Escuro' },
-      { id: 'theme-7', name: 'Verde Escuro' },
-      { id: 'theme-8', name: 'Preto' }
-    ];
-    
-    // Obter o tema atual
-    const bodyClasses = document.body.className.split(' ');
-    const currentTheme = bodyClasses.find(cls => cls.startsWith('theme-')) || 'theme-1';
-    
-    // Criar opções para cada tema
-    themes.forEach(theme => {
-      const themeOption = document.createElement('div');
-      themeOption.className = `theme-option ${theme.id === currentTheme ? 'active' : ''}`;
-      themeOption.setAttribute('data-theme', theme.id);
-      themeOption.title = theme.name;
-      
-      // Adicionar texto descritivo
-      const themeName = document.createElement('span');
-      themeName.textContent = theme.name;
-      themeOption.appendChild(themeName);
-      
-      // Adicionar evento de clique para selecionar tema
-      themeOption.addEventListener('click', function() {
-        // Remover classe ativa de todas as opções
-        document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-        // Adicionar classe ativa à opção clicada
-        this.classList.add('active');
-        
-        // Remover todas as classes de tema do body
-        bodyClasses.forEach(cls => {
-          if (cls.startsWith('theme-')) {
-            document.body.classList.remove(cls);
-          }
-        });
-        
-        // Adicionar a nova classe de tema
-        document.body.classList.add(theme.id);
-      });
-      
-      themeGrid.appendChild(themeOption);
-    });
-    
-    themeSelector.appendChild(themeGrid);
-    document.body.appendChild(themeSelector);
-    
-    // Ativar o editor de temas automaticamente após um breve atraso
-    setTimeout(() => {
-      themeSelector.classList.add('active');
-    }, 1000);
+    // Adicionar seletor de padrões animados
+    addPatternSelector();
   }
   
   // Adicionar o seletor de padrões de fundo animados
@@ -357,16 +231,9 @@ function initEditSystem() {
   
   // Desativar modo de edição
   function disableEditMode() {
-    console.log('Desativando modo de edição...');
     isEditMode = false;
-    
-    if (profileContainer) {
-      profileContainer.classList.remove('edit-mode');
-    }
-    
-    if (editControls) {
-      editControls.classList.remove('active');
-    }
+    profileContainer.classList.remove('edit-mode');
+    editControls.classList.remove('active');
     
     // Remover elementos de edição
     removeEditableFields();
@@ -377,19 +244,11 @@ function initEditSystem() {
       patternEditor.remove();
     }
     
-    // Remover o seletor de temas
-    const themeEditor = document.querySelector('.theme-editor');
-    if (themeEditor) {
-      themeEditor.remove();
-    }
-    
     // Remover os botões de ação
     const actionButtons = document.querySelector('.edit-action-buttons');
     if (actionButtons) {
       actionButtons.remove();
     }
-    
-    console.log('Modo de edição desativado com sucesso!');
   }
   
   // Tornar campos editáveis
@@ -1174,48 +1033,19 @@ function initEditSystem() {
   
   // Coletar dados editados
   function collectEditedData() {
-    console.log("Coletando dados editados...");
-    
-    // Verificar existência dos elementos antes de tentar acessar seus valores
-    const usernameInput = document.querySelector('.username-input');
-    const bioInput = document.querySelector('.bio-input');
-    const descriptionInput = document.querySelector('.description-input');
-    const phoneInput = document.querySelector('.phone-input');
-    const copyrightInput = document.querySelector('.footer-copyright-input');
-    const copyrightIconSelect = document.querySelector('.copyright-wrapper .footer-icon-select');
-    
-    console.log("Elementos de formulário encontrados:", {
-      username: usernameInput ? "Sim" : "Não",
-      bio: bioInput ? "Sim" : "Não",
-      description: descriptionInput ? "Sim" : "Não"
-    });
-    
-    if (!usernameInput || !bioInput) {
-      console.error("Elementos críticos do formulário não encontrados!");
-      showMessage('Erro ao coletar dados do formulário', 'error');
-      return null;
-    }
-    
     const data = {
-      name: usernameInput.value,
-      bio: bioInput.value,
-      description: descriptionInput ? descriptionInput.value : '',
-      phone: phoneInput ? phoneInput.value : '',
+      name: document.querySelector('.username-input').value,
+      bio: document.querySelector('.bio-input').value,
+      description: document.querySelector('.description-input') ? document.querySelector('.description-input').value : '',
+      phone: document.querySelector('.phone-input') ? document.querySelector('.phone-input').value : '',
       social_links: [],
       profile_links: [],
       footer_items: [],
       theme: '',
       pattern: '',
-      copyright_text: copyrightInput ? copyrightInput.value : '',
-      copyright_icon: copyrightIconSelect ? copyrightIconSelect.value : 'fa-copyright',
-      timestamp: new Date().getTime()  // Adicionar timestamp para evitar problemas de cache
+      copyright_text: document.querySelector('.footer-copyright-input') ? document.querySelector('.footer-copyright-input').value : '',
+      copyright_icon: document.querySelector('.copyright-wrapper .footer-icon-select') ? document.querySelector('.copyright-wrapper .footer-icon-select').value : 'fa-copyright'
     };
-    
-    console.log("Dados básicos coletados:", {
-      name: data.name,
-      bio: data.bio,
-      description: data.description
-    });
     
     // Coletar tema selecionado
     const activeTheme = document.querySelector('.theme-option.active');
@@ -1290,60 +1120,38 @@ function initEditSystem() {
   
   // Salvar alterações no servidor
   function saveChanges() {
-    // Criar um objeto de dados simplificado para teste
-    const simplifiedData = {
-      name: document.querySelector('.username-input')?.value || 'Nome não encontrado',
-      bio: document.querySelector('.bio-input')?.value || 'Bio não encontrada',
-      description: document.querySelector('.description-input')?.value || '',
-      social_links: [],
-      profile_links: [],
-      footer_items: [],
-      theme: document.body.className || 'theme-1',
-      pattern: document.body.getAttribute('data-pattern') || 'none',
-      timestamp: new Date().getTime()
-    };
+    const data = collectEditedData();
     
-    console.log("TESTE SIMPLIFICADO - Dados a serem salvos:", simplifiedData);
-    
-    // Mostrar indicador de carregamento
-    showMessage('Tentando salvar alterações...', 'loading');
-    
-    // Enviar dados para o servidor com abordagem simplificada
+    // Enviar dados para o servidor
     fetch('/update-profile', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(simplifiedData),
+      body: JSON.stringify(data),
     })
     .then(response => {
-      console.log("Resposta do servidor:", response.status, response.statusText);
-      
-      // Mostrar resposta bruta para debug
-      response.clone().text().then(text => {
-        console.log('Conteúdo bruto da resposta:', text);
-      });
-      
       if (!response.ok) {
-        throw new Error(`Erro HTTP: ${response.status}`);
+        throw new Error('Falha ao salvar as alterações');
       }
       return response.json();
     })
-    .then(responseData => {
-      console.log("Dados de resposta:", responseData);
-      
-      // Mostrar mensagem de sucesso
-      showMessage('Teste de salvamento concluído. Verificando resposta...', 'success');
-      
-      // Forçar recarregamento da página após 2 segundos
-      setTimeout(() => {
-        console.log("Recarregando página para ver alterações...");
-        window.location.href = window.location.pathname + '?reload=' + new Date().getTime();
-      }, 2000);
+    .then(data => {
+      if (data.success) {
+        // Mostrar mensagem de sucesso
+        showMessage('Perfil atualizado com sucesso!', 'success');
+        
+        // Desativar modo de edição e recarregar a página
+        setTimeout(() => {
+          disableEditMode();
+        }, 1000);
+      } else {
+        showMessage(data.message || 'Ocorreu um erro ao salvar as alterações.', 'error');
+      }
     })
     .catch(error => {
-      console.error('Erro durante teste de salvamento:', error);
-      showMessage('Erro durante teste de salvamento. Verifique o console.', 'error');
+      console.error('Erro:', error);
+      showMessage('Ocorreu um erro ao salvar as alterações. Tente novamente.', 'error');
     });
   }
   
@@ -1427,8 +1235,7 @@ function initEditSystem() {
       enableEditMode();
       createActionButtons(); // Criar botões quando o modo de edição for habilitado
     });
-  }
   */
-  
-  // Log de debug final
-  console.log('Inicialização do sistema de edição concluída');
+  // Se ainda não encontrou o botão após todas as tentativas
+  console.error('Botão de edição não encontrado mesmo após tentativa de criação!');
+});

@@ -1,7 +1,6 @@
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -21,7 +20,7 @@ class FooterItem(db.Model):
     def __repr__(self):
         return f'<FooterItem {self.text}>'
 
-class User(UserMixin, db.Model):
+class User(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)

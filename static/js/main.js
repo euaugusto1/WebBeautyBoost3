@@ -18,53 +18,45 @@ document.addEventListener('DOMContentLoaded', function() {
   const themePreviews = document.querySelectorAll('.theme-preview');
   const body = document.body;
   
-  // Toggle theme preview panel (apenas se o elemento existir)
-  if (themeSwitcher && themePreviewContainer) {
-    themeSwitcher.addEventListener('click', () => {
-      themePreviewContainer.classList.toggle('active');
-    });
-    
-    // Close theme panel when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!themePreviewContainer.contains(e.target) && e.target !== themeSwitcher) {
-        themePreviewContainer.classList.remove('active');
-      }
-    });
-  } else {
-    console.log('Theme switcher ou preview container não encontrado, pulando inicialização.');
-  }
+  // Toggle theme preview panel
+  themeSwitcher.addEventListener('click', () => {
+    themePreviewContainer.classList.toggle('active');
+  });
   
-  // Handle theme selection (apenas se houver previews)
-  if (themePreviews && themePreviews.length > 0 && themePreviewContainer) {
-    themePreviews.forEach(preview => {
-      preview.addEventListener('click', () => {
-        // Get theme class
-        const themeClass = preview.dataset.theme;
-        
-        // Remove all theme classes from body
-        body.classList.remove('theme-1', 'theme-2', 'theme-3', 'theme-4', 'theme-5', 
-                           'theme-6', 'theme-7', 'theme-8', 'theme-9', 'theme-10');
-        
-        // Add selected theme class
-        body.classList.add(themeClass);
-        
-        // Update active state on previews
-        themePreviews.forEach(p => p.classList.remove('active'));
-        preview.classList.add('active');
-        
-        // Salvar a preferência do tema (implementação futura do salvamento no banco de dados)
-        // Por enquanto colocamos um console.log apenas para mostrar que está funcionando
-        console.log(`Tema selecionado: ${themeClass}`);
-        
-        // Close the theme panel
-        setTimeout(() => {
-          themePreviewContainer.classList.remove('active');
-        }, 300);
-      });
+  // Close theme panel when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!themePreviewContainer.contains(e.target) && e.target !== themeSwitcher) {
+      themePreviewContainer.classList.remove('active');
+    }
+  });
+  
+  // Handle theme selection
+  themePreviews.forEach(preview => {
+    preview.addEventListener('click', () => {
+      // Get theme class
+      const themeClass = preview.dataset.theme;
+      
+      // Remove all theme classes from body
+      body.classList.remove('theme-1', 'theme-2', 'theme-3', 'theme-4', 'theme-5', 
+                          'theme-6', 'theme-7', 'theme-8', 'theme-9', 'theme-10');
+      
+      // Add selected theme class
+      body.classList.add(themeClass);
+      
+      // Update active state on previews
+      themePreviews.forEach(p => p.classList.remove('active'));
+      preview.classList.add('active');
+      
+      // Salvar a preferência do tema (implementação futura do salvamento no banco de dados)
+      // Por enquanto colocamos um console.log apenas para mostrar que está funcionando
+      console.log(`Tema selecionado: ${themeClass}`);
+      
+      // Close the theme panel
+      setTimeout(() => {
+        themePreviewContainer.classList.remove('active');
+      }, 300);
     });
-  } else {
-    console.log('Theme previews não encontrados ou vazios, pulando inicialização.');
-  }
+  });
   
   // Add hover animation to links
   const links = document.querySelectorAll('.link-btn');
@@ -83,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const logo = document.querySelector('.logo');
   
   // Only add mouse effects on devices that likely have a mouse (non-touch devices)
-  if (logo && window.matchMedia("(hover: hover)").matches) {
+  if (window.matchMedia("(hover: hover)").matches) {
     logo.addEventListener('mousemove', (e) => {
       const rect = logo.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
@@ -98,21 +90,15 @@ document.addEventListener('DOMContentLoaded', function() {
     logo.addEventListener('mouseleave', () => {
       logo.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
     });
-  } else if (!logo) {
-    console.log('Elemento .logo não encontrado, pulando animação de hover.');
   }
   
   // Add smooth scroll behavior
   const smoothScroll = (target) => {
     const element = document.querySelector(target);
-    if (element) {
-      window.scrollTo({
-        top: element.offsetTop,
-        behavior: 'smooth'
-      });
-    } else {
-      console.log(`Elemento ${target} não encontrado para scroll suave.`);
-    }
+    window.scrollTo({
+      top: element.offsetTop,
+      behavior: 'smooth'
+    });
   };
   
   // Create page loading animation

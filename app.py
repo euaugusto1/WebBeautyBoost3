@@ -1,28 +1,14 @@
 import os
 import json
-import time
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, SocialLink, ProfileLink, ThemeSetting, FooterItem
-from forms import LoginForm, RegistrationForm
 
 # Carregar variáveis de ambiente do .env
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev_secret_key")
-
-# Configurar Flask-Login
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-login_manager.login_message = 'Você precisa fazer login para acessar esta página.'
-login_manager.login_message_category = 'error'
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 # Configuração do banco de dados
 # Verificar se DATABASE_URL está definido, caso contrário usar variáveis individuais para construir a URL
@@ -33,10 +19,9 @@ if db_url is None:
     db_port = os.environ.get("PGPORT", "5432")
     db_user = os.environ.get("PGUSER", "postgres")
     db_password = os.environ.get("PGPASSWORD", "")
-    db_name = os.environ.get("PGDATABASE", "postgres")
+    db_name = os.environ.get("PGDATABASE", "linkstack")
     
     db_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
-    print(f"URL do banco de dados construída a partir de variáveis: {db_url}")
     
     # Fallback para SQLite se mesmo assim não tivermos as variáveis
     if not all([db_host, db_user, db_name]):
@@ -108,18 +93,8 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    # Se o usuário estiver logado, mostrar seu perfil
-    # Caso contrário, mostrar o perfil de demonstração (demo)
-    if current_user.is_authenticated:
-        print(f"Usuário autenticado: {current_user.username} (ID: {current_user.id})")
-        user = current_user
-    else:
-        print("Nenhum usuário autenticado, mostrando perfil demo")
-        user = User.query.filter_by(username='demo').first_or_404()
-    
-    # Verificar se é o usuário logado visualizando seu próprio perfil
-    is_owner = current_user.is_authenticated and current_user.id == user.id
-    print(f"É o proprietário do perfil? {is_owner}")
+    # Obter o usuário demo (por enquanto só temos esse)
+    user = User.query.filter_by(username='demo').first_or_404()
     
     # Montar o perfil a partir dos dados do usuário
     profile = {
@@ -164,129 +139,24 @@ def index():
         theme = user.theme_settings.theme_name
         pattern = user.theme_settings.background_pattern
     
-    return render_template('index.html', profile=profile, theme=theme, pattern=pattern, is_owner=is_owner)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    # Se o usuário já estiver autenticado, redireciona para a página principal
-    if current_user.is_authenticated:
-        print(f"Usuário já autenticado: {current_user.username}. Redirecionando para a página inicial.")
-        return redirect(url_for('index'))
-    
-    form = LoginForm()
-    if form.validate_on_submit():
-        print(f"Tentativa de login para o usuário: {form.username.data}")
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
-            print(f"Login bem-sucedido para o usuário: {user.username} (ID: {user.id})")
-            next_page = request.args.get('next')
-            flash('Login realizado com sucesso!', 'success')
-            if not next_page or url_for('index') in next_page:
-                next_page = url_for('index')
-            return redirect(next_page)
-        else:
-            print(f"Falha no login para o usuário: {form.username.data}")
-            flash('Nome de usuário ou senha incorretos. Por favor, tente novamente.', 'error')
-    
-    return render_template('login.html', form=form)
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    # Se o usuário já estiver autenticado, redireciona para a página principal
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(
-            username=form.username.data,
-            email=form.email.data,
-            name=form.username.data,
-            copyright_text='Todos os direitos reservados © 2025 - Powered by LinkStack',
-            copyright_icon='fa-copyright'
-        )
-        user.set_password(form.password.data)
-        
-        # Adicionar configurações básicas de tema
-        theme_settings = ThemeSetting(theme_name='theme-2')
-        user.theme_settings = theme_settings
-        
-        # Adicionar um link de exemplo
-        profile_link = ProfileLink(
-            title='Meu Site',
-            url='#',
-            icon='fa-globe',
-            css_class='website',
-            position=1
-        )
-        user.profile_links = [profile_link]
-        
-        # Adicionar um link social de exemplo
-        social_link = SocialLink(
-            platform='instagram',
-            url='#',
-            icon='fa-instagram'
-        )
-        user.social_links = [social_link]
-        
-        # Adicionar um item de footer de exemplo
-        footer_item = FooterItem(
-            text='Contato',
-            icon='fa-envelope',
-            url='mailto:contato@exemplo.com',
-            position=1
-        )
-        user.footer_items = [footer_item]
-        
-        db.session.add(user)
-        try:
-            db.session.commit()
-            flash('Conta criada com sucesso! Agora você pode fazer login.', 'success')
-            return redirect(url_for('login'))
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Erro ao registrar: {str(e)}', 'error')
-    
-    return render_template('register.html', form=form)
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('Você foi desconectado.', 'success')
-    return redirect(url_for('index'))
+    return render_template('index.html', profile=profile, theme=theme, pattern=pattern)
 
 @app.route('/update-profile', methods=['POST'])
-@login_required
 def update_profile():
     try:
         # Obter dados do formulário
         data = request.json
-        print(f"Dados recebidos para atualização: {data}")
         
-        # Obter o usuário atual
-        user = current_user
-        print(f"Usuário autenticado: {user.username} (ID: {user.id})")
-        
-        # Se não houver dados no request, envie uma resposta de sucesso falsa para testar a conexão
-        if not data:
-            print("Solicitação sem dados, retornando resposta de teste")
-            return jsonify({
-                'success': True,
-                'message': 'Teste de conexão bem-sucedido',
-                'timestamp': int(time.time())
-            })
+        # Obter usuário (usamos o demo por enquanto)
+        user = User.query.filter_by(username='demo').first_or_404()
         
         # Atualizar dados do usuário
-        print(f"[DEBUG] Atualizando dados básicos do usuário: nome, bio, descrição...")
         user.name = data.get('name')
         user.bio = data.get('bio')
         user.description = data.get('description', '')
         user.phone = data.get('phone')
         user.copyright_text = data.get('copyright_text', '')
         user.copyright_icon = data.get('copyright_icon', 'fa-copyright')
-        print(f"[DEBUG] Dados básicos atualizados: nome={user.name}, bio={user.bio[:20]}...")
         
         # Atualizar tema e padrão de fundo
         if 'theme' in data and data['theme']:
@@ -386,27 +256,12 @@ def update_profile():
             db.session.add(footer_item)
         
         # Salvar as alterações no banco de dados
-        print(f"[DEBUG] Preparando para salvar no banco de dados...")
         db.session.commit()
-        print(f"[DEBUG] Commit realizado com sucesso!")
         
-        # Invalidar o cache de sessão para forçar recarregar dados do usuário
-        print(f"[DEBUG] Atualizando objeto de usuário para refletir mudanças...")
-        db.session.refresh(user)
-        db.session.expunge_all()  # Limpar a sessão do SQLAlchemy
-        print(f"[DEBUG] Perfil atualizado com sucesso para o usuário {user.username}")
-        
-        # Recarregar página após salvar - adicionar timestamp para evitar cache
-        return jsonify({
-            'success': True, 
-            'message': 'Perfil atualizado com sucesso!',
-            'timestamp': int(time.time())  # Adicionar timestamp para evitar cache
-        })
+        return jsonify({'success': True, 'message': 'Perfil atualizado com sucesso!'})
     except Exception as e:
         db.session.rollback()
         print(f'Erro ao atualizar perfil: {str(e)}')
-        import traceback
-        print(traceback.format_exc())
         return jsonify({'success': False, 'message': f'Erro ao atualizar o perfil: {str(e)}'}), 500
 
 @app.route('/click-link/<int:link_id>', methods=['POST'])
@@ -434,13 +289,6 @@ def click_link(link_id):
             'message': 'Erro ao registrar clique',
             'error': str(e)
         }), 500
-
-@app.route('/debug-edit')
-def debug_edit():
-    """Página de teste para edição de perfil."""
-    with open('debug_edit.html', 'r') as f:
-        content = f.read()
-    return content
 
 @app.route('/get-link-stats/<int:link_id>')
 def get_link_stats(link_id):
