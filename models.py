@@ -29,7 +29,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     name = db.Column(db.String(100))
     bio = db.Column(db.String(200))
-    description = db.Column(db.String(400))  # Descrição adicional abaixo da bio
+    description = db.Column(db.Text)  # Descrição adicional abaixo da bio - agora sem limite de tamanho
     phone = db.Column(db.String(50))
     profile_image = db.Column(db.String(255))
     copyright_text = db.Column(db.String(200))  # Texto personalizado do copyright
