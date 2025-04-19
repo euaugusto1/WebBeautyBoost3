@@ -318,8 +318,13 @@
                   if (!dataUrl.startsWith('data:image')) {
                     dataUrl = 'data:image/png;base64,' + dataUrl;
                   }
+                  
+                  // Definir um atributo personalizado na imagem para indicar que foi alterada
                   originalImg.setAttribute('data-image-base64', dataUrl);
+                  originalImg.setAttribute('data-image-changed', 'true');
+                  
                   console.log('Imagem carregada e pronta para upload:', dataUrl.substring(0, 50) + '...');
+                  console.log('Tamanho total da imagem em base64:', dataUrl.length, 'bytes');
                   
                   // Adicionar indicador de sucesso
                   const successIndicator = document.createElement('div');
@@ -1308,7 +1313,7 @@
         const profileImgWrapper = document.querySelector('.img-edit-wrapper');
         if (profileImgWrapper) {
           const imgElement = profileImgWrapper.querySelector('img');
-          if (imgElement && imgElement.hasAttribute('data-image-base64')) {
+          if (imgElement && imgElement.hasAttribute('data-image-base64') && imgElement.hasAttribute('data-image-changed')) {
             const imageBase64 = imgElement.getAttribute('data-image-base64');
             if (imageBase64 && imageBase64.length > 0) {
               console.log('Imagem de perfil encontrada para enviar ao servidor');
@@ -1319,13 +1324,15 @@
               console.log('Primeiros 100 caracteres da imagem:', imageBase64.substring(0, 100));
               console.log('Tamanho total da string base64:', imageBase64.length);
               
-              // Adicionar flag para indicar que a imagem foi alterada
+              // Adicionar flag para indicar que a imagem foi alterada - IMPORTANTE
               editedData.image_changed = true;
+              
+              console.log('Flag de imagem alterada definida como TRUE');
             } else {
               console.log('Atributo data-image-base64 está vazio');
             }
           } else {
-            console.log('Imagem de perfil não encontrada no wrapper ou sem atributo data-image-base64');
+            console.log('Imagem de perfil não foi alterada ou não tem os atributos necessários');
           }
         } else {
           console.log('Wrapper de imagem de perfil não encontrado');
