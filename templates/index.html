@@ -1259,14 +1259,39 @@
       function saveChanges() {
         const editedData = collectEditedData();
         
-        // Simulação de envio para o servidor
-        console.log('Dados a serem enviados:', editedData);
+        // Mostrar mensagem de carregamento
+        showMessage('Salvando alterações...', 'info');
         
-        // Mostrar mensagem de sucesso
-        showMessage('Perfil atualizado com sucesso!', 'success');
-        
-        // Desativar modo de edição
-        disableEditMode();
+        // Enviar dados para o servidor
+        fetch('/update-profile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(editedData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Resposta do servidor:', data);
+          
+          if (data.success) {
+            // Mostrar mensagem de sucesso
+            showMessage('Perfil atualizado com sucesso!', 'success');
+            
+            // Aguardar um momento antes de recarregar para mostrar a mensagem
+            setTimeout(() => {
+              // Recarregar a página para ver as mudanças
+              window.location.reload();
+            }, 1500);
+          } else {
+            // Mostrar mensagem de erro
+            showMessage('Erro ao atualizar perfil: ' + data.message, 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Erro ao enviar dados:', error);
+          showMessage('Erro ao salvar alterações. Verifique o console para mais detalhes.', 'error');
+        });
       }
       
       // Coletar dados editados
@@ -1311,22 +1336,28 @@
         }
         
         // Links sociais
-        editedData.socialLinks = [];
+        editedData.social_links = [];
         document.querySelectorAll('.social-edit-wrapper').forEach(wrapper => {
           const platformSelect = wrapper.querySelector('.platform-select');
           const urlInput = wrapper.querySelector('.social-url-input');
           
           if (platformSelect && urlInput && urlInput.value.trim()) {
-            editedData.socialLinks.push({
+            // Certificar que a URL está completa
+            let url = urlInput.value.trim();
+            if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
+              url = 'https://' + url;
+            }
+            
+            editedData.social_links.push({
               platform: platformSelect.value,
-              url: urlInput.value.trim(),
-              icon: `fab fa-${platformSelect.value}`
+              url: url,
+              icon: `fa-${platformSelect.value}`
             });
           }
         });
         
         // Links do perfil
-        editedData.profileLinks = [];
+        editedData.profile_links = [];
         document.querySelectorAll('.link-edit-wrapper').forEach(wrapper => {
           const titleInput = wrapper.querySelector('.link-title-input');
           const urlInput = wrapper.querySelector('.link-url-input');
@@ -1334,9 +1365,15 @@
           const classSelect = wrapper.querySelector('.class-select');
           
           if (titleInput && urlInput && titleInput.value.trim() && urlInput.value.trim()) {
-            editedData.profileLinks.push({
+            // Certificar que a URL está completa
+            let url = urlInput.value.trim();
+            if (url && !url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('tel:') && !url.startsWith('mailto:')) {
+              url = 'https://' + url;
+            }
+            
+            editedData.profile_links.push({
               title: titleInput.value.trim(),
-              url: urlInput.value.trim(),
+              url: url,
               icon: iconSelect ? iconSelect.value : 'fa-link',
               class: classSelect ? classSelect.value : ''
             });
@@ -1344,7 +1381,7 @@
         });
         
         // Itens do footer
-        editedData.footerItems = [];
+        editedData.footer_items = [];
         document.querySelectorAll('.edit-footer-wrapper:not(.copyright-wrapper)').forEach(wrapper => {
           const textInput = wrapper.querySelector('.footer-text-input');
           const urlInput = wrapper.querySelector('.footer-url-input');
@@ -1352,10 +1389,30 @@
           const brandCheckbox = wrapper.querySelector('.footer-brand-checkbox');
           
           if (textInput && textInput.value.trim()) {
-            editedData.footerItems.push({
+            // Certificar que a URL está completa se houver uma
+            let url = '';
+            if (urlInput && urlInput.value.trim()) {
+              url = urlInput.value.trim();
+              if (url && !url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('tel:') && !url.startsWith('mailto:')) {
+                // Se parece um número de telefone, adicionar prefixo tel:
+                if (/^\+?[\d\s\(\)-]{7,}$/.test(url)) {
+                  url = 'tel:' + url;
+                } 
+                // Se parece um email, adicionar prefixo mailto:
+                else if (/^[^@]+@[^@]+\.[^@]+$/.test(url)) {
+                  url = 'mailto:' + url;
+                }
+                // Caso contrário, assumir que é uma URL web
+                else {
+                  url = 'https://' + url;
+                }
+              }
+            }
+            
+            editedData.footer_items.push({
               text: textInput.value.trim(),
-              url: urlInput ? urlInput.value.trim() : '',
-              icon: iconSelect && iconSelect.value ? `fas ${iconSelect.value}` : '',
+              url: url,
+              icon: iconSelect && iconSelect.value ? iconSelect.value : '',
               is_brand: brandCheckbox ? brandCheckbox.checked : false
             });
           }

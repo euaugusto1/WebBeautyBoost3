@@ -166,9 +166,17 @@ def update_profile():
         user.copyright_icon = data.get('copyright_icon', 'fa-copyright')
         
         # Atualizar tema e padrão de fundo
-        if 'theme' in data and data['theme']:
-            theme_name = data.get('theme')
+        # Verifique se existe propriedade copyright nos dados
+        if 'copyright' in data and isinstance(data['copyright'], dict):
+            # Atualizar ícone e texto de copyright específicos
+            user.copyright_text = data['copyright'].get('text', user.copyright_text)
+            user.copyright_icon = data['copyright'].get('icon', user.copyright_icon)
+        
+        # Atualizar tema
+        theme_name = data.get('theme')
+        if theme_name:
             pattern_name = data.get('pattern', 'none')
+            print(f"Atualizando tema para: {theme_name}, padrão: {pattern_name}")
             
             if user.theme_settings:
                 user.theme_settings.theme_name = theme_name
