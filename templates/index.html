@@ -313,7 +313,13 @@
                   originalImg.src = e.target.result;
                   
                   // Guardar o conteúdo em base64 para enviar ao servidor
-                  originalImg.setAttribute('data-image-base64', e.target.result);
+                  // Garantir que comece com o cabeçalho data:image
+                  let dataUrl = e.target.result;
+                  if (!dataUrl.startsWith('data:image')) {
+                    dataUrl = 'data:image/png;base64,' + dataUrl;
+                  }
+                  originalImg.setAttribute('data-image-base64', dataUrl);
+                  console.log('Imagem carregada e pronta para upload:', dataUrl.substring(0, 50) + '...');
                   
                   // Adicionar indicador de sucesso
                   const successIndicator = document.createElement('div');

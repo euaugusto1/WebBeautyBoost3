@@ -193,14 +193,21 @@ def update_profile():
         if 'profile_image' in data and data['profile_image']:
             # Verificar se a string base64 é válida
             try:
+                print(f"Iniciando processamento de imagem de perfil: {data['profile_image'][:30]}...")
+                
                 # Extrair apenas a parte base64 da string (remover o prefixo 'data:image/png;base64,')
+                base64_data = ''
                 if ',' in data['profile_image']:
-                    base64_data = data['profile_image'].split(',')[1]
+                    header, base64_data = data['profile_image'].split(',', 1)
+                    print(f"Detectado cabeçalho na imagem: {header}")
                 else:
                     base64_data = data['profile_image']
+                    print("Nenhum cabeçalho detectado, usando dados brutos")
                 
                 # Verificar se a string base64 tem conteúdo
                 if base64_data and len(base64_data) > 0:
+                    print(f"Tamanho dos dados base64: {len(base64_data)} caracteres")
+                    
                     # Salvar imagem como arquivo
                     import base64
                     import os
@@ -209,31 +216,49 @@ def update_profile():
                     # Criar diretório de imagens se não existir
                     img_dir = os.path.join('static', 'images', 'uploads')
                     os.makedirs(img_dir, exist_ok=True)
+                    print(f"Diretório para uploads: {img_dir}")
                     
                     # Gerar nome de arquivo único
                     filename = f"profile_{user.id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
                     filepath = os.path.join(img_dir, filename)
+                    print(f"Caminho do arquivo que será criado: {filepath}")
                     
                     # Salvar imagem
                     try:
+                        # Limpar possíveis caracteres inválidos
+                        base64_data = base64_data.strip()
+                        # Adicionar padding se necessário
+                        missing_padding = len(base64_data) % 4
+                        if missing_padding:
+                            base64_data += '=' * (4 - missing_padding)
+                        
+                        # Decodificar e salvar
+                        print("Decodificando imagem base64...")
+                        decoded_data = base64.b64decode(base64_data)
+                        print(f"Imagem decodificada: {len(decoded_data)} bytes")
+                        
                         with open(filepath, "wb") as fh:
-                            decoded_data = base64.b64decode(base64_data)
                             fh.write(decoded_data)
                         
                         # Verificar se a imagem foi escrita corretamente
                         if os.path.exists(filepath) and os.path.getsize(filepath) > 0:
                             # Atualizar caminho da imagem no usuário
-                            user.profile_image = os.path.join('images', 'uploads', filename)
+                            image_path = os.path.join('images', 'uploads', filename)
+                            user.profile_image = image_path
                             print(f"Imagem de perfil salva com sucesso: {user.profile_image}")
                         else:
-                            print("Arquivo de imagem foi criado, mas está vazio")
+                            print(f"Arquivo de imagem foi criado, mas está vazio: {filepath}")
                     except Exception as img_error:
                         print(f"Erro ao salvar imagem: {str(img_error)}")
+                        import traceback
+                        print(traceback.format_exc())
                         # Continuar mesmo se houver erro na imagem
                 else:
                     print("String base64 vazia ou inválida")
             except Exception as decode_error:
                 print(f"Erro ao processar a string base64 da imagem: {str(decode_error)}")
+                import traceback
+                print(traceback.format_exc())
         
         # Atualizar links sociais
         # Primeiro, remover todos os links existentes
