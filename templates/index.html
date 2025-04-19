@@ -919,13 +919,26 @@
             { value: 'fa-star', label: 'Estrela' }
           ];
           
+          // Log para depuração
+          if (icon) {
+            console.log('Ícone do footer:', icon.className);
+            // Extrair apenas o nome do ícone sem o prefixo 'fas'
+            const iconName = icon.className.replace('fas ', '');
+            console.log('Nome do ícone extraído:', iconName);
+          }
+          
           icons.forEach(icn => {
             const option = document.createElement('option');
             option.value = icn.value;
             option.textContent = icn.label;
             
-            if (icon && icon.className.includes(icn.value)) {
-              option.selected = true;
+            // Melhorar a detecção do ícone atual
+            if (icon) {
+              const iconName = icon.className.replace('fas ', '');
+              if (icn.value === iconName) {
+                option.selected = true;
+                console.log('Ícone selecionado:', icn.value);
+              }
             }
             
             iconSelect.appendChild(option);
@@ -1437,12 +1450,21 @@
               }
             }
             
+            // Obter o ícone selecionado com log para depuração
+            let iconValue = '';
+            if (iconSelect && iconSelect.value) {
+              iconValue = iconSelect.value;
+              console.log(`Footer item ícone detectado: ${iconValue}`);
+            }
+            
             editedData.footer_items.push({
               text: textInput.value.trim(),
               url: url,
-              icon: iconSelect && iconSelect.value ? iconSelect.value : '',
+              icon: iconValue,
               is_brand: brandCheckbox ? brandCheckbox.checked : false
             });
+            
+            console.log(`Item de footer adicionado: ${textInput.value.trim()}, ícone: ${iconValue}`);
           }
         });
         

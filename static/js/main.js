@@ -118,6 +118,14 @@ document.addEventListener('DOMContentLoaded', function() {
       link.removeEventListener('click', handleLinkClick);
       // Adicionar novo listener
       link.addEventListener('click', handleLinkClick);
+      
+      // Verificar se o link tem uma URL
+      const linkUrl = link.getAttribute('data-url');
+      if (!linkUrl) {
+        console.warn('Link sem URL encontrado:', link);
+      } else {
+        console.log('Link configurado com URL:', linkUrl);
+      }
     });
   }
   
