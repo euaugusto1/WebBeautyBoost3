@@ -100,9 +100,9 @@
     <!-- Links Section -->
     <div class="links" data-aos="fade-up" data-aos-delay="600">
       {% for link in profile.links %}
-      <a href="{{ link.url }}" 
+      <a href="javascript:void(0);" 
          data-link-id="{{ link.id }}" 
-         target="_blank" rel="noopener"
+         data-url="{{ link.url }}" 
          class="link-btn {{ link.class }} track-click" 
          data-aos="fade-up" 
          data-aos-delay="{{ loop.index * 100 + 500 }}">

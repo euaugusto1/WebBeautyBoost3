@@ -128,8 +128,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const link = this;
     const linkId = link.getAttribute('data-link-id');
-    const linkUrl = link.getAttribute('href') || link.getAttribute('data-url');
+    const linkUrl = link.getAttribute('data-url');
     const clickStatsElement = link.querySelector('.click-stats');
+    
+    if (!linkId) {
+      console.error('Link clicado não possui um ID');
+      if (linkUrl) {
+        window.open(linkUrl, '_blank');
+      }
+      return;
+    }
     
     console.log('Link clicado:', linkId, linkUrl);
     
@@ -144,26 +152,40 @@ document.addEventListener('DOMContentLoaded', function() {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
       if (data.success) {
         // Atualizar contador na interface
         if (clickStatsElement) {
           clickStatsElement.textContent = `${data.click_count} cliques`;
+          console.log(`Contador atualizado: ${data.click_count} cliques`);
         }
         
         // Abrir URL em nova aba após um pequeno atraso
         setTimeout(() => {
-          window.open(linkUrl, '_blank');
+          if (linkUrl) {
+            window.open(linkUrl, '_blank');
+          } else {
+            console.error('URL do link não encontrada');
+          }
         }, 300);
       } else {
         console.error('Erro ao registrar clique:', data.message);
-        window.open(linkUrl, '_blank');
+        if (linkUrl) {
+          window.open(linkUrl, '_blank');
+        }
       }
     })
     .catch(error => {
       console.error('Erro ao registrar clique:', error);
-      window.open(linkUrl, '_blank');
+      if (linkUrl) {
+        window.open(linkUrl, '_blank');
+      }
     });
   }
   

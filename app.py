@@ -331,10 +331,19 @@ def click_link(link_id):
     try:
         # Buscar o link no banco de dados
         link = ProfileLink.query.get_or_404(link_id)
+        print(f"Processando clique para o link ID {link_id} - Contagem atual: {link.click_count}")
         
         # Incrementar o contador de cliques
         link.click_count += 1
-        db.session.commit()
+        
+        # Realizar o commit imediatamente
+        try:
+            db.session.commit()
+            print(f"Clique registrado com sucesso. Nova contagem: {link.click_count}")
+        except Exception as commit_error:
+            db.session.rollback()
+            print(f"Erro ao realizar commit do clique: {str(commit_error)}")
+            raise commit_error
         
         # Retornar sucesso e a URL para redirecionamento
         return jsonify({
@@ -345,6 +354,8 @@ def click_link(link_id):
     except Exception as e:
         db.session.rollback()
         print(f"Erro ao registrar clique: {str(e)}")
+        import traceback
+        print(traceback.format_exc())
         return jsonify({
             'success': False, 
             'message': 'Erro ao registrar clique',
