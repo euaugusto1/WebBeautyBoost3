@@ -282,20 +282,33 @@ def update_profile():
             )
             db.session.add(social_link)
         
-        # Atualizar links do perfil
-        # Primeiro, remover todos os links existentes
+        # Criar um dicionário para armazenar a contagem de cliques dos links existentes
+        link_click_counts = {}
         for link in user.profile_links:
+            # Salvar o contador de cliques com base no título e URL para poder restaurar depois
+            link_key = f"{link.title}:{link.url}"
+            link_click_counts[link_key] = link.click_count
+            print(f"Salvando contagem de cliques: {link_key} = {link.click_count}")
             db.session.delete(link)
         
-        # Adicionar os novos links do perfil
+        # Adicionar os novos links do perfil, preservando a contagem de cliques quando possível
         for index, link_data in enumerate(data.get('profile_links', [])):
+            title = link_data.get('title')
+            url = link_data.get('url')
+            link_key = f"{title}:{url}"
+            
+            # Verificar se temos uma contagem de cliques salva para este link
+            click_count = link_click_counts.get(link_key, 0)
+            print(f"Restaurando contagem de cliques para {link_key}: {click_count}")
+            
             profile_link = ProfileLink(
                 user_id=user.id,
-                title=link_data.get('title'),
-                url=link_data.get('url'),
+                title=title,
+                url=url,
                 icon=link_data.get('icon'),
                 css_class=link_data.get('class'),
-                position=index + 1
+                position=index + 1,
+                click_count=click_count  # Restaurar contagem de cliques
             )
             db.session.add(profile_link)
             

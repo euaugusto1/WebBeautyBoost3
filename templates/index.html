@@ -630,6 +630,13 @@
           const linkWrapper = document.createElement('div');
           linkWrapper.className = 'link-edit-wrapper';
           
+          // Obter o ID do link para preservar a contagem de cliques
+          const linkId = link.getAttribute('data-link-id');
+          if (linkId) {
+            linkWrapper.setAttribute('data-link-id', linkId);
+            console.log(`Link com ID encontrado: ${linkId}`);
+          }
+          
           // Dados do link
           const title = link.querySelector('span').textContent;
           // Garantir que pegamos a URL correta do link
@@ -1405,6 +1412,9 @@
           const iconSelect = wrapper.querySelector('.icon-select');
           const classSelect = wrapper.querySelector('.class-select');
           
+          // Obter o ID do link se ele já existir (para preservar contagem de cliques)
+          const linkId = wrapper.getAttribute('data-link-id');
+          
           if (titleInput && urlInput && titleInput.value.trim() && urlInput.value.trim()) {
             // Certificar que a URL está completa
             let url = urlInput.value.trim();
@@ -1412,12 +1422,21 @@
               url = 'https://' + url;
             }
             
-            editedData.profile_links.push({
+            // Criar o objeto do link, incluindo o ID se existir
+            const linkData = {
               title: titleInput.value.trim(),
               url: url,
               icon: iconSelect ? iconSelect.value : 'fa-link',
               class: classSelect ? classSelect.value : ''
-            });
+            };
+            
+            // Adicionar ID se existir (isso ajuda no backend a preservar contagem)
+            if (linkId) {
+              linkData.id = linkId;
+              console.log(`Preservando link ID ${linkId} para ${linkData.title}`);
+            }
+            
+            editedData.profile_links.push(linkData);
           }
         });
         
