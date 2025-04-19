@@ -27,6 +27,13 @@ if db_url is None:
     if not all([db_host, db_user, db_name]):
         db_url = "sqlite:///linkstack.db"
         print("Aviso: Variáveis de ambiente de banco de dados não encontradas. Usando SQLite local.")
+else:
+    # Corrigir problema com URLs começando com postgres:// (mudar para postgresql://)
+    if db_url.startswith('postgres://'):
+        db_url = db_url.replace('postgres://', 'postgresql://', 1)
+        print("Aviso: Convertendo string de conexão de 'postgres://' para 'postgresql://'")
+        
+    print(f"Usando DB_URL: {db_url.split('@')[0].split('://')[0]}://*****@{db_url.split('@')[1] if '@' in db_url else 'localhost'}")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
