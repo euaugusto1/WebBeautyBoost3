@@ -632,7 +632,14 @@
           
           // Dados do link
           const title = link.querySelector('span').textContent;
-          const url = link.getAttribute('href') || link.getAttribute('data-url');
+          // Garantir que pegamos a URL correta do link
+          let url = link.getAttribute('data-url');
+          if (!url) {
+            url = link.getAttribute('href') || '';
+            console.log('URL obtida do href:', url);
+          } else {
+            console.log('URL obtida do data-url:', url);
+          }
           const icon = link.querySelector('i').className.replace('fas ', '');
           
           // Preview do ícone
