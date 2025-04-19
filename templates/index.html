@@ -1318,6 +1318,9 @@
               // Log para debug
               console.log('Primeiros 100 caracteres da imagem:', imageBase64.substring(0, 100));
               console.log('Tamanho total da string base64:', imageBase64.length);
+              
+              // Adicionar flag para indicar que a imagem foi alterada
+              editedData.image_changed = true;
             } else {
               console.log('Atributo data-image-base64 está vazio');
             }

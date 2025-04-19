@@ -196,8 +196,8 @@ def update_profile():
                 )
                 db.session.add(theme_settings)
         
-        # Verificar se há uma nova imagem de perfil
-        if 'profile_image' in data and data['profile_image']:
+        # Verificar se há uma nova imagem de perfil - apenas se a flag image_changed estiver presente
+        if 'profile_image' in data and data['profile_image'] and data.get('image_changed', False):
             # Verificar se a string base64 é válida
             try:
                 print(f"Iniciando processamento de imagem de perfil: {data['profile_image'][:30]}...")
