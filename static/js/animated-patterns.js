@@ -42,11 +42,14 @@ document.addEventListener('DOMContentLoaded', function() {
       // Other patterns don't need additional setup
     }
     
-    // Add the pattern to the profile container
-    const profileContainer = document.querySelector('.profile-container');
-    if (profileContainer) {
-      profileContainer.appendChild(patternContainer);
+    // Add the pattern to the body, garantindo que estará em posição inferior
+    // Isso garante que o padrão não interferirá nos cliques
+    const container = document.querySelector('.container');
+    if (container) {
+      // Inserir antes do container para garantir que fique atrás
+      document.body.insertBefore(patternContainer, container);
     } else {
+      // Caso de fallback
       document.body.appendChild(patternContainer);
     }
     

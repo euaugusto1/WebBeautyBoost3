@@ -7,9 +7,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: -1; /* Alterado para -1 para ficar atrás de todos os elementos */
   overflow: hidden;
   opacity: 0.5;
+  pointer-events: none; /* Adicionado para garantir que o padrão não capture eventos de mouse */
 }
 
 /* Pattern 1: Floating Particles */
